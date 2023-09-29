@@ -6,7 +6,7 @@ import { MyModal } from '../UI/MyModal';
 import { Form } from './Form';
 import { DealList } from './DealList';
 import { addDeal, deleteCompletedTasks } from '../store/dealSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { openModal } from '../store/modalSlice';
 
 const StyledMain = styled.main`

@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { MySelect } from '../UI/MySelect';
 import { hours, minutes } from '../helpers/hoursAndMinutes';
