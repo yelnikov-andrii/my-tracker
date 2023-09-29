@@ -1,12 +1,12 @@
 import React, { Dispatch, SetStateAction } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { closeModal } from '../store/modalSlice';
 
 
 
 interface Props {
   children: React.ReactNode;
-  active: boolean;
-  setActive: Dispatch<SetStateAction<boolean>>;
 }
 
 const MyModalStyled = styled.div<any>`
@@ -32,12 +32,15 @@ border-radius: 16px;
 }
 `;
 
-export const MyModal: React.FC <Props> = ({ children, active, setActive }) => {
+export const MyModal: React.FC <Props> = ({ children }) => {
+  const { isOpen } = useSelector((state: any) => state.modal);
+  const dispatch = useDispatch();
+
   return (
     <MyModalStyled
-      active={active}
+      active={isOpen}
       onClick={() => {
-        setActive(false);
+        dispatch(closeModal());
       }}
     >
       <MyModalContent onClick={(e) => {

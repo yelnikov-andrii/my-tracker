@@ -1,8 +1,9 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { removeDeal, updateDeal } from '../store/dealSlice';
+import { removeDeal, selectDealIdToChange, updateDeal } from '../store/dealSlice';
 import { saveDealsToLocaleStorage } from '../helpers/saveDealsTolocaleStorage';
+import { openModal } from '../store/modalSlice';
 
 const List = styled.ul`
 margin: 0;
@@ -24,10 +25,15 @@ const ListItem = styled.li<any>`
 font-size: 20px;
 font-weight: 500;
 display: flex;
-justify-content: space-between;
+flex-direction: column;
 text-decoration: ${props => props.completed ? 'line-through' : 'none'};
 flex-wrap: wrap;
 gap: 10px;
+`;
+
+const ListItemBlock = styled.div`
+display: flex;
+justify-content: space-between;
 `;
 
 const Name = styled.span`
@@ -89,6 +95,11 @@ export const DealList = () => {
     
   }
 
+  function changeTheDeal(dealId: number) {
+    dispatch(openModal());
+    dispatch(selectDealIdToChange(dealId));
+  }
+
   return (
     <div>
       <h4>
@@ -101,6 +112,7 @@ export const DealList = () => {
             key={deal.name}
             completed={deal.completed}
           >
+            <ListItemBlock>
             {`${deal.start} - ${deal.finish}`}
             <Name>
               {deal.name}
@@ -112,11 +124,23 @@ export const DealList = () => {
               }}
               checked={deal.completed}
             />
-            <Button onClick={() => {
-            deleteDeal(deal.id);
-          }}>
-            Видалити
-          </Button>
+            </ListItemBlock>
+            <ListItemBlock>
+              <Button 
+                onClick={() => {
+                  deleteDeal(deal.id);
+                }}
+              >
+                Видалити
+              </Button>
+              <Button 
+                onClick={() => {
+                  changeTheDeal(deal.id);
+                }}
+              >
+                Редагувати
+              </Button>
+            </ListItemBlock>
           </ListItem>
           </>
         )) : (

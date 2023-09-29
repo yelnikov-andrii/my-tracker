@@ -5,8 +5,9 @@ import styled from 'styled-components';
 import { MyModal } from '../UI/MyModal';
 import { Form } from './Form';
 import { DealList } from './DealList';
-import { addDeal } from '../store/dealSlice';
-import { useDispatch } from 'react-redux';
+import { addDeal, deleteCompletedTasks } from '../store/dealSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { openModal } from '../store/modalSlice';
 
 const StyledMain = styled.main`
 padding: 50px 0;
@@ -33,8 +34,14 @@ color: #fff;
 }
 `;
 
+const Block = styled.div`
+margin: 20px 0 0 0;
+border: 1px solid teal;
+border-radius: 12px;
+padding: 10px;
+`;
+
 export const Main = () => {
-  const [modalIsOpen, setModalIsOpen] = React.useState(false);
   const dispatch = useDispatch();
 
     React.useEffect(() => {
@@ -51,20 +58,22 @@ export const Main = () => {
         <div>
           <ButtonBlock>
             <Button onClick={() => {
-              setModalIsOpen(true);
+              dispatch(openModal())
             }}>
               Додати справу
             </Button>
           </ButtonBlock>
-          <MyModal
-            active={modalIsOpen}
-            setActive={setModalIsOpen}
-          >
-            <Form 
-              setActive={setModalIsOpen}
-            />
+          <MyModal>
+            <Form />
           </MyModal>
           <DealList />
+          <Block>
+            <Button onClick={(e) => {
+              dispatch(deleteCompletedTasks());
+            }}>
+              Видалити завершені
+            </Button>
+          </Block>
         </div>
       </Container>
     </StyledMain>

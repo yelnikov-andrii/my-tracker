@@ -3,8 +3,9 @@ import styled from 'styled-components';
 import { MySelect } from '../UI/MySelect';
 import { hours, minutes } from '../helpers/hoursAndMinutes';
 import { useDispatch, useSelector } from 'react-redux';
-import { addDeal } from '../store/dealSlice';
+import { addDeal, changeTheDeal, selectDealIdToChange } from '../store/dealSlice';
 import { saveDealsToLocaleStorage } from '../helpers/saveDealsTolocaleStorage';
+import { closeModal } from '../store/modalSlice';
 
 const StyledForm = styled.div`
 width: 100%;
@@ -35,7 +36,6 @@ font-weight: 700;
 `;
 
 const Button = styled.button`
-width: 100%;
 height: 40px;
 border-radius: 8px;
 border: none;
@@ -49,17 +49,14 @@ color: #fff;
 }
 `;
 
-interface Props {
-  setActive: Dispatch<SetStateAction<boolean>>;
-}
-
-export const Form: React.FC <Props> = ({ setActive }) => {
+export const Form = () => {
   const [nameOfTheTask, setNameOfTheTask] = React.useState('');
   const [startHour, setStartHour] = React.useState('00');
   const [startMinutes, setStartMinutes] = React.useState('00');
   const [finishHour, setFInishHour] = React.useState('00');
   const [finishMinutes, setFinishMinutes] = React.useState('00');
-  const { deals } = useSelector((state: any) => state.deal);
+  const { deals, dealIdToChange } = useSelector((state: any) => state.deal);
+
   
   const dispatch = useDispatch();
 
@@ -76,12 +73,42 @@ export const Form: React.FC <Props> = ({ setActive }) => {
       id: Date.now()
     };
 
-    const updatedDeals = [...deals, deal];
-    saveDealsToLocaleStorage(updatedDeals);
-
     dispatch(addDeal(deal));
     setNameOfTheTask('');
-    setStartHour(finishHour);
+
+    if (startHour === finishHour) {
+      if (finishMinutes === '55') {
+        setStartHour((prev: string) => {
+          let res = (+prev + 1).toString();
+          if (res.length === 1) {
+            res = '0' + res;
+          }
+
+          return res;
+        });
+        setStartMinutes('00');
+        setFInishHour((prev: string) => {
+          let res = (+prev + 1).toString();
+          if (res.length === 1) {
+            res = '0' + res;
+          }
+
+          return res;
+        });
+        setFinishMinutes('05');
+      } else {
+        setStartMinutes(finishMinutes);
+      setFinishMinutes(prev => {
+        if (prev === '00') {
+          return '05'
+        }
+  
+        return (+prev + 5).toString();
+      });
+      }
+      
+    } else {
+      setStartHour(finishHour);
     setStartMinutes(finishMinutes);
     setFinishMinutes(prev => {
       if (prev === '00') {
@@ -90,7 +117,30 @@ export const Form: React.FC <Props> = ({ setActive }) => {
 
       return (+prev + 5).toString();
     });
-    setActive(false);
+    }
+
+    dispatch(closeModal());
+  }
+
+  function changeTheDealHandler(dealId: number) {
+    const foundDeal = deals.find((deal: any) => deal.id === dealId);
+
+    if (!nameOfTheTask || !startHour || !startMinutes || !finishHour || !finishMinutes || !foundDeal) {
+      return;
+    }
+
+    const newDeal = {
+      name: nameOfTheTask,
+      start: `${startHour}:${startMinutes}`,
+      finish: `${finishHour}:${finishMinutes}`,
+    };
+
+    dispatch(changeTheDeal(newDeal));
+    setNameOfTheTask('');
+    dispatch(selectDealIdToChange(null));
+    dispatch(closeModal());
+    const copyDeals = [...deals];
+    saveDealsToLocaleStorage(copyDeals);
   }
 
   return (
@@ -139,6 +189,11 @@ export const Form: React.FC <Props> = ({ setActive }) => {
           addDealHandler();
         }}>
           Додати справу
+        </Button>
+        <Button onClick={() => {
+          changeTheDealHandler(dealIdToChange);
+        }}>
+          Редагувати справу
         </Button>
       </Block>
     </StyledForm>
