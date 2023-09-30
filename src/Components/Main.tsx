@@ -39,6 +39,8 @@ margin: 20px 0 0 0;
 border: 1px solid teal;
 border-radius: 12px;
 padding: 10px;
+display: flex;
+gap: 20px;
 `;
 
 interface Props {
