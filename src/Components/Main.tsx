@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 import { Container } from '../UI/Container';
 import styled from 'styled-components';
 import { MyModal } from '../UI/MyModal';
 import { Form } from './Form';
 import { DealList } from './DealList';
-import { addDeal, deleteCompletedTasks } from '../store/dealSlice';
+import { deleteCompletedTasks } from '../store/dealSlice';
 import { useDispatch } from 'react-redux';
 import { openModal } from '../store/modalSlice';
 
@@ -41,16 +41,17 @@ border-radius: 12px;
 padding: 10px;
 `;
 
-export const Main = () => {
+interface Props {
+  readyToChange: boolean;
+  setReadyToChange: Dispatch<SetStateAction<boolean>>;
+}
+
+export const Main: React.FC <Props> = ({ readyToChange, setReadyToChange }) => {
   const dispatch = useDispatch();
 
-    React.useEffect(() => {
-      const dealsString = localStorage.getItem('deals');
-      if (dealsString) {
-        const deals = JSON.parse(dealsString);
-        deals.forEach((deal: any) => dispatch(addDeal(deal)));
-      }
-    }, []);
+ function changeThePlanTime() {
+   setReadyToChange(true);
+ }
 
   return (
     <StyledMain>
@@ -66,12 +67,19 @@ export const Main = () => {
           <MyModal>
             <Form />
           </MyModal>
-          <DealList />
+          <DealList 
+            readyToChange={readyToChange}
+          />
           <Block>
             <Button onClick={(e) => {
               dispatch(deleteCompletedTasks());
             }}>
               Видалити завершені
+            </Button>
+            <Button onClick={(e) => {
+              changeThePlanTime();
+            }}>
+              Змістити графік
             </Button>
           </Block>
         </div>

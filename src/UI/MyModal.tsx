@@ -15,7 +15,7 @@ top: 0;
 bottom: 0;
 left: 0;
 right: 0;
-display: ${props => props.active ? 'flex' : 'none'};
+display: ${props => props.active === 'true' ? 'flex' : 'none'};
 justify-content: center;
 align-items: center;
 background: rgba(0, 0, 0, 0.5);
@@ -38,7 +38,7 @@ export const MyModal: React.FC <Props> = ({ children }) => {
 
   return (
     <MyModalStyled
-      active={isOpen}
+      active={isOpen ? 'true' : 'false'}
       onClick={() => {
         dispatch(closeModal());
       }}

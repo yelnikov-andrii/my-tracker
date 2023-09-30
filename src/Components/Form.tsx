@@ -4,8 +4,8 @@ import { MySelect } from '../UI/MySelect';
 import { hours, minutes } from '../helpers/hoursAndMinutes';
 import { useDispatch, useSelector } from 'react-redux';
 import { addDeal, changeTheDeal, selectDealIdToChange } from '../store/dealSlice';
-import { saveDealsToLocaleStorage } from '../helpers/saveDealsTolocaleStorage';
 import { closeModal } from '../store/modalSlice';
+import { setFinishHour, setFinishMinutes, setStartHour, setStartMinutes } from '../store/timeSlice';
 
 const StyledForm = styled.div`
 width: 100%;
@@ -51,12 +51,8 @@ color: #fff;
 
 export const Form = () => {
   const [nameOfTheTask, setNameOfTheTask] = React.useState('');
-  const [startHour, setStartHour] = React.useState('00');
-  const [startMinutes, setStartMinutes] = React.useState('00');
-  const [finishHour, setFInishHour] = React.useState('00');
-  const [finishMinutes, setFinishMinutes] = React.useState('00');
   const { deals, dealIdToChange } = useSelector((state: any) => state.deal);
-
+  const { startHour, startMinutes, finishHour, finishMinutes } = useSelector((state: any) => state.time);
   
   const dispatch = useDispatch();
 
@@ -78,45 +74,20 @@ export const Form = () => {
 
     if (startHour === finishHour) {
       if (finishMinutes === '55') {
-        setStartHour((prev: string) => {
-          let res = (+prev + 1).toString();
-          if (res.length === 1) {
-            res = '0' + res;
-          }
-
-          return res;
-        });
-        setStartMinutes('00');
-        setFInishHour((prev: string) => {
-          let res = (+prev + 1).toString();
-          if (res.length === 1) {
-            res = '0' + res;
-          }
-
-          return res;
-        });
-        setFinishMinutes('05');
+        const newStartHour = (+startHour + 1).toString().padStart(2, '0');
+        const newFinishHour = (+finishHour + 1).toString().padStart(2, '0');
+        dispatch(setStartHour(newStartHour));
+        dispatch(setStartMinutes('00'));
+        dispatch(setFinishHour(newFinishHour));
+        dispatch(setFinishMinutes('05'));
       } else {
-        setStartMinutes(finishMinutes);
-      setFinishMinutes(prev => {
-        if (prev === '00') {
-          return '05'
-        }
-  
-        return (+prev + 5).toString();
-      });
+        dispatch(setStartMinutes(finishMinutes));
+        dispatch(setFinishMinutes((+finishMinutes + 5).toString().padStart(2, '0')));
       }
-      
     } else {
-      setStartHour(finishHour);
-    setStartMinutes(finishMinutes);
-    setFinishMinutes(prev => {
-      if (prev === '00') {
-        return '05'
-      }
-
-      return (+prev + 5).toString();
-    });
+      dispatch(setStartHour(finishHour));
+      dispatch(setStartMinutes(finishMinutes));
+      dispatch(setFinishMinutes((+finishMinutes + 5).toString().padStart(2, '0')));
     }
 
     dispatch(closeModal());
@@ -139,8 +110,22 @@ export const Form = () => {
     setNameOfTheTask('');
     dispatch(selectDealIdToChange(null));
     dispatch(closeModal());
-    const copyDeals = [...deals];
-    saveDealsToLocaleStorage(copyDeals);
+  }
+
+  function changeStartHour(value: any) {
+    dispatch(setStartHour(value));
+  }
+
+  function changeStartMinutes(value: any) {
+    dispatch(setStartMinutes(value));
+  }
+
+  function changeFinishHour(value: any) {
+    dispatch(setFinishHour(value));
+  }
+
+  function changeFinishMinutes(value: any) {
+    dispatch(setFinishMinutes(value));
   }
 
   return (
@@ -153,12 +138,12 @@ export const Form = () => {
         <BlockInput>
           <MySelect 
             options={hours}
-            change={setStartHour}
+            change={changeStartHour}
             value={startHour}
           />
           <MySelect 
             options={minutes}
-            change={setStartMinutes}
+            change={changeStartMinutes}
             value={startMinutes}
           />
         </BlockInput>
@@ -166,12 +151,12 @@ export const Form = () => {
         <BlockInput>
         <MySelect 
             options={hours}
-            change={setFInishHour}
+            change={changeFinishHour}
             value={finishHour}
           />
           <MySelect 
             options={minutes}
-            change={setFinishMinutes}
+            change={changeFinishMinutes}
             value={finishMinutes}
           />
         </BlockInput>

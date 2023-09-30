@@ -18,7 +18,14 @@ export const dealSlice: any = createSlice({
   reducers: {
     addDeal: (state, action: PayloadAction<any>) => {
       state.deals.push(action.payload);
-      saveDealsToLocaleStorage([...state.deals, action.payload]);
+      saveDealsToLocaleStorage(state.deals);
+    },
+    getDealsFromStorage: (state) => {
+      const dealsString = localStorage.getItem('deals');
+      state.deals = [];
+      if (dealsString) {
+        state.deals = JSON.parse(dealsString);
+      }
     },
     updateDeal: (state, action: PayloadAction<any>) => {
     const foundDeal = state.deals.find(deal => deal.id === action.payload);
@@ -42,10 +49,13 @@ export const dealSlice: any = createSlice({
     deleteCompletedTasks: (state) => {
       state.deals = state.deals.filter(deal => deal.completed === false);
       saveDealsToLocaleStorage([...state.deals]);
+    },
+    clearDeals: (state) => {
+      state.deals = [];
     }
   },
 });
 
-export const { addDeal, updateDeal, removeDeal, selectDealIdToChange, changeTheDeal, deleteCompletedTasks } = dealSlice.actions;
+export const { addDeal, updateDeal, removeDeal, selectDealIdToChange, changeTheDeal, deleteCompletedTasks, clearDeals, getDealsFromStorage } = dealSlice.actions;
 
 export default dealSlice.reducer;
