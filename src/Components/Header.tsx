@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Container } from '../UI/Container';
+import { Link } from 'react-router-dom';
 
 const StyledHeader = styled.header`
 height: 40px;
@@ -18,12 +19,15 @@ export const Header = () => {
     <StyledHeader>
       <Container>
         <Block>
-          <a href="/">
-            Logo
-          </a>
-          <a href='/user'>
-            User
-          </a>
+          <Link to="/">
+            Tasker
+          </Link>
+          <Link to='/deals-without-timeline'>
+            Справи без ліміту по часу
+          </Link>
+          <Link to='/'>
+            Справи за графіком
+          </Link>
         </Block>
       </Container>
     </StyledHeader>

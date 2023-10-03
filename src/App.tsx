@@ -4,6 +4,8 @@ import { Header } from './Components/Header';
 import { Main } from './Components/Main';
 import { useDispatch } from 'react-redux';
 import { getDealsFromStorage } from './store/dealSlice';
+import { Routes, Route } from 'react-router-dom';
+import { DealsWithoutTime } from './Components/DealsWithoutTime';
 
 function App() {
   const dispatch = useDispatch();
@@ -11,15 +13,15 @@ function App() {
     dispatch(getDealsFromStorage());
   }, []);
 
-  const [readyToChange, setReadyToChange] = React.useState(false);
-
   return (
     <div>
       <Header />
-      <Main 
-        readyToChange={readyToChange}
-        setReadyToChange={setReadyToChange}
-      />
+      <Routes>
+        <Route path='/' element={<Main />}>
+        </Route>
+        <Route path='/deals-without-timeline' element={<DealsWithoutTime />}>
+        </Route>
+      </Routes>
     </div>
   );
 }

@@ -5,11 +5,13 @@ import { saveDealsToLocaleStorage } from '../helpers/saveDealsTolocaleStorage';
 export interface LangState {
   deals: any[];
   dealIdToChange: null | number;
+  dealsWithoutTimeline: any[];
 }
 
 const initialState: LangState = {
   deals: [],
   dealIdToChange: null,
+  dealsWithoutTimeline: [],
 };
 
 export const dealSlice: any = createSlice({
@@ -52,10 +54,20 @@ export const dealSlice: any = createSlice({
     },
     clearDeals: (state) => {
       state.deals = [];
+    },
+    addDealWithoutTimeline: (state, action) => {
+      state.dealsWithoutTimeline.push(action.payload);
+    },
+    updateDealWithout: (state, action) => {
+      const foundDeal = state.dealsWithoutTimeline.find(deal => deal.id === action.payload);
+      foundDeal.completed = !foundDeal.completed;
+    },
+    removeDealWithout: (state, action) => {
+      state.dealsWithoutTimeline = state.dealsWithoutTimeline.filter((deal: any) => deal.id !== action.payload);
     }
   },
 });
 
-export const { addDeal, updateDeal, removeDeal, selectDealIdToChange, changeTheDeal, deleteCompletedTasks, clearDeals, getDealsFromStorage } = dealSlice.actions;
+export const { addDeal, updateDeal, removeDeal, selectDealIdToChange, changeTheDeal, deleteCompletedTasks, clearDeals, getDealsFromStorage, addDealWithoutTimeline, updateDealWithout, removeDealWithout } = dealSlice.actions;
 
 export default dealSlice.reducer;

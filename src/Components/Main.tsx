@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { Dispatch, SetStateAction } from 'react'
+import React from 'react'
 import { Container } from '../UI/Container';
 import styled from 'styled-components';
 import { MyModal } from '../UI/MyModal';
@@ -45,15 +45,10 @@ display: flex;
 gap: 20px;
 `;
 
-interface Props {
-  readyToChange: boolean;
-  setReadyToChange: Dispatch<SetStateAction<boolean>>;
-}
-
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
-export const Main: React.FC <Props> = () => {
+export const Main: React.FC = () => {
   const dispatch = useDispatch();
   const [value, onChange] = React.useState<Value>(new Date());
 

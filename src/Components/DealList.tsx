@@ -187,7 +187,7 @@ export const DealList: React.FC<any> = ({ date }) => {
           </ListItem>
         )) : (
           <ListItem>
-            No tasks yet
+            Немає завдань
           </ListItem>
         )}
       </List>
