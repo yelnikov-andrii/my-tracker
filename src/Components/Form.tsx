@@ -49,7 +49,7 @@ color: #fff;
 }
 `;
 
-export const Form = () => {
+export const Form: React.FC <any> = ({ date }) => {
   const [nameOfTheTask, setNameOfTheTask] = React.useState('');
   const { deals, dealIdToChange } = useSelector((state: any) => state.deal);
   const { startHour, startMinutes, finishHour, finishMinutes } = useSelector((state: any) => state.time);
@@ -66,6 +66,7 @@ export const Form = () => {
       start: `${startHour}:${startMinutes}`,
       finish: `${finishHour}:${finishMinutes}`,
       completed: false,
+      date: date,
       id: Date.now()
     };
 

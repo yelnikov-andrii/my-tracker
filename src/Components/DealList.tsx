@@ -70,11 +70,7 @@ height: 20px;
 color: teal;
 `;
 
-interface Props {
-  readyToChange: boolean;
-}
-
-export const DealList: React.FC <Props> = ({ readyToChange }) => {
+export const DealList: React.FC<any> = ({ date }) => {
   const { deals } = useSelector((state: any) => state.deal);
   const dispatch = useDispatch();
 
@@ -100,20 +96,19 @@ export const DealList: React.FC <Props> = ({ readyToChange }) => {
     dispatch(setFinishMinutes(finishMinutes));
   }
 
+  const filteredDeals = React.useMemo(() => {
+    return deals.filter((deal: any) => deal.date === date);
+  }, [date, deals]);
+
+  console.log(filteredDeals, deals)
+
   return (
     <div>
       <h4>
         Tasks list
       </h4>
-        {readyToChange && (
-          <p>
-            Виберіть таску, щоб змінити час і змістити план
-          </p>
-        )}
-      <List
-        ready={readyToChange ? 'true' : 'false'}
-      >
-        {deals.length > 0 ? deals.map((deal: any) => (
+      <List>
+        {filteredDeals.length > 0 ? filteredDeals.map((deal: any) => (
           <ListItem 
             key={deal.name}
             completed={deal.completed ? "true" : "false"}

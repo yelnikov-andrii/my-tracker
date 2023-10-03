@@ -8,6 +8,7 @@ import { DealList } from './DealList';
 import { deleteCompletedTasks } from '../store/dealSlice';
 import { useDispatch } from 'react-redux';
 import { openModal } from '../store/modalSlice';
+import { MyCalendar } from './MyCalendar';
 
 const StyledMain = styled.main`
 padding: 50px 0;
@@ -15,8 +16,9 @@ padding: 50px 0;
 
 const ButtonBlock = styled.div`
 display: flex;
-justify-content: center;
+gap: 30px;
 align-items: center;
+margin: 20px 0 0 0;
 `;
 
 const Button = styled.button`
@@ -48,18 +50,33 @@ interface Props {
   setReadyToChange: Dispatch<SetStateAction<boolean>>;
 }
 
-export const Main: React.FC <Props> = ({ readyToChange, setReadyToChange }) => {
-  const dispatch = useDispatch();
+type ValuePiece = Date | null;
+type Value = ValuePiece | [ValuePiece, ValuePiece];
 
- function changeThePlanTime() {
-   setReadyToChange(true);
- }
+export const Main: React.FC <Props> = () => {
+  const dispatch = useDispatch();
+  const [value, onChange] = React.useState<Value>(new Date());
+
+  const formatDate = (date: any) => {
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    return `${day < 10 ? '0' : ''}${day}.${month < 10 ? '0' : ''}${month}`;
+  };
 
   return (
     <StyledMain>
       <Container>
         <div>
+          <div>
+          <MyCalendar 
+            value={value}
+            onChange={onChange}
+          />
+          </div>
           <ButtonBlock>
+            <div>
+              {`Дата: ${formatDate(value)}`}
+            </div>
             <Button onClick={() => {
               dispatch(openModal())
             }}>
@@ -67,21 +84,18 @@ export const Main: React.FC <Props> = ({ readyToChange, setReadyToChange }) => {
             </Button>
           </ButtonBlock>
           <MyModal>
-            <Form />
+            <Form 
+              date={formatDate(value)}
+            />
           </MyModal>
           <DealList 
-            readyToChange={readyToChange}
+            date={formatDate(value)}
           />
           <Block>
             <Button onClick={(e) => {
               dispatch(deleteCompletedTasks());
             }}>
               Видалити завершені
-            </Button>
-            <Button onClick={(e) => {
-              changeThePlanTime();
-            }}>
-              Змістити графік
             </Button>
           </Block>
         </div>
