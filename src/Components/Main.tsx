@@ -43,6 +43,7 @@ border-radius: 12px;
 padding: 10px;
 display: flex;
 gap: 20px;
+width: 70%;
 `;
 
 type ValuePiece = Date | null;
@@ -57,6 +58,8 @@ export const Main: React.FC = () => {
     const month = date.getMonth() + 1;
     return `${day < 10 ? '0' : ''}${day}.${month < 10 ? '0' : ''}${month}`;
   };
+
+  console.log(formatDate(value));
 
   return (
     <StyledMain>

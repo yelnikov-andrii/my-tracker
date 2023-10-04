@@ -138,6 +138,7 @@ export const DealsWithoutTime = () => {
         {dealsWithoutTimeline.length > 0 ? dealsWithoutTimeline.map((deal: any) => (
           <ListItem
             completed={deal.completed ? "true" : "false"}
+            key={deal.id}
           >
             <ListItemBlock>
             <Name>

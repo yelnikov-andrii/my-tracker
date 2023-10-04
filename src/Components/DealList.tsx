@@ -110,7 +110,7 @@ export const DealList: React.FC<any> = ({ date }) => {
       <List>
         {filteredDeals.length > 0 ? filteredDeals.map((deal: any) => (
           <ListItem 
-            key={deal.name}
+            key={deal.id}
             completed={deal.completed ? "true" : "false"}
           >
             <ListItemBlock>
