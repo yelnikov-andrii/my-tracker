@@ -59,8 +59,6 @@ export const Main: React.FC = () => {
     return `${day < 10 ? '0' : ''}${day}.${month < 10 ? '0' : ''}${month}`;
   };
 
-  console.log(formatDate(value));
-
   return (
     <StyledMain>
       <Container>

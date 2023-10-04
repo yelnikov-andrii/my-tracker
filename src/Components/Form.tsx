@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addDeal, changeTheDeal, selectDealIdToChange } from '../store/dealSlice';
 import { closeModal } from '../store/modalSlice';
 import { setFinishHour, setFinishMinutes, setStartHour, setStartMinutes } from '../store/timeSlice';
+import { changeTimeAfterAddingAdeal } from '../helpers/changeTimeAfterAdd';
 
 const StyledForm = styled.div`
 width: 100%;
@@ -72,25 +73,7 @@ export const Form: React.FC <any> = ({ date }) => {
 
     dispatch(addDeal(deal));
     setNameOfTheTask('');
-
-    if (startHour === finishHour) {
-      if (finishMinutes === '55') {
-        const newStartHour = (+startHour + 1).toString().padStart(2, '0');
-        const newFinishHour = (+finishHour + 1).toString().padStart(2, '0');
-        dispatch(setStartHour(newStartHour));
-        dispatch(setStartMinutes('00'));
-        dispatch(setFinishHour(newFinishHour));
-        dispatch(setFinishMinutes('05'));
-      } else {
-        dispatch(setStartMinutes(finishMinutes));
-        dispatch(setFinishMinutes((+finishMinutes + 5).toString().padStart(2, '0')));
-      }
-    } else {
-      dispatch(setStartHour(finishHour));
-      dispatch(setStartMinutes(finishMinutes));
-      dispatch(setFinishMinutes((+finishMinutes + 5).toString().padStart(2, '0')));
-    }
-
+    changeTimeAfterAddingAdeal(startHour, finishHour, finishMinutes, dispatch);
     dispatch(closeModal());
   }
 

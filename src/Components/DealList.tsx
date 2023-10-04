@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { removeDeal, selectDealIdToChange, updateDeal } from '../store/dealSlice';
 import { openModal } from '../store/modalSlice';
-import { setFinishHour, setFinishMinutes, setStartHour, setStartMinutes } from '../store/timeSlice';
+import { changeTime } from '../helpers/changeTime';
 
 const List = styled.ul<any>`
 margin: 0;
@@ -85,25 +85,15 @@ export const DealList: React.FC<any> = ({ date }) => {
   function changeTheDeal(dealId: number) {
     dispatch(openModal());
     dispatch(selectDealIdToChange(dealId));
-    const foundDeal = deals.find((deal: any) => deal.id === dealId);
-    const startMinutes = foundDeal.start.slice(foundDeal.start.indexOf(':') + 1);
-    const startHour = foundDeal.start.slice(0, foundDeal.start.lastIndexOf(':'));
-    const finishMinutes = foundDeal.finish.slice(foundDeal.finish.indexOf(':') + 1);
-    const finishHour = foundDeal.finish.slice(0, foundDeal.finish.lastIndexOf(':'));
-    dispatch(setStartHour(startHour));
-    dispatch(setStartMinutes(startMinutes));
-    dispatch(setFinishHour(finishHour));
-    dispatch(setFinishMinutes(finishMinutes));
+    changeTime(deals, dealId, dispatch);
   }
 
   const filteredDeals = React.useMemo(() => {
     return deals.filter((deal: any) => deal.date === date);
   }, [date, deals]);
 
-  console.log(filteredDeals, deals)
-
   return (
-    <div>
+    <React.Fragment>
       <h2>
         Список завдань
       </h2>
@@ -149,6 +139,6 @@ export const DealList: React.FC<any> = ({ date }) => {
             </ListItem>
         )}
       </List>
-    </div>
+    </React.Fragment>
   )
 }
