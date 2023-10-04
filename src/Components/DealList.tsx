@@ -104,9 +104,9 @@ export const DealList: React.FC<any> = ({ date }) => {
 
   return (
     <div>
-      <h4>
-        Tasks list
-      </h4>
+      <h2>
+        Список завдань
+      </h2>
       <List>
         {filteredDeals.length > 0 ? filteredDeals.map((deal: any) => (
           <ListItem 
@@ -144,51 +144,9 @@ export const DealList: React.FC<any> = ({ date }) => {
             </ListItemBlock>
           </ListItem>
         )) : (
-          <ListItem>
-            No tasks yet
-          </ListItem>
-        )}
-      </List>
-      <List>
-        {deals.length > 0 ? deals.map((deal: any) => (
-          <ListItem 
-            key={deal.name}
-            completed={deal.completed ? "true" : "false"}
-          >
-            <ListItemBlock>
-            {`${deal.start} - ${deal.finish}`}
-            <Name>
-              {deal.name}
-            </Name>
-            <Checkbox 
-              type='checkbox'
-              onChange={(e) => {
-                toggleDeal(deal.id)
-              }}
-              checked={deal.completed}
-            />
-            </ListItemBlock>
-            <ListItemBlock>
-              <Button 
-                onClick={() => {
-                  deleteDeal(deal.id);
-                }}
-              >
-                Видалити
-              </Button>
-              <Button 
-                onClick={() => {
-                  changeTheDeal(deal.id);
-                }}
-              >
-                Редагувати
-              </Button>
-            </ListItemBlock>
-          </ListItem>
-        )) : (
-          <ListItem>
-            Немає завдань
-          </ListItem>
+            <ListItem>
+              Немає завдань
+            </ListItem>
         )}
       </List>
     </div>
