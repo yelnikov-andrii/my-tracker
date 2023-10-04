@@ -21,6 +21,12 @@ align-items: center;
 margin: 20px 0 0 0;
 `;
 
+const Data = styled.b`
+margin: 0;
+font-size: 22px;
+font-weight: 600;
+`;
+
 const Button = styled.button`
 width: 100px;
 height: 40px;
@@ -54,10 +60,11 @@ export const Main: React.FC = () => {
   const [value, onChange] = React.useState<Value>(new Date());
 
   const formatDate = (date: any) => {
-    const day = date.getDate();
+    const year = date.getFullYear();
     const month = date.getMonth() + 1;
-    return `${day < 10 ? '0' : ''}${day}.${month < 10 ? '0' : ''}${month}`;
-  };
+    const day = date.getDate();
+    return `${day < 10 ? '0' : ''}${day}.${month < 10 ? '0' : ''}${month}.${year}`;
+};
 
   return (
     <StyledMain>
@@ -70,9 +77,9 @@ export const Main: React.FC = () => {
           />
           </div>
           <ButtonBlock>
-            <div>
+            <Data>
               {`Дата: ${formatDate(value)}`}
-            </div>
+            </Data>
             <Button onClick={() => {
               dispatch(openModal())
             }}>
