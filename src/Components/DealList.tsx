@@ -43,6 +43,7 @@ justify-content: space-between;
 const Buttons = styled.div`
 display: flex;
 gap: 20px;
+flex-wrap: wrap;
 `;
 
 const Name = styled.span`
@@ -65,8 +66,8 @@ color: #fff;
 }
 
 @media (max-width: 768px) {
-  width: 80px;
-  height: 30px;
+  width: 100px;
+  height: 36px;
   font-size: 12px;
   font-weight: 400;
 }
