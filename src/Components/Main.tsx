@@ -6,9 +6,12 @@ import { MyModal } from '../UI/MyModal';
 import { Form } from './Form';
 import { DealList } from './DealList';
 import { deleteCompletedTasks } from '../store/dealSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { openModal } from '../store/modalSlice';
 import { MyCalendar } from './MyCalendar';
+import { RootState } from '../store/store';
+import { setDate } from '../store/timeSlice';
+import { formatDate } from '../helpers/formateDate';
 
 const StyledMain = styled.main`
 padding: 50px 0;
@@ -52,19 +55,13 @@ gap: 20px;
 width: 70%;
 `;
 
-type ValuePiece = Date | null;
-type Value = ValuePiece | [ValuePiece, ValuePiece];
-
 export const Main: React.FC = () => {
   const dispatch = useDispatch();
-  const [value, onChange] = React.useState<Value>(new Date());
+  const { currentDate } = useSelector((state: RootState) => state.time);
 
-  const formatDate = (date: any) => {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    return `${day < 10 ? '0' : ''}${day}.${month < 10 ? '0' : ''}${month}.${year}`;
-};
+  function changeCurrentDate(newDate: any) {
+    dispatch(setDate(newDate.toISOString()))
+  }
 
   return (
     <StyledMain>
@@ -72,13 +69,13 @@ export const Main: React.FC = () => {
         <div>
           <div>
           <MyCalendar 
-            value={value}
-            onChange={onChange}
+            value={currentDate}
+            onChange={changeCurrentDate}
           />
           </div>
           <ButtonBlock>
             <Data>
-              {`Дата: ${formatDate(value)}`}
+              {`Дата: ${formatDate(currentDate)}`}
             </Data>
             <Button onClick={() => {
               dispatch(openModal())
@@ -88,15 +85,15 @@ export const Main: React.FC = () => {
           </ButtonBlock>
           <MyModal>
             <Form 
-              date={formatDate(value)}
+              date={formatDate(currentDate)}
             />
           </MyModal>
           <DealList 
-            date={formatDate(value)}
+            date={formatDate(currentDate)}
           />
           <Block>
             <Button onClick={(e) => {
-              dispatch(deleteCompletedTasks());
+              dispatch(deleteCompletedTasks(currentDate));
             }}>
               Видалити завершені
             </Button>

@@ -3,10 +3,11 @@ import styled from 'styled-components';
 import { MySelect } from '../UI/MySelect';
 import { hours, minutes } from '../helpers/hoursAndMinutes';
 import { useDispatch, useSelector } from 'react-redux';
-import { addDeal, changeTheDeal, selectDealIdToChange } from '../store/dealSlice';
+import { addDeal, addDealAfterThis, addDealBeforeThis, changeDealName, changeTheDeal, selectDealIdToAddAfterThis, selectDealIdToAddBeforeThis, selectDealIdToChange } from '../store/dealSlice';
 import { closeModal } from '../store/modalSlice';
 import { setFinishHour, setFinishMinutes, setStartHour, setStartMinutes } from '../store/timeSlice';
 import { changeTimeAfterAddingAdeal } from '../helpers/changeTimeAfterAdd';
+import { RootState } from '../store/store';
 
 const StyledForm = styled.div`
 width: 100%;
@@ -51,19 +52,18 @@ color: #fff;
 `;
 
 export const Form: React.FC <any> = ({ date }) => {
-  const [nameOfTheTask, setNameOfTheTask] = React.useState('');
-  const { deals, dealIdToChange } = useSelector((state: any) => state.deal);
+  const { deals, dealIdToChange, dealName, dealIdToAddAfterThis, dealIdToAddBeforeThis } = useSelector((state: RootState) => state.deal);
   const { startHour, startMinutes, finishHour, finishMinutes } = useSelector((state: any) => state.time);
   
   const dispatch = useDispatch();
 
   function addDealHandler() {
-    if (!nameOfTheTask || !startHour || !startMinutes || !finishHour || !finishMinutes) {
+    if (!dealName || !startHour || !startMinutes || !finishHour || !finishMinutes) {
       return;
     }
 
     const deal = {
-      name: nameOfTheTask,
+      name: dealName,
       start: `${startHour}:${startMinutes}`,
       finish: `${finishHour}:${finishMinutes}`,
       completed: false,
@@ -71,27 +71,46 @@ export const Form: React.FC <any> = ({ date }) => {
       id: Date.now()
     };
 
+    if (dealIdToAddAfterThis) {
+      dispatch(addDealAfterThis(deal));
+      dispatch(changeDealName(''));
+      changeTimeAfterAddingAdeal(startHour, finishHour, finishMinutes, dispatch);
+      dispatch(closeModal());
+      dispatch(selectDealIdToAddAfterThis(null))
+      return;
+    }
+
+    if (dealIdToAddBeforeThis) {
+      dispatch(addDealBeforeThis(deal));
+      dispatch(changeDealName(''));
+      changeTimeAfterAddingAdeal(startHour, finishHour, finishMinutes, dispatch);
+      dispatch(closeModal());
+      dispatch(selectDealIdToAddBeforeThis(null));
+      return;
+    }
+
     dispatch(addDeal(deal));
-    setNameOfTheTask('');
+    dispatch(changeDealName(''));
     changeTimeAfterAddingAdeal(startHour, finishHour, finishMinutes, dispatch);
     dispatch(closeModal());
   }
 
-  function changeTheDealHandler(dealId: number) {
+  function changeTheDealHandler(dealId: number | null) {
     const foundDeal = deals.find((deal: any) => deal.id === dealId);
 
-    if (!nameOfTheTask || !startHour || !startMinutes || !finishHour || !finishMinutes || !foundDeal) {
+    if (!dealName || !startHour || !startMinutes || !finishHour || !finishMinutes || !foundDeal) {
       return;
     }
 
     const newDeal = {
-      name: nameOfTheTask,
+      name: dealName,
       start: `${startHour}:${startMinutes}`,
       finish: `${finishHour}:${finishMinutes}`,
+      date: foundDeal.date,
     };
 
     dispatch(changeTheDeal(newDeal));
-    setNameOfTheTask('');
+    dispatch(changeDealName(''));
     dispatch(selectDealIdToChange(null));
     dispatch(closeModal());
   }
@@ -147,9 +166,9 @@ export const Form: React.FC <any> = ({ date }) => {
       </Block>
       <Block>
         <MyInput 
-          value={nameOfTheTask}
+          value={dealName}
           onChange={(e) => {
-            setNameOfTheTask(e.target.value)
+            dispatch(changeDealName(e.target.value))
           }}
         />
       </Block>

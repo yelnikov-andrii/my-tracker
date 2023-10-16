@@ -5,6 +5,7 @@ export interface TimeState {
   startMinutes: string;
   finishHour: string;
   finishMinutes: string;
+  currentDate: any;
 }
 
 const initialState: TimeState = {
@@ -12,27 +13,31 @@ const initialState: TimeState = {
   startMinutes: '00',
   finishHour: '00',
   finishMinutes: '00',
+  currentDate: new Date().toISOString(),
 }
 
-export const timeSlice: any = createSlice({
+export const timeSlice = createSlice({
   name: 'time',
   initialState,
   reducers: {
-    setStartHour: (state: any, action: any) => {
+    setStartHour: (state: TimeState, action) => {
       state.startHour = action.payload;
     },
-    setStartMinutes: (state: any, action: any) => {
+    setStartMinutes: (state: TimeState, action) => {
       state.startMinutes = action.payload;
     },
-    setFinishHour: (state: any, action: any) => {
+    setFinishHour: (state: TimeState, action) => {
       state.finishHour = action.payload;
     },
-    setFinishMinutes: (state: any, action: any) => {
+    setFinishMinutes: (state: TimeState, action) => {
       state.finishMinutes = action.payload;
+    },
+    setDate: (state: TimeState, action) => {
+      state.currentDate = action.payload;
     }
   },
 });
 
-export const { setStartHour, setStartMinutes, setFinishHour, setFinishMinutes } = timeSlice.actions;
+export const { setStartHour, setStartMinutes, setFinishHour, setFinishMinutes, setDate } = timeSlice.actions;
 
 export default timeSlice.reducer;

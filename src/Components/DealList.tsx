@@ -1,9 +1,10 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { removeDeal, selectDealIdToChange, updateDeal } from '../store/dealSlice';
+import { removeDeal, selectDealIdToAddAfterThis, selectDealIdToAddBeforeThis, selectDealIdToChange, updateDeal } from '../store/dealSlice';
 import { openModal } from '../store/modalSlice';
 import { changeTime } from '../helpers/changeTime';
+import { RootState } from '../store/store';
 
 const List = styled.ul<any>`
 margin: 0;
@@ -30,11 +31,18 @@ flex-direction: column;
 text-decoration: ${props => props.completed === 'true' ? 'line-through' : 'none'};
 flex-wrap: wrap;
 gap: 10px;
+border: 1px solid teal;
+padding: 5px 10px;
 `;
 
 const ListItemBlock = styled.div`
 display: flex;
 justify-content: space-between;
+`;
+
+const Buttons = styled.div`
+display: flex;
+gap: 20px;
 `;
 
 const Name = styled.span`
@@ -71,7 +79,7 @@ color: teal;
 `;
 
 export const DealList: React.FC<any> = ({ date }) => {
-  const { deals } = useSelector((state: any) => state.deal);
+  const { deals } = useSelector((state: RootState) => state.deal);
   const dispatch = useDispatch();
 
   function toggleDeal(dealId: number) {
@@ -82,10 +90,20 @@ export const DealList: React.FC<any> = ({ date }) => {
     dispatch(removeDeal(dealId));
   }
 
-  function changeTheDeal(dealId: number) {
+  function changeTheDeal(deal: any) {
     dispatch(openModal());
-    dispatch(selectDealIdToChange(dealId));
-    changeTime(deals, dealId, dispatch);
+    dispatch(selectDealIdToChange(deal));
+    changeTime(deals, deal.id, dispatch);
+  }
+
+  function addDealAfter(dealId: number) {
+    dispatch(openModal());
+    dispatch(selectDealIdToAddAfterThis(dealId));
+  }
+
+  function addDealBefore(dealId: number) {
+    dispatch(openModal());
+    dispatch(selectDealIdToAddBeforeThis(dealId));
   }
 
   const filteredDeals = React.useMemo(() => {
@@ -117,20 +135,36 @@ export const DealList: React.FC<any> = ({ date }) => {
             />
             </ListItemBlock>
             <ListItemBlock>
-              <Button 
-                onClick={() => {
-                  deleteDeal(deal.id);
-                }}
-              >
-                Видалити
-              </Button>
-              <Button 
-                onClick={() => {
-                  changeTheDeal(deal.id);
-                }}
-              >
-                Редагувати
-              </Button>
+              <Buttons>
+                <Button 
+                  onClick={() => {
+                    deleteDeal(deal.id);
+                  }}
+                >
+                  Видалити
+                </Button>
+                <Button 
+                  onClick={() => {
+                    changeTheDeal(deal);
+                  }}
+                >
+                  Редагувати
+                </Button>
+                <Button 
+                  onClick={() => {
+                    addDealAfter(deal.id);
+                  }}
+                >
+                  Додати справу після цієї
+                </Button>
+                <Button 
+                  onClick={() => {
+                    addDealBefore(deal.id);
+                  }}
+                >
+                  Додати справу перед цією
+                </Button>
+              </Buttons>
             </ListItemBlock>
           </ListItem>
         )) : (
