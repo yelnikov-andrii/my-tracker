@@ -53,6 +53,10 @@ padding: 10px;
 display: flex;
 gap: 20px;
 width: 70%;
+
+@media screen and (max-width: 768px) {
+  width: 100%;
+}
 `;
 
 export const Main: React.FC = () => {

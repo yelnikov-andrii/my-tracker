@@ -5,6 +5,7 @@ import { removeDeal, selectDealIdToAddAfterThis, selectDealIdToAddBeforeThis, se
 import { openModal } from '../store/modalSlice';
 import { changeTime } from '../helpers/changeTime';
 import { RootState } from '../store/store';
+import { MyDropdown } from '../UI/MyDropdown';
 
 const List = styled.ul<any>`
 margin: 0;
@@ -136,6 +137,9 @@ export const DealList: React.FC<any> = ({ date }) => {
             />
             </ListItemBlock>
             <ListItemBlock>
+              <MyDropdown
+                butttonContent="Вибрати опцію"
+              >
               <Buttons>
                 <Button 
                   onClick={() => {
@@ -166,6 +170,7 @@ export const DealList: React.FC<any> = ({ date }) => {
                   Додати справу перед цією
                 </Button>
               </Buttons>
+              </MyDropdown>
             </ListItemBlock>
           </ListItem>
         )) : (
