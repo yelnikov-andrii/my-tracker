@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { MySelect } from '../UI/MySelect';
 import { hours, minutes } from '../helpers/hoursAndMinutes';
 import { useDispatch, useSelector } from 'react-redux';
 import { addDeal, addDealAfterThis, addDealBeforeThis, changeDealName, changeTheDeal, selectDealIdToAddAfterThis, selectDealIdToAddBeforeThis, selectDealIdToChange } from '../store/dealSlice';
@@ -8,6 +7,7 @@ import { closeModal } from '../store/modalSlice';
 import { setFinishHour, setFinishMinutes, setStartHour, setStartMinutes } from '../store/timeSlice';
 import { changeTimeAfterAddingAdeal } from '../helpers/changeTimeAfterAdd';
 import { RootState } from '../store/store';
+import { MySelect } from '../UI/MySelect';
 
 const StyledForm = styled.div`
 width: 100%;
@@ -19,6 +19,7 @@ gap: 20px;
 const Block = styled.div`
 display: flex;
 justify-content: space-between;
+align-items: center;
 `;
 
 const BlockInput = styled.div`
@@ -49,6 +50,11 @@ color: #fff;
   background: green;
   cursor: pointer;
 }
+`;
+
+const Cipher = styled.div`
+font-size: 28px;
+font-weight: 500;
 `;
 
 export const Form: React.FC <any> = ({ date }) => {
@@ -139,25 +145,25 @@ export const Form: React.FC <any> = ({ date }) => {
       </Block>
       <Block>
         <BlockInput>
-          <MySelect 
+          <MySelect
             options={hours}
             change={changeStartHour}
             value={startHour}
           />
-          <MySelect 
+          <MySelect
             options={minutes}
             change={changeStartMinutes}
             value={startMinutes}
           />
         </BlockInput>
-        <div> - </div>
+        <Cipher> - </Cipher>
         <BlockInput>
         <MySelect 
             options={hours}
             change={changeFinishHour}
             value={finishHour}
           />
-          <MySelect 
+          <MySelect
             options={minutes}
             change={changeFinishMinutes}
             value={finishMinutes}

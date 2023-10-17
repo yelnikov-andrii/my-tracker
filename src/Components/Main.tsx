@@ -112,7 +112,6 @@ export const Main: React.FC = () => {
           <Block>
             <Button onClick={(e) => {
               if (deals.find(deal => (deal.date === formatDate(currentDate)) && deal.completed === true)) {
-                console.log('deal was found')
                 setReadyToDelete(true);
               } else {
                 return;

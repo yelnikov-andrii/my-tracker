@@ -14,7 +14,7 @@ const SelectButton = styled.div`
 `;
 
 const DropdownContent = styled.div<any>`
-  display: ${props => (props.isOpen ? 'block' : 'none')};
+  display: ${props => (props.isopen ? 'block' : 'none')};
   background-color: white;
   border-radius: 8px;
   margin-top: 15px;
@@ -53,7 +53,7 @@ export const MyDropdown: React.FC <any> = ({ butttonContent, children }) => {
       </SelectButton>
       {isOpen && (
         <DropdownContent 
-          isOpen={isOpen}
+          isopen={isOpen === true ? 'true' : ''}
         >
           {children}
         </DropdownContent>
