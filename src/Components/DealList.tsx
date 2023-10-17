@@ -2,10 +2,10 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { removeDeal, selectDealIdToAddAfterThis, selectDealIdToAddBeforeThis, selectDealIdToChange, updateDeal } from '../store/dealSlice';
-import { openModal } from '../store/modalSlice';
 import { changeTime } from '../helpers/changeTime';
 import { RootState } from '../store/store';
 import { MyDropdown } from '../UI/MyDropdown';
+import { openModal } from '../store/modalSlice';
 
 const List = styled.ul<any>`
 margin: 0;
