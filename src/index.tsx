@@ -23,9 +23,9 @@ const theme = createTheme({
 ReactDOM.render(
       <ThemeProvider theme={theme}>
         <Provider store={store}>
-      <HashRouter>
-        <App />
-      </HashRouter>
-    </Provider>
+        <HashRouter>
+          <App />
+        </HashRouter>
+      </Provider>
       </ThemeProvider>, document.getElementById('root')
 );
