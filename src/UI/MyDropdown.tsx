@@ -1,24 +1,5 @@
+import { Box, Button } from '@mui/material';
 import React from 'react';
-import styled from 'styled-components';
-
-const StyledSelect = styled.div`
-  border-radius: 8px;
-  padding: 3px 6px;
-`;
-
-const SelectButton = styled.div`
-  cursor: pointer;
-  color: teal;
-  font-size: 14px;
-  border-bottom: 1px solid teal;
-`;
-
-const DropdownContent = styled.div<any>`
-  display: ${props => (props.isopen ? 'block' : 'none')};
-  background-color: white;
-  border-radius: 8px;
-  margin-top: 15px;
-`;
 
 export const MyDropdown: React.FC <any> = ({ butttonContent, children }) => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -43,21 +24,25 @@ export const MyDropdown: React.FC <any> = ({ butttonContent, children }) => {
   }, []);
 
   return (
-    <StyledSelect 
+    <Box 
       ref={dropdownRef}
+      borderRadius={2}
+      p={2}
     >
-      <SelectButton  
+      <Button  
         onClick={toggleDropdown}
       >
         {butttonContent}
-      </SelectButton>
+      </Button>
       {isOpen && (
-        <DropdownContent 
-          isopen={isOpen === true ? 'true' : ''}
+        <Box 
+          style={{
+            display: isOpen ? 'block' : 'none',
+          }}
         >
           {children}
-        </DropdownContent>
+        </Box>
       )}
-    </StyledSelect>
+    </Box>
   );
 };
