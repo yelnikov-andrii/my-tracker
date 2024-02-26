@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
-import { Header } from './Components/Header';
-import { Main } from './Components/Main';
+import { Header } from './Components/Header/Header';
+import { Main } from './Components/Main/Main';
 import { useDispatch } from 'react-redux';
 import { getDealsFromStorage } from './store/dealSlice';
 import { Routes, Route } from 'react-router-dom';
-import { DealsWithoutTime } from './Components/DealsWithoutTime';
+import { DealsWithoutTime } from './Components/DealsWithoutTime/DealsWithoutTime';
 
 function App() {
   const dispatch = useDispatch();
