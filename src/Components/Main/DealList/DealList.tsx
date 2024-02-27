@@ -57,7 +57,8 @@ export const DealList: React.FC<any> = ({ date }) => {
               border: `1px solid ${theme.palette.primary.main}`,
               fontWeight: '500',
               fontSize: '18px',
-              alignItems: 'flex-start'
+              alignItems: 'flex-start',
+              padding: '4px'
             }}
           >
             <Box display="flex" justifyContent="space-between" width="100%" alignItems="center">
@@ -70,36 +71,54 @@ export const DealList: React.FC<any> = ({ date }) => {
                 checked={deal.completed}
               />
             </Box>
-            <div>
               <MyDropdown butttonContent="Вибрати опцію">
-                <div style={{ display: 'flex', gap: '8px' }}>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   <Button
                     variant="contained"
                     onClick={() => deleteDeal(deal.id)}
+                    sx={{
+                      '@media (max-width: 425px)': {
+                        fontSize: '14px'
+                      },
+                    }}
                   >
                     Видалити
                   </Button>
                   <Button
                     variant="contained"
                     onClick={() => changeTheDeal(deal)}
+                    sx={{
+                      '@media (max-width: 425px)': {
+                        fontSize: '14px'
+                      },
+                    }}
                   >
                     Редагувати
                   </Button>
                   <Button
                     variant="contained"
                     onClick={() => addDealAfter(deal.id)}
+                    sx={{
+                      '@media (max-width: 425px)': {
+                        fontSize: '14px'
+                      },
+                    }}
                   >
                     Додати справу після цієї
                   </Button>
                   <Button
                     variant="contained"
                     onClick={() => addDealBefore(deal.id)}
+                    sx={{
+                      '@media (max-width: 425px)': {
+                        fontSize: '14px'
+                      },
+                    }}
                   >
                     Додати справу перед цією
                   </Button>
                 </div>
               </MyDropdown>
-            </div>
           </ListItem>
         )) : (
           <ListItem>Немає завдань</ListItem>

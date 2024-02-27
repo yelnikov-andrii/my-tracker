@@ -27,7 +27,7 @@ export const MyDropdown: React.FC <any> = ({ butttonContent, children }) => {
     <Box 
       ref={dropdownRef}
       borderRadius={2}
-      p={2}
+      p={1}
     >
       <Button  
         onClick={toggleDropdown}
