@@ -3,14 +3,15 @@ import React from 'react';
 import { Header } from './Components/Header/Header';
 import { Main } from './Components/Main/Main';
 import { useDispatch } from 'react-redux';
-import { getDealsFromStorage } from './store/dealSlice';
+import { getTodosFromStorage } from './store/todosSlice';
 import { Routes, Route } from 'react-router-dom';
-import { DealsWithoutTime } from './Components/DealsWithoutTime/DealsWithoutTime';
+import { TodosWithoutTime } from './Components/TodosWithoutTime/TodosWithoutTime';
 
 function App() {
   const dispatch = useDispatch();
+
   React.useEffect(() => {
-    dispatch(getDealsFromStorage());
+    dispatch(getTodosFromStorage());
   }, []);
 
   return (
@@ -19,7 +20,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Main />}>
         </Route>
-        <Route path='/deals-without-timeline' element={<DealsWithoutTime />}>
+        <Route path='/todos-without-timeline' element={<TodosWithoutTime />}>
         </Route>
       </Routes>
     </div>

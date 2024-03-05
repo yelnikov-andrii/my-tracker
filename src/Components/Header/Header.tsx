@@ -41,7 +41,7 @@ const classes = useStyles();
       <AppBar position="static" className={classes.header}>
         <Container maxWidth="sm">
           <Toolbar className={classes.toolbar}>
-            <Link to="/deals-without-timeline" color="white" className={classes.link}>
+            <Link to="/todos-without-timeline" color="white" className={classes.link}>
               Справи без ліміту
             </Link>
             <Link to="/" color="white" className={classes.link}>

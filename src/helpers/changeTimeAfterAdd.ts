@@ -1,6 +1,6 @@
 import { setFinishHour, setFinishMinutes, setStartHour, setStartMinutes } from "../store/timeSlice";
 
-export const changeTimeAfterAddingAdeal = (startHour: string, finishHour: string, finishMinutes: string, dispatch: any) => {
+export const changeTimeAfterAddingTodo = (finishHour: string, finishMinutes: string, dispatch: any) => {
     dispatch(setStartHour(finishHour));
     dispatch(setFinishHour(finishHour));
     dispatch(setStartMinutes(finishMinutes));

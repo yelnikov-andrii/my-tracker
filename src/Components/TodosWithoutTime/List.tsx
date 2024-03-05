@@ -1,19 +1,21 @@
 import { Box, Button, Checkbox, List, ListItem, Paper, Typography, useTheme } from '@mui/material';
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { removeDealWithout, updateDealWithout } from '../../store/dealSlice';
+import { RootState } from '../../store/store';
+import { updateTodoWithout } from '../../store/todosSlice';
+// import { removeDealWithout, updateDealWithout } from '../../store/dealSlice';
 
 export const DealList = () => {
   const theme = useTheme();
-  const { dealsWithoutTimeline } = useSelector((state: any) => state.deal);
+  const { todosWIthoutTimeline } = useSelector((state: RootState) => state.todos);
   const dispatch = useDispatch();
 
-  function toggleDeal(dealId: number) {
-    dispatch(updateDealWithout(dealId));
+  function toggleTodo(todoId: number) {
+    dispatch(updateTodoWithout(todoId));
   }
 
   function deleteDeal(dealId: number) {
-    dispatch(removeDealWithout(dealId));
+    // dispatch(removeDealWithout(dealId));
   }
 
   return (
@@ -23,13 +25,13 @@ export const DealList = () => {
     </Typography>
     <Paper variant="outlined">
       <List>
-        {dealsWithoutTimeline.length > 0 ? dealsWithoutTimeline.map((deal: any) => (
+        {todosWIthoutTimeline.length > 0 ? todosWIthoutTimeline.map((todo: any) => (
           <ListItem
-            key={deal.id}
+            key={todo.id}
             style={{
               display: 'flex',
               flexDirection: 'column',
-              textDecoration: deal.completed ? 'line-through' : 'none',
+              textDecoration: todo.completed ? 'line-through' : 'none',
               border: `1px solid ${theme.palette.primary.main}`,
               fontWeight: '500',
               fontSize: '18px',
@@ -38,19 +40,19 @@ export const DealList = () => {
           >
             <Box display="flex" justifyContent="space-between" width="100%" alignItems="center">
             <div>
-              {deal.name}
+              {todo.name}
             </div>
             <Checkbox
               onChange={(e) => {
-                toggleDeal(deal.id)
+                toggleTodo(todo.id)
               }}
-              checked={deal.completed}
+              checked={todo.completed}
             />
             </Box>
             <Box>
               <Button 
                 onClick={() => {
-                  deleteDeal(deal.id);
+                  deleteDeal(todo.id);
                 }}
                 variant='contained'
               >

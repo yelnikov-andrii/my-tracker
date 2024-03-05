@@ -1,12 +1,10 @@
 import React from 'react';
-import { openModal } from '../../../store/modalSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { formatDate } from '../../../helpers/formateDate';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
-export const ButtonBlock = () => {
-  const dispatch = useDispatch();
+export const DateBlock = () => {
   const { currentDate } = useSelector((state: RootState) => state.time);
   
   return (
@@ -14,14 +12,6 @@ export const ButtonBlock = () => {
       <Typography fontWeight="bold" fontSize={22}>
         {`Дата: ${formatDate(currentDate)}`}
       </Typography>
-      <Button 
-        onClick={() => {
-          dispatch(openModal());
-        }}
-        variant="contained"
-      >
-        Додати справу
-      </Button>
     </Box>
   )
 }

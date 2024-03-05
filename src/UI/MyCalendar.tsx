@@ -7,7 +7,8 @@ export const MyCalendar: React.FC<any> = ({ value, onChange }) => {
     <div>
       <Calendar 
         onChange={onChange} 
-        value={value} 
+        value={value}
+        locale='ua-UA'
       />
     </div>
   )
