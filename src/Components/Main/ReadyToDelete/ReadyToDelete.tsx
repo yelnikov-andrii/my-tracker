@@ -1,21 +1,20 @@
 import React, { Dispatch, SetStateAction } from 'react';
-import { MyModal1 } from '../../../UI/MyModal1';
-import { deleteCompletedTasks } from '../../../store/dealSlice';
+import { MyModal } from '../../../UI/MyModal';
+import { deleteCompletedTasks } from '../../../store/todosSlice';
 import { Box, Button, Typography } from '@mui/material';
-import { RootState } from '../../../store/store';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 interface Props {
   readyToDelete: boolean;
   setReadyToDelete: Dispatch<SetStateAction<boolean>>;
+  date: string;
 }
 
-export const ReadyToDelete: React.FC <Props> = ({ readyToDelete, setReadyToDelete }) => {
+export const ReadyToDelete: React.FC <Props> = ({ readyToDelete, setReadyToDelete, date }) => {
   const dispatch = useDispatch();
-  const { currentDate } = useSelector((state: RootState) => state.time);
 
   return (
-    <MyModal1
+    <MyModal
       isOpen={readyToDelete}
       setIsOpen={setReadyToDelete}
     >
@@ -26,7 +25,7 @@ export const ReadyToDelete: React.FC <Props> = ({ readyToDelete, setReadyToDelet
         <Button
           variant="contained"
           onClick={() => {
-            dispatch(deleteCompletedTasks(currentDate));
+            dispatch(deleteCompletedTasks(date));
             setReadyToDelete(false);
           }}
         >
@@ -41,6 +40,6 @@ export const ReadyToDelete: React.FC <Props> = ({ readyToDelete, setReadyToDelet
           Ні
         </Button>
       </Box>
-    </MyModal1>
+    </MyModal>
   )
 }

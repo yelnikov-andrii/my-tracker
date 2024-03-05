@@ -1,79 +1,86 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { hours, minutes } from '../../../helpers/hoursAndMinutes';
 import { useDispatch, useSelector } from 'react-redux';
-import { addDeal, addDealAfterThis, addDealBeforeThis, changeDealName, changeTheDeal, selectDealIdToAddAfterThis, selectDealIdToAddBeforeThis } from '../../../store/dealSlice';
-import { closeModal } from '../../../store/modalSlice';
+// import { addDeal, changeDealName,  } from '../../../store/todosSlice';
+// import { addDeal, addDealAfterThis, addDealBeforeThis, changeDealName, changeTheDeal, selectDealIdToAddAfterThis, selectDealIdToAddBeforeThis, selectDealIdToChange } from '../../../store/dealSlice';
 import { setFinishHour, setFinishMinutes, setStartHour, setStartMinutes } from '../../../store/timeSlice';
-import { changeTimeAfterAddingAdeal } from '../../../helpers/changeTimeAfterAdd';
+import { changeTimeAfterAddingTodo } from '../../../helpers/changeTimeAfterAdd';
 import { RootState } from '../../../store/store';
 import { MySelect } from '../../../UI/MySelect';
 import { Box, Button, Typography, OutlinedInput } from '@mui/material';
+import { addTodo, addTodoAfterThis, addTodoBeforeThis, changeTheDeal, changeTodoName, selectTodoToAddAfterThis, selectTodoToAddBeforeThis, selectTodoToChange } from '../../../store/todosSlice';
 
 interface Props {
   date: string;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export const Form: React.FC <Props> = ({ date }) => {
-  const { deals, dealIdToChange, dealName, dealIdToAddAfterThis, dealIdToAddBeforeThis } = useSelector((state: RootState) => state.deal);
+export const Form: React.FC <Props> = ({ date, setIsOpen }) => {
+  const { days, todoName, todoToChange, todoToAddBeforeThis, todoToAddAfterThis } = useSelector((state: RootState) => state.todos);
   const { startHour, startMinutes, finishHour, finishMinutes } = useSelector((state: any) => state.time);
   
   const dispatch = useDispatch();
+  console.log(days);
 
-  function addDealHandler() {
-    if (!dealName || !startHour || !startMinutes || !finishHour || !finishMinutes) {
+  function addTodoHandler() {
+    if (!todoName || !startHour || !startMinutes || !finishHour || !finishMinutes) {
       return;
     }
 
-    const deal = {
-      name: dealName,
+    const todo = {
+      name: todoName,
       start: `${startHour}:${startMinutes}`,
       finish: `${finishHour}:${finishMinutes}`,
       completed: false,
-      date: date,
       id: Date.now()
     };
 
-    if (dealIdToAddAfterThis) {
-      dispatch(addDealAfterThis(deal));
-      dispatch(changeDealName(''));
-      changeTimeAfterAddingAdeal(startHour, finishHour, finishMinutes, dispatch);
-      dispatch(closeModal());
-      dispatch(selectDealIdToAddAfterThis(null))
+    if (todoToAddAfterThis) {
+      dispatch(addTodoAfterThis({ date: date, todo: todo, repeated: false }));
+      dispatch(changeTodoName(''));
+      changeTimeAfterAddingTodo(finishHour, finishMinutes, dispatch);
+      setIsOpen(false);
+      dispatch(selectTodoToAddAfterThis(null));
       return;
     }
 
-    if (dealIdToAddBeforeThis) {
-      dispatch(addDealBeforeThis(deal));
-      dispatch(changeDealName(''));
-      changeTimeAfterAddingAdeal(startHour, finishHour, finishMinutes, dispatch);
-      dispatch(closeModal());
-      dispatch(selectDealIdToAddBeforeThis(null));
+    if (todoToAddBeforeThis) {
+      dispatch(addTodoBeforeThis({ date: date, todo: todo, repeated: false }));
+      dispatch(changeTodoName(''));
+      changeTimeAfterAddingTodo(finishHour, finishMinutes, dispatch);
+      setIsOpen(false);
+      dispatch(selectTodoToAddBeforeThis(null));
       return;
     }
 
-    dispatch(addDeal(deal));
-    dispatch(changeDealName(''));
-    changeTimeAfterAddingAdeal(startHour, finishHour, finishMinutes, dispatch);
-    dispatch(closeModal());
+    dispatch(addTodo({ date: date, todo: todo, repeated: false }));
+    dispatch(changeTodoName(''));
+    changeTimeAfterAddingTodo(finishHour, finishMinutes, dispatch);
+    setIsOpen(false);
   }
 
-  function changeTheDealHandler(dealId: number | null) {
-    const foundDeal = deals.find((deal: any) => deal.id === dealId);
+  function changeTheTodoHandler(todoId: any) {
+    const foundDay = days.find(day => day.date === date);
+    
+    if (foundDay) {
+      const foundTodo = foundDay.todos.find((todo: any) => todo.id === todoId);
 
-    if (!dealName || !startHour || !startMinutes || !finishHour || !finishMinutes || !foundDeal) {
-      return;
+      if (!todoName || !startHour || !startMinutes || !finishHour || !finishMinutes || !foundTodo) {
+        dispatch(selectTodoToChange(null));
+        return;
+      }
+      
+      const newTodo = {
+        name: todoName,
+        start: `${startHour}:${startMinutes}`,
+        finish: `${finishHour}:${finishMinutes}`,
+      };
+  
+      dispatch(changeTheDeal({ todo: newTodo, date: date }));
+      dispatch(changeTodoName(''));
+      dispatch(selectTodoToChange(null));
+      setIsOpen(false);
     }
-
-    const newDeal = {
-      name: dealName,
-      start: `${startHour}:${startMinutes}`,
-      finish: `${finishHour}:${finishMinutes}`,
-      date: foundDeal.date,
-    };
-
-    dispatch(changeTheDeal(newDeal));
-    dispatch(changeDealName(''));
-    dispatch(closeModal());
   }
 
   function changeStartHour(value: any) {
@@ -159,21 +166,21 @@ export const Form: React.FC <Props> = ({ date }) => {
       <Box display="flex" justifyContent="space-between" gap={1} marginBottom={2}>
         <OutlinedInput
           fullWidth
-          value={dealName}
-          onChange={(e) => dispatch(changeDealName(e.target.value))}
+          value={todoName}
+          onChange={(e) => dispatch(changeTodoName(e.target.value))}
         />
       </Box>
       <Box display="flex" justifyContent="center" gap={1}>
-        {!dealIdToChange ? (
+        {!todoToChange ? (
           <Button 
-          onClick={addDealHandler}
+          onClick={addTodoHandler}
           variant="contained"
         >
           Додати справу
         </Button>
         ) : (
         <Button 
-          onClick={() => changeTheDealHandler(dealIdToChange)}
+          onClick={() => changeTheTodoHandler(todoToChange)}
           variant="contained"
         >
           Редагувати справу

@@ -11,7 +11,7 @@ export const MySelect: React.FC <any> = ({ options, change, value }) => {
             }}
             >
             {options.map((option: any) => (
-              <MenuItem value={option}>
+              <MenuItem value={option} key={option}>
                 {option}
               </MenuItem>
             ))}

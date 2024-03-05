@@ -1,12 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import dealSlice from './dealSlice';
-import modalSlice from './modalSlice';
 import timeSlice from './timeSlice';
+import todosSlice from './todosSlice';
 
 export const store = configureStore({
   reducer: {
-    deal: dealSlice,
-    modal: modalSlice,
+    todos: todosSlice,
     time: timeSlice,
   },
 });

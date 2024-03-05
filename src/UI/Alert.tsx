@@ -1,14 +1,12 @@
 import { Box } from '@mui/material';
-import React, { Dispatch, SetStateAction } from 'react'
+import React from 'react';
 
 interface Props {
   children: React.ReactNode;
   isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export const MyModal: React.FC <Props> = ({ children, isOpen, setIsOpen }) => {
-
+export const Alert: React.FC <Props> = ({ children, isOpen }) => {
   return (
     <Box
       position="fixed"
@@ -24,7 +22,6 @@ export const MyModal: React.FC <Props> = ({ children, isOpen, setIsOpen }) => {
       }}
       zIndex={1}
       onClick={() => {
-        setIsOpen(false);
       }}
     >
       <Box 
@@ -44,5 +41,5 @@ export const MyModal: React.FC <Props> = ({ children, isOpen, setIsOpen }) => {
         {children}
       </Box>
     </Box>
-  );
+  )
 }

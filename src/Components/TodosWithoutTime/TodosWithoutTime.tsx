@@ -1,15 +1,13 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
-import { MyModal } from '../../UI/MyModal';
 import { MyContainer } from '../../UI/Container';
-import { openModal } from '../../store/modalSlice';
 import { Box, Button, Typography } from '@mui/material';
 import { Form } from './Form';
 import { DealList } from './List';
+import { MyModal } from '../../UI/MyModal';
 
 
-export const DealsWithoutTime = () => {
-  const dispatch = useDispatch();
+export const TodosWithoutTime = () => {
+  const [isOpen, setIsOpen] = React.useState(false);
 
   return (
     <Box paddingTop={6}>
@@ -17,13 +15,18 @@ export const DealsWithoutTime = () => {
       <Typography variant='h3'>
         Справи без ліміту
       </Typography>
-      <MyModal>
-        <Form />
+      <MyModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      >
+        <Form 
+          setIsOpen={setIsOpen}
+        />
       </MyModal>
       <div>
         <Button 
           onClick={() => {
-            dispatch(openModal());
+            setIsOpen(true)
           }}
           variant='contained'
         >

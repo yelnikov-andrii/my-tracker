@@ -1,59 +1,92 @@
-import React from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { Dispatch, SetStateAction } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { removeDeal, selectDealIdToAddAfterThis, selectDealIdToAddBeforeThis, selectDealIdToChange, updateDeal } from '../../../store/dealSlice';
 import { changeTime } from '../../../helpers/changeTime';
 import { RootState } from '../../../store/store';
 import { MyDropdown } from '../../../UI/MyDropdown';
-import { openModal } from '../../../store/modalSlice';
 import { Box, Button, Checkbox, List, ListItem, Paper, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { addDay, removeTodo, selectTodoToAddAfterThis, selectTodoToAddBeforeThis, selectTodoToChange, updateTodo } from '../../../store/todosSlice';
+import { TodoInterface } from '../../../types/todos';
 
-export const DealList: React.FC<any> = ({ date }) => {
-  const { deals } = useSelector((state: RootState) => state.deal);
+interface Props {
+  date: string;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+export const DealList: React.FC<Props> = ({ date, setIsOpen }) => {
+  const { days, todosRepeated } = useSelector((state: RootState) => state.todos);
+  const { currentDate } = useSelector((state: RootState) => state.time);
   const dispatch = useDispatch();
 
   const theme = useTheme();
+  const newDate = new Date(currentDate);
+  const daysOfWeek = ['sun', 'mon', 'tue', 'wen', 'thu', 'fri', 'sat'];
+  const thisWeekDay = daysOfWeek[newDate.getDay()];
+  console.log(thisWeekDay, 'weekday');
+  const foundTodoRepeated = todosRepeated.find(todoRepeated => todoRepeated.day === thisWeekDay);
+  console.log(todosRepeated, 'todos repeated')
+  console.log(foundTodoRepeated, 'foundtodorepeated')
 
-  function toggleDeal(dealId: number) {
-    dispatch(updateDeal(dealId));
+  React.useEffect(() => {
+    const foundDay = days.find(day => day.date === date);
+    if (!foundDay && foundTodoRepeated && foundTodoRepeated.todos.length > 0) {
+      const remasteredTodos = foundTodoRepeated.todos.map((todo: any) => {
+        return {...todo, id: Date.now()};
+      });
+
+      const day = {
+        date: date,
+        repeated: true,
+        todos: remasteredTodos,
+      };
+
+      dispatch(addDay(day));
+    }
+  }, [days, date, todosRepeated]);
+
+  function toggleTodo(todoId: number) {
+    dispatch(updateTodo({ id: todoId, date: date }));
   }
 
-  function deleteDeal(dealId: number) {
-    dispatch(removeDeal(dealId));
+  function deleteTodo(todoId: number) {
+    dispatch(removeTodo({ id: todoId, date: date }));
   }
 
-  function changeTheDeal(deal: any) {
-    dispatch(openModal());
-    dispatch(selectDealIdToChange(deal));
-    changeTime(deals, deal.id, dispatch);
+  function changeTheTodo(todo: TodoInterface) {
+    setIsOpen(true);
+    dispatch(selectTodoToChange({ id: todo.id, date: date }));
+    changeTime(days, todo.id, dispatch, date);
   }
 
-  function addDealAfter(dealId: number) {
-    dispatch(openModal());
-    dispatch(selectDealIdToAddAfterThis(dealId));
+  function addTodoAfter(todoId: number) {
+    setIsOpen(true);
+    dispatch(selectTodoToAddAfterThis(todoId));
   }
 
-  function addDealBefore(dealId: number) {
-    dispatch(openModal());
-    dispatch(selectDealIdToAddBeforeThis(dealId));
+  function addTodoBefore(todoId: any) {
+    setIsOpen(true);
+    dispatch(selectTodoToAddBeforeThis(todoId));
   }
 
-  const filteredDeals = React.useMemo(() => {
-    return deals.filter((deal: any) => deal.date === date);
-  }, [date, deals]);
+  const foundTodo = React.useMemo(() => {
+    const foundTodo = days.find(day => day.date === date);
+    if (foundTodo) {
+      return foundTodo;
+    }
+    
+  }, [date, days]);
 
   return (
     <React.Fragment>
     <Typography variant='h6'>Список завдань</Typography>
-    <Paper variant="outlined">
       <List>
-        {filteredDeals.length > 0 ? filteredDeals.map((deal) => (
+        {foundTodo && foundTodo.todos.length > 0 ? foundTodo.todos.map((todo: any) => (
           <ListItem
-            key={deal.id}
+            key={todo.id}
             style={{
               display: 'flex',
               flexDirection: 'column',
-              textDecoration: deal.completed ? 'line-through' : 'none',
               border: `1px solid ${theme.palette.primary.main}`,
               fontWeight: '500',
               fontSize: '18px',
@@ -61,22 +94,36 @@ export const DealList: React.FC<any> = ({ date }) => {
               padding: '4px'
             }}
           >
-            <Box display="flex" justifyContent="space-between" width="100%" alignItems="center">
-              {`${deal.start} - ${deal.finish}`}
-              <div>
-                {deal.name}
-              </div>
+            <Box 
+              display="flex" 
+              justifyContent="space-between" 
+              width="100%" 
+              alignItems="center"
+              sx={{
+                textDecoration: todo.completed ? 'line-through' : 'none',
+                opacity: todo.completed ? '0.5' : '1'
+              }}
+            >
+              {`${todo.start} - ${todo.finish}`}
+              <Box 
+                sx={{
+                  textDecoration: todo.completed ? 'line-through' : 'none',
+                }}
+              >
+                {todo.name}
+              </Box>
               <Checkbox
-                onChange={() => toggleDeal(deal.id)}
-                checked={deal.completed}
+                onChange={() => toggleTodo(todo.id)}
+                checked={todo.completed}
               />
-            </Box>
+            </Box >
               <MyDropdown butttonContent="Вибрати опцію">
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', textDecoration: 'none' }}>
                   <Button
                     variant="contained"
-                    onClick={() => deleteDeal(deal.id)}
+                    onClick={() => deleteTodo(todo.id)}
                     sx={{
+                      textDecoration: 'none',
                       '@media (max-width: 425px)': {
                         fontSize: '14px'
                       },
@@ -86,7 +133,7 @@ export const DealList: React.FC<any> = ({ date }) => {
                   </Button>
                   <Button
                     variant="contained"
-                    onClick={() => changeTheDeal(deal)}
+                    onClick={() => changeTheTodo(todo)}
                     sx={{
                       '@media (max-width: 425px)': {
                         fontSize: '14px'
@@ -97,7 +144,7 @@ export const DealList: React.FC<any> = ({ date }) => {
                   </Button>
                   <Button
                     variant="contained"
-                    onClick={() => addDealAfter(deal.id)}
+                    onClick={() => addTodoAfter(todo.id)}
                     sx={{
                       '@media (max-width: 425px)': {
                         fontSize: '14px'
@@ -108,7 +155,7 @@ export const DealList: React.FC<any> = ({ date }) => {
                   </Button>
                   <Button
                     variant="contained"
-                    onClick={() => addDealBefore(deal.id)}
+                    onClick={() => addTodoBefore(todo.id)}
                     sx={{
                       '@media (max-width: 425px)': {
                         fontSize: '14px'
@@ -121,10 +168,11 @@ export const DealList: React.FC<any> = ({ date }) => {
               </MyDropdown>
           </ListItem>
         )) : (
-          <ListItem>Немає завдань</ListItem>
+          <Paper variant='outlined'>
+            <ListItem>Немає завдань</ListItem>
+          </Paper>
         )}
       </List>
-    </Paper>
     </React.Fragment>
   )
 }
