@@ -8,22 +8,13 @@ export interface TodoInterface {
 
 export interface DayInterface {
   date: string;
-  repeated: boolean;
   todos: TodoInterface[]
 }
 
 export interface DayWithTodoInterface {
   date: string;
   todo: TodoInterface;
-  repeated: boolean;
 }
-
-// export interface TodoInterfaceForChange {
-//   date: string;
-//   finish: string;
-//   name: string;
-//   start: string;
-// }
 
 export interface TodoWithoutTimeInterface {
   id: number;
@@ -31,22 +22,28 @@ export interface TodoWithoutTimeInterface {
   completed: boolean;
 }
 
-// export interface TodoRepeatedInt {
-//   day: string;
-//   Todos: TodoInterface[];
-// }
+export interface TodoRepeatedInterface {
+  day: string;
+  todos: TodoInterface[];
+}
 
-// export interface TodoState {
-//   Todos: TodoInterface[];
-//   TodosRepeated: TodoRepeatedInt[];
-//   TodoIdToChange: null | number;
-//   TodosWithoutTimeline: TodoWithouTime[];
-//   TodoName: string;
-//   TodoIdToAddAfterThis: null | number;
-//   TodoIdToAddBeforeThis: null | number;
-// }
+interface NewTodoInterface {
+  name: string;
+  start: string;
+  finish: string;
+}
 
-// export interface TodoIntForAdding {
-//   days: string[];
-//   Todos: TodoInterface[];
-// }
+export interface TodoToChangeInterface {
+  date: string;
+  todo: NewTodoInterface;
+}
+
+export interface TodoForUpdateInterface {
+  date: string;
+  id: number;
+}
+
+export interface DayTodosForRepeatingInterface {
+  days: string[];
+  todos: TodoInterface[];
+}

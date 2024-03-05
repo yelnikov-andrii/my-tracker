@@ -14,7 +14,7 @@ interface Props {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export const DealList: React.FC<Props> = ({ date, setIsOpen }) => {
+export const TodoList: React.FC<Props> = ({ date, setIsOpen }) => {
   const { days, todosRepeated } = useSelector((state: RootState) => state.todos);
   const { currentDate } = useSelector((state: RootState) => state.time);
   const dispatch = useDispatch();
@@ -23,15 +23,12 @@ export const DealList: React.FC<Props> = ({ date, setIsOpen }) => {
   const newDate = new Date(currentDate);
   const daysOfWeek = ['sun', 'mon', 'tue', 'wen', 'thu', 'fri', 'sat'];
   const thisWeekDay = daysOfWeek[newDate.getDay()];
-  console.log(thisWeekDay, 'weekday');
   const foundTodoRepeated = todosRepeated.find(todoRepeated => todoRepeated.day === thisWeekDay);
-  console.log(todosRepeated, 'todos repeated')
-  console.log(foundTodoRepeated, 'foundtodorepeated')
 
   React.useEffect(() => {
     const foundDay = days.find(day => day.date === date);
     if (!foundDay && foundTodoRepeated && foundTodoRepeated.todos.length > 0) {
-      const remasteredTodos = foundTodoRepeated.todos.map((todo: any) => {
+      const remasteredTodos = foundTodoRepeated.todos.map((todo: TodoInterface) => {
         return {...todo, id: Date.now()};
       });
 
@@ -64,7 +61,7 @@ export const DealList: React.FC<Props> = ({ date, setIsOpen }) => {
     dispatch(selectTodoToAddAfterThis(todoId));
   }
 
-  function addTodoBefore(todoId: any) {
+  function addTodoBefore(todoId: number) {
     setIsOpen(true);
     dispatch(selectTodoToAddBeforeThis(todoId));
   }
@@ -81,7 +78,7 @@ export const DealList: React.FC<Props> = ({ date, setIsOpen }) => {
     <React.Fragment>
     <Typography variant='h6'>Список завдань</Typography>
       <List>
-        {foundTodo && foundTodo.todos.length > 0 ? foundTodo.todos.map((todo: any) => (
+        {foundTodo && foundTodo.todos.length > 0 ? foundTodo.todos.map((todo: TodoInterface) => (
           <ListItem
             key={todo.id}
             style={{

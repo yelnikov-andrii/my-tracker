@@ -2,7 +2,7 @@
 import React from 'react'
 import { MyContainer } from '../../UI/Container';
 import { Form } from './Form/Form';
-import { DealList } from './DealList/DealList';
+import { TodoList } from './TodoList/TodoList';
 import { useDispatch, useSelector } from 'react-redux';
 import { MyCalendar } from '../../UI/MyCalendar';
 import { RootState } from '../../store/store';
@@ -22,7 +22,7 @@ export const Main: React.FC = () => {
   const [readyToDelete, setReadyToDelete] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(false);
 
-  function changeCurrentDate(newDate: any) {
+  function changeCurrentDate(newDate: Date) {
     dispatch(setDate(newDate.toISOString()))
   }
 
@@ -46,7 +46,7 @@ export const Main: React.FC = () => {
             setIsOpen={setIsOpen}
           />
         </MyModal>
-        <DealList 
+        <TodoList
           date={formatDate(currentDate)}
           setIsOpen={setIsOpen}
         />

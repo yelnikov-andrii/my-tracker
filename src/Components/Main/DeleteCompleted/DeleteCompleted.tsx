@@ -2,6 +2,7 @@ import { Box, Button } from '@mui/material';
 import React, { Dispatch, SetStateAction } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
+import { TodoInterface } from '../../../types/todos';
 
 interface Props {
   setReadyToDelete: Dispatch<SetStateAction<boolean>>;
@@ -15,7 +16,7 @@ export const DeleteCompleted: React.FC <Props> = ({ setReadyToDelete, date }) =>
   return (
     <Box>
       <Button onClick={(e) => {
-        if (foundDay && foundDay.todos.find((todo: any) => todo.completed === true)) {
+        if (foundDay && foundDay.todos.find((todo: TodoInterface) => todo.completed === true)) {
           setReadyToDelete(true);
         } else {
           return;

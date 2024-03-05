@@ -2,7 +2,7 @@ import React from 'react'
 import { MyContainer } from '../../UI/Container';
 import { Box, Button, Typography } from '@mui/material';
 import { Form } from './Form';
-import { DealList } from './List';
+import { TodoList } from './List';
 import { MyModal } from '../../UI/MyModal';
 
 
@@ -33,7 +33,7 @@ export const TodosWithoutTime = () => {
           Додати справу
         </Button>
       </div>
-      <DealList />
+      <TodoList />
       </MyContainer>
     </Box>
   )

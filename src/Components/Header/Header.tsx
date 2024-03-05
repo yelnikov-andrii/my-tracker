@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import AppBar from '@mui/material/AppBar';
 import Container from '@mui/material/Container';
-import { Toolbar } from '@mui/material';
+import { Theme, Toolbar } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
-const useStyles: any = makeStyles((theme: any) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   header: {
     backgroundColor: theme.palette.primary.main,
   },
