@@ -21,7 +21,7 @@ export const TodoList: React.FC<Props> = ({ date, setIsOpen }) => {
 
   const theme = useTheme();
   const newDate = new Date(currentDate);
-  const daysOfWeek = ['sun', 'mon', 'tue', 'wen', 'thu', 'fri', 'sat'];
+  const daysOfWeek = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
   const thisWeekDay = daysOfWeek[newDate.getDay()];
   const foundTodoRepeated = todosRepeated.find(todoRepeated => todoRepeated.day === thisWeekDay);
 

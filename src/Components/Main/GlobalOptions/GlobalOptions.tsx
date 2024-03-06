@@ -37,7 +37,7 @@ export const GlobalOptions: React.FC<Props> = ({ date }) => {
   }
 
   function handleOffRepeating() {
-    dispatch(addTodosForRepeating({days: ['mon', 'tue', 'wen', 'thu', 'fri', 'sat', 'sun'], todos: []}));
+    dispatch(addTodosForRepeating({days: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'], todos: []}));
     setIsOpen(true);
     setAlerttext('Повторювання справ вимкнено')
     hideAlert();

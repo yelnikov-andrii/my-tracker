@@ -30,7 +30,7 @@ export const WeekDays: React.FC <Props> = ({ selectedDays, setSelectedDays }) =>
         label="Вівторок"
       />
       <FormControlLabel
-        control={<Checkbox checked={selectedDays.includes('wen')} onChange={handleCheckboxChange} value="wed" />}
+        control={<Checkbox checked={selectedDays.includes('wed')} onChange={handleCheckboxChange} value="wed" />}
         label="Середа"
       />
       <FormControlLabel

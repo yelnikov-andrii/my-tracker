@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { saveTodosToLocaleStorage } from '../helpers/saveTodosToLocaleStorage';
+import { saveTodosForRepeatingInLocaleStorage, saveTodosToLocaleStorage, saveTodosWithoutTimeline } from '../helpers/saveTodosToLocaleStorage';
 import { DayInterface, DayTodosForRepeatingInterface, DayWithTodoInterface, TodoForUpdateInterface, TodoInterface, TodoRepeatedInterface, TodoToChangeInterface, TodoWithoutTimeInterface } from '../types/todos';
 
 interface StateInterface {
@@ -95,9 +95,14 @@ export const todoslice = createSlice({
     },
     getTodosFromStorage: (state: StateInterface) => {
       const todosString = localStorage.getItem('todos');
+      const todosForRepeating = localStorage.getItem('todos-for-repeating');
       state.days = [] as DayInterface[];
       if (todosString) {
         state.days = JSON.parse(todosString);
+      }
+
+      if (todosForRepeating) {
+        state.todosRepeated = JSON.parse(todosForRepeating);
       }
     },
     updateTodo: (state: StateInterface, action: PayloadAction<TodoForUpdateInterface>) => {
@@ -154,15 +159,18 @@ export const todoslice = createSlice({
     },
     addTodoWithoutTimeline: (state: StateInterface, action: PayloadAction<TodoWithoutTimeInterface>) => {
       state.todosWIthoutTimeline.push(action.payload);
+      saveTodosWithoutTimeline(state.todosWIthoutTimeline);
     },
     updateTodoWithout: (state: StateInterface, action: PayloadAction<number>) => {
       const foundTodo = state.todosWIthoutTimeline.find((todo: TodoWithoutTimeInterface) => todo.id === action.payload);
       if (foundTodo) {
         foundTodo.completed = !foundTodo.completed;
+        saveTodosWithoutTimeline(state.todosWIthoutTimeline);
       }
     },
     removeTodoWithoutTimeline: (state: StateInterface, action: PayloadAction<number>) => {
       state.todosWIthoutTimeline = state.todosWIthoutTimeline.filter((todo: TodoWithoutTimeInterface) => todo.id !== action.payload);
+      saveTodosWithoutTimeline(state.todosWIthoutTimeline);
     },
     changeTodoName: (state: StateInterface, action: PayloadAction<string>) => {
         state.todoName = action.payload;
@@ -174,10 +182,11 @@ export const todoslice = createSlice({
         }
         return obj;
       });
+      saveTodosForRepeatingInLocaleStorage(state.todosRepeated);
     },
     addDay: (state: StateInterface, action: PayloadAction<DayInterface>) => {
       state.days.push(action.payload);
-      saveTodosToLocaleStorage([...state.days]);
+      saveTodosToLocaleStorage(state.days);
     }
   },
 });
