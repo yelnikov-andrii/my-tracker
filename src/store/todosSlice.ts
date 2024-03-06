@@ -63,7 +63,6 @@ export const todoslice = createSlice({
     } else {
       const day = {
         date: action.payload.date,
-        repeated: false,
         todos: [] as TodoInterface[],
       };
       day.todos.push(action.payload.todo);
@@ -187,10 +186,14 @@ export const todoslice = createSlice({
     addDay: (state: StateInterface, action: PayloadAction<DayInterface>) => {
       state.days.push(action.payload);
       saveTodosToLocaleStorage(state.days);
+    },
+    clearDaysWhereDealsIsEmpty: (state: StateInterface) => {
+      state.days = state.days.filter(day => day.todos.length > 0);
+      saveTodosToLocaleStorage(state.days);
     }
   },
 });
 
-export const { addTodo, changeTodoName, getTodosFromStorage, addTodoBeforeThis, addTodoAfterThis, selectTodoToAddBeforeThis, selectTodoToAddAfterThis, selectTodoToChange, changeTheTodo, updateTodo, removeTodo, deleteCompletedTasks, addTodoWithoutTimeline, updateTodoWithout, addTodosForRepeating, addDay, removeTodoWithoutTimeline } = todoslice.actions;
+export const { addTodo, changeTodoName, getTodosFromStorage, addTodoBeforeThis, addTodoAfterThis, selectTodoToAddBeforeThis, selectTodoToAddAfterThis, selectTodoToChange, changeTheTodo, updateTodo, removeTodo, deleteCompletedTasks, addTodoWithoutTimeline, updateTodoWithout, addTodosForRepeating, addDay, removeTodoWithoutTimeline, clearDaysWhereDealsIsEmpty } = todoslice.actions;
 
 export default todoslice.reducer;

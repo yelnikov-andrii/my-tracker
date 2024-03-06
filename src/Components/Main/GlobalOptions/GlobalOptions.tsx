@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { Alert } from '../../../UI/Alert';
 import { WeekDays } from './WeekDays';
-import { addTodosForRepeating } from '../../../store/todosSlice';
+import { addTodosForRepeating, clearDaysWhereDealsIsEmpty } from '../../../store/todosSlice';
 import { TodoInterface } from '../../../types/todos';
 
 interface Props {
@@ -38,6 +38,7 @@ export const GlobalOptions: React.FC<Props> = ({ date }) => {
 
   function handleOffRepeating() {
     dispatch(addTodosForRepeating({days: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'], todos: []}));
+    dispatch(clearDaysWhereDealsIsEmpty());
     setIsOpen(true);
     setAlerttext('Повторювання справ вимкнено')
     hideAlert();
