@@ -1,14 +1,13 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { hours, minutes } from '../../../helpers/hoursAndMinutes';
 import { useDispatch, useSelector } from 'react-redux';
-// import { addDeal, changeDealName,  } from '../../../store/todosSlice';
-// import { addDeal, addDealAfterThis, addDealBeforeThis, changeDealName, changeTheDeal, selectDealIdToAddAfterThis, selectDealIdToAddBeforeThis, selectDealIdToChange } from '../../../store/dealSlice';
 import { setFinishHour, setFinishMinutes, setStartHour, setStartMinutes } from '../../../store/timeSlice';
 import { changeTimeAfterAddingTodo } from '../../../helpers/changeTimeAfterAdd';
 import { RootState } from '../../../store/store';
 import { MySelect } from '../../../UI/MySelect';
 import { Box, Button, Typography, OutlinedInput } from '@mui/material';
-import { addTodo, addTodoAfterThis, addTodoBeforeThis, changeTheDeal, changeTodoName, selectTodoToAddAfterThis, selectTodoToAddBeforeThis, selectTodoToChange } from '../../../store/todosSlice';
+import { addTodo, addTodoAfterThis, addTodoBeforeThis, changeTheTodo, changeTodoName, selectTodoToAddAfterThis, selectTodoToAddBeforeThis, selectTodoToChange } from '../../../store/todosSlice';
+import { TodoInterface } from '../../../types/todos';
 
 interface Props {
   date: string;
@@ -17,10 +16,9 @@ interface Props {
 
 export const Form: React.FC <Props> = ({ date, setIsOpen }) => {
   const { days, todoName, todoToChange, todoToAddBeforeThis, todoToAddAfterThis } = useSelector((state: RootState) => state.todos);
-  const { startHour, startMinutes, finishHour, finishMinutes } = useSelector((state: any) => state.time);
+  const { startHour, startMinutes, finishHour, finishMinutes } = useSelector((state: RootState) => state.time);
   
   const dispatch = useDispatch();
-  console.log(days);
 
   function addTodoHandler() {
     if (!todoName || !startHour || !startMinutes || !finishHour || !finishMinutes) {
@@ -36,7 +34,7 @@ export const Form: React.FC <Props> = ({ date, setIsOpen }) => {
     };
 
     if (todoToAddAfterThis) {
-      dispatch(addTodoAfterThis({ date: date, todo: todo, repeated: false }));
+      dispatch(addTodoAfterThis({ date: date, todo: todo }));
       dispatch(changeTodoName(''));
       changeTimeAfterAddingTodo(finishHour, finishMinutes, dispatch);
       setIsOpen(false);
@@ -45,7 +43,7 @@ export const Form: React.FC <Props> = ({ date, setIsOpen }) => {
     }
 
     if (todoToAddBeforeThis) {
-      dispatch(addTodoBeforeThis({ date: date, todo: todo, repeated: false }));
+      dispatch(addTodoBeforeThis({ date: date, todo: todo }));
       dispatch(changeTodoName(''));
       changeTimeAfterAddingTodo(finishHour, finishMinutes, dispatch);
       setIsOpen(false);
@@ -53,17 +51,17 @@ export const Form: React.FC <Props> = ({ date, setIsOpen }) => {
       return;
     }
 
-    dispatch(addTodo({ date: date, todo: todo, repeated: false }));
+    dispatch(addTodo({ date: date, todo: todo }));
     dispatch(changeTodoName(''));
     changeTimeAfterAddingTodo(finishHour, finishMinutes, dispatch);
     setIsOpen(false);
   }
 
-  function changeTheTodoHandler(todoId: any) {
+  function changeTheTodoHandler(todoId: number) {
     const foundDay = days.find(day => day.date === date);
     
     if (foundDay) {
-      const foundTodo = foundDay.todos.find((todo: any) => todo.id === todoId);
+      const foundTodo = foundDay.todos.find((todo: TodoInterface) => todo.id === todoId);
 
       if (!todoName || !startHour || !startMinutes || !finishHour || !finishMinutes || !foundTodo) {
         dispatch(selectTodoToChange(null));
@@ -76,26 +74,26 @@ export const Form: React.FC <Props> = ({ date, setIsOpen }) => {
         finish: `${finishHour}:${finishMinutes}`,
       };
   
-      dispatch(changeTheDeal({ todo: newTodo, date: date }));
+      dispatch(changeTheTodo({ todo: newTodo, date: date }));
       dispatch(changeTodoName(''));
       dispatch(selectTodoToChange(null));
       setIsOpen(false);
     }
   }
 
-  function changeStartHour(value: any) {
+  function changeStartHour(value: string) {
     dispatch(setStartHour(value));
   }
 
-  function changeStartMinutes(value: any) {
+  function changeStartMinutes(value: string) {
     dispatch(setStartMinutes(value));
   }
 
-  function changeFinishHour(value: any) {
+  function changeFinishHour(value: string) {
     dispatch(setFinishHour(value));
   }
 
-  function changeFinishMinutes(value: any) {
+  function changeFinishMinutes(value: string) {
     dispatch(setFinishMinutes(value));
   }
 

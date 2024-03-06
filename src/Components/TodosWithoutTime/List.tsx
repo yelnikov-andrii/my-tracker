@@ -2,10 +2,10 @@ import { Box, Button, Checkbox, List, ListItem, Paper, Typography, useTheme } fr
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
-import { updateTodoWithout } from '../../store/todosSlice';
-// import { removeDealWithout, updateDealWithout } from '../../store/dealSlice';
+import { removeTodoWithoutTimeline, updateTodoWithout } from '../../store/todosSlice';
+import { TodoWithoutTimeInterface } from '../../types/todos';
 
-export const DealList = () => {
+export const TodoList = () => {
   const theme = useTheme();
   const { todosWIthoutTimeline } = useSelector((state: RootState) => state.todos);
   const dispatch = useDispatch();
@@ -14,8 +14,8 @@ export const DealList = () => {
     dispatch(updateTodoWithout(todoId));
   }
 
-  function deleteDeal(dealId: number) {
-    // dispatch(removeDealWithout(dealId));
+  function deleteTodo(todoId: number) {
+    dispatch(removeTodoWithoutTimeline(todoId));
   }
 
   return (
@@ -25,7 +25,7 @@ export const DealList = () => {
     </Typography>
     <Paper variant="outlined">
       <List>
-        {todosWIthoutTimeline.length > 0 ? todosWIthoutTimeline.map((todo: any) => (
+        {todosWIthoutTimeline.length > 0 ? todosWIthoutTimeline.map((todo: TodoWithoutTimeInterface) => (
           <ListItem
             key={todo.id}
             style={{
@@ -52,7 +52,7 @@ export const DealList = () => {
             <Box>
               <Button 
                 onClick={() => {
-                  deleteDeal(todo.id);
+                  deleteTodo(todo.id);
                 }}
                 variant='contained'
               >

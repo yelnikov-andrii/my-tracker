@@ -5,7 +5,7 @@ export interface TimeState {
   startMinutes: string;
   finishHour: string;
   finishMinutes: string;
-  currentDate: any;
+  currentDate: string;
 }
 
 const initialState: TimeState = {

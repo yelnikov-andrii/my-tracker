@@ -7,6 +7,7 @@ import { RootState } from '../../../store/store';
 import { Alert } from '../../../UI/Alert';
 import { WeekDays } from './WeekDays';
 import { addTodosForRepeating } from '../../../store/todosSlice';
+import { TodoInterface } from '../../../types/todos';
 
 interface Props {
   date: string;
@@ -22,7 +23,7 @@ export const GlobalOptions: React.FC<Props> = ({ date }) => {
   const foundDay = days.find(day => day.date === date);
   
   function handleApplyButtonClick() {
-    dispatch(addTodosForRepeating({ days: selectedDays, todos: foundDay?.todos }));
+    dispatch(addTodosForRepeating({ days: selectedDays, todos: foundDay?.todos as TodoInterface[] }));
     setSelectedDays([]);
     setAlerttext('Тепер справи за цей день будут повторюватись по вибраним дням тижня');
     setIsOpen(true);
@@ -36,7 +37,7 @@ export const GlobalOptions: React.FC<Props> = ({ date }) => {
   }
 
   function handleOffRepeating() {
-    dispatch(addTodosForRepeating({days: ['mon', 'tue', 'wen', 'thu', 'fri', 'sat', 'sun'], todos: []}));
+    dispatch(addTodosForRepeating({days: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'], todos: []}));
     setIsOpen(true);
     setAlerttext('Повторювання справ вимкнено')
     hideAlert();

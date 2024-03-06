@@ -1,5 +1,5 @@
 import { Box, Checkbox, FormControlLabel } from '@mui/material'
-import React, { Dispatch, SetStateAction } from 'react'
+import React, { ChangeEvent, Dispatch, SetStateAction } from 'react'
 
 interface Props {
   selectedDays: string[];
@@ -8,7 +8,7 @@ interface Props {
 
 export const WeekDays: React.FC <Props> = ({ selectedDays, setSelectedDays }) => {
 
-  const handleCheckboxChange = (event: any) => {
+  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     const day = event.target.value;
     setSelectedDays((prevSelectedDays) => {
       if (prevSelectedDays.includes(day)) {
@@ -30,7 +30,7 @@ export const WeekDays: React.FC <Props> = ({ selectedDays, setSelectedDays }) =>
         label="Вівторок"
       />
       <FormControlLabel
-        control={<Checkbox checked={selectedDays.includes('wen')} onChange={handleCheckboxChange} value="wen" />}
+        control={<Checkbox checked={selectedDays.includes('wed')} onChange={handleCheckboxChange} value="wed" />}
         label="Середа"
       />
       <FormControlLabel
