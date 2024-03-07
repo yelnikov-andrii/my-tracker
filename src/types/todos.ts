@@ -47,3 +47,8 @@ export interface DayTodosForRepeatingInterface {
   days: string[];
   todos: TodoInterface[];
 }
+
+export interface ToggleDayInterface {
+  date: string;
+  isToggled: boolean;
+}

@@ -6,6 +6,7 @@ import { List, ListItem, Paper, Typography } from '@mui/material';
 import { TodoInterface } from '../../../types/todos';
 import { useAddTodosWhenRepeatedTasks } from '../../../helpers/addTodosWhenRepeatsWeekdayTasks';
 import { ListItemComponent } from './ListItemComponent';
+import { ToggleBlock } from './ToggleBlock';
 
 interface Props {
   date: string;
@@ -14,16 +15,14 @@ interface Props {
 
 export const TodoList: React.FC<Props> = ({ date, setIsOpen }) => {
   const { days } = useSelector((state: RootState) => state.todos);
-  const { todosRepeated } = useSelector((state: RootState) => state.todosRepeated);
   const { currentDate } = useSelector((state: RootState) => state.time);
   useAddTodosWhenRepeatedTasks(currentDate);
 
-  console.log(todosRepeated, 'repeated todos')
 
-  const foundTodo = React.useMemo(() => {
-    const foundTodo = days.find(day => day.date === date);
-    if (foundTodo) {
-      return foundTodo;
+  const foundDay = React.useMemo(() => {
+    const foundDay = days.find(day => day.date === date);
+    if (foundDay) {
+      return foundDay;
     }
     
   }, [date, days]);
@@ -33,8 +32,12 @@ export const TodoList: React.FC<Props> = ({ date, setIsOpen }) => {
     <Typography variant='h6'>
       Список завдань
     </Typography>
+      <ToggleBlock 
+        date={date}
+        foundDay={foundDay || null}
+      />
       <List>
-        {foundTodo && foundTodo.todos.length > 0 ? foundTodo.todos.map((todo: TodoInterface) => (
+        {foundDay && foundDay.todos.length > 0 ? foundDay.todos.map((todo: TodoInterface) => (
           <ListItemComponent
             todo={todo}
             key={todo.id}
