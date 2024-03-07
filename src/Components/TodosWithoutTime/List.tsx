@@ -2,12 +2,12 @@ import { Box, Button, Checkbox, List, ListItem, Paper, Typography, useTheme } fr
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
-import { removeTodoWithoutTimeline, updateTodoWithout } from '../../store/todosSlice';
 import { TodoWithoutTimeInterface } from '../../types/todos';
+import { removeTodoWithoutTimeline, updateTodoWithout } from '../../store/todoWithout';
 
 export const TodoList = () => {
   const theme = useTheme();
-  const { todosWIthoutTimeline } = useSelector((state: RootState) => state.todos);
+  const { todosWIthoutTimeline } = useSelector((state: RootState) => state.todoswithout);
   const dispatch = useDispatch();
 
   function toggleTodo(todoId: number) {

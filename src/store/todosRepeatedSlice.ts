@@ -58,7 +58,7 @@ const todosRepeatedSlice = createSlice({
       if (todosForRepeating) {
         state.todosRepeated = JSON.parse(todosForRepeating);
       }
-    }
+    },
   }
 });
 

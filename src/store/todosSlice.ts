@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { saveTodosToLocaleStorage, saveTodosWithoutTimeline } from '../helpers/saveDataToLocaleStorage';
-import { DayInterface, DayWithTodoInterface, TodoForUpdateInterface, TodoInterface, TodoToChangeInterface, TodoWithoutTimeInterface } from '../types/todos';
+import { saveTodosToLocaleStorage } from '../helpers/saveDataToLocaleStorage';
+import { DayInterface, DayWithTodoInterface, TodoForUpdateInterface, TodoInterface, TodoToChangeInterface, ToggleDayInterface } from '../types/todos';
 
 interface StateInterface {
   days: DayInterface[];
@@ -8,7 +8,6 @@ interface StateInterface {
   todoName: string;
   todoToChange: null | number;
   todoToAddAfterThis: null | number;
-  todosWIthoutTimeline: TodoWithoutTimeInterface[];
 }
 
 const initialState: StateInterface = {
@@ -16,7 +15,6 @@ const initialState: StateInterface = {
   todoToAddBeforeThis: null,
   todoToAddAfterThis: null,
   todoToChange: null,
-  todosWIthoutTimeline: [] as TodoWithoutTimeInterface[],
   todoName: '',
 };
 
@@ -120,21 +118,6 @@ export const todoslice = createSlice({
       }
       saveTodosToLocaleStorage([...state.days]);
     },
-    addTodoWithoutTimeline: (state: StateInterface, action: PayloadAction<TodoWithoutTimeInterface>) => {
-      state.todosWIthoutTimeline.push(action.payload);
-      saveTodosWithoutTimeline(state.todosWIthoutTimeline);
-    },
-    updateTodoWithout: (state: StateInterface, action: PayloadAction<number>) => {
-      const foundTodo = state.todosWIthoutTimeline.find((todo: TodoWithoutTimeInterface) => todo.id === action.payload);
-      if (foundTodo) {
-        foundTodo.completed = !foundTodo.completed;
-        saveTodosWithoutTimeline(state.todosWIthoutTimeline);
-      }
-    },
-    removeTodoWithoutTimeline: (state: StateInterface, action: PayloadAction<number>) => {
-      state.todosWIthoutTimeline = state.todosWIthoutTimeline.filter((todo: TodoWithoutTimeInterface) => todo.id !== action.payload);
-      saveTodosWithoutTimeline(state.todosWIthoutTimeline);
-    },
     changeTodoName: (state: StateInterface, action: PayloadAction<string>) => {
         state.todoName = action.payload;
     },
@@ -145,10 +128,36 @@ export const todoslice = createSlice({
     clearDaysWhereDealsIsEmpty: (state: StateInterface) => {
       state.days = state.days.filter(day => day.todos.length > 0);
       saveTodosToLocaleStorage(state.days);
+    },
+    toggleTodos: (state: StateInterface, action: PayloadAction<ToggleDayInterface>) => {
+      const foundDay = state.days.find(day => day.date === action.payload.date);
+      if (foundDay) {
+        if (action.payload.isToggled) {
+          foundDay.todos = foundDay?.todos.map(todo => {
+            if (todo.completed) {
+              return todo;
+            } else {
+              const newTodo = {...todo};
+              newTodo.completed = true;
+              return newTodo;
+            }
+          });
+        } else {
+          foundDay.todos = foundDay?.todos.map(todo => {
+            if (todo.completed) {
+              const newTodo = {...todo};
+              newTodo.completed = false;
+              return newTodo;
+            } else {
+              return todo;
+            }
+          });
+        }
+      }
     }
   },
 });
 
-export const { addTodo, changeTodoName, getTodosFromStorage, addTodoBeforeThis, addTodoAfterThis, selectTodoToAddBeforeThis, selectTodoToAddAfterThis, selectTodoToChange, changeTheTodo, updateTodo, removeTodo, deleteCompletedTasks, addTodoWithoutTimeline, updateTodoWithout, addDay, removeTodoWithoutTimeline, clearDaysWhereDealsIsEmpty } = todoslice.actions;
+export const { addTodo, changeTodoName, getTodosFromStorage, addTodoBeforeThis, addTodoAfterThis, selectTodoToAddBeforeThis, selectTodoToAddAfterThis, selectTodoToChange, changeTheTodo, updateTodo, removeTodo, deleteCompletedTasks, addDay, clearDaysWhereDealsIsEmpty, toggleTodos } = todoslice.actions;
 
 export default todoslice.reducer;

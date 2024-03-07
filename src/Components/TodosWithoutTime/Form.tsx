@@ -1,7 +1,7 @@
 import { Box, Button, OutlinedInput } from '@mui/material';
 import React, { Dispatch, SetStateAction } from 'react'
 import { useDispatch } from 'react-redux';
-import { addTodoWithoutTimeline } from '../../store/todosSlice';
+import { addTodoWithoutTimeline } from '../../store/todoWithout';
 
 interface Props {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
