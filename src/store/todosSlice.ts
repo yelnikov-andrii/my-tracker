@@ -1,10 +1,9 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { saveTodosForRepeatingInLocaleStorage, saveTodosToLocaleStorage, saveTodosWithoutTimeline } from '../helpers/saveTodosToLocaleStorage';
-import { DayInterface, DayTodosForRepeatingInterface, DayWithTodoInterface, TodoForUpdateInterface, TodoInterface, TodoRepeatedInterface, TodoToChangeInterface, TodoWithoutTimeInterface } from '../types/todos';
+import { saveTodosToLocaleStorage, saveTodosWithoutTimeline } from '../helpers/saveDataToLocaleStorage';
+import { DayInterface, DayWithTodoInterface, TodoForUpdateInterface, TodoInterface, TodoToChangeInterface, TodoWithoutTimeInterface } from '../types/todos';
 
 interface StateInterface {
   days: DayInterface[];
-  todosRepeated: TodoRepeatedInterface[];
   todoToAddBeforeThis: number | null;
   todoName: string;
   todoToChange: null | number;
@@ -14,36 +13,6 @@ interface StateInterface {
 
 const initialState: StateInterface = {
   days: [],
-  todosRepeated: [
-    {
-      day: 'mon',
-      todos: [],
-    },
-    {
-      day: 'tue',
-      todos: [],
-    },
-    {
-      day: 'wed',
-      todos: [],
-    },
-    {
-      day: 'thu',
-      todos: [],
-    },
-    {
-      day: 'fri',
-      todos: [],
-    },
-    {
-      day: 'sat',
-      todos: [],
-    },
-    {
-      day: 'sun',
-      todos: [],
-    }
-  ],
   todoToAddBeforeThis: null,
   todoToAddAfterThis: null,
   todoToChange: null,
@@ -94,14 +63,9 @@ export const todoslice = createSlice({
     },
     getTodosFromStorage: (state: StateInterface) => {
       const todosString = localStorage.getItem('todos');
-      const todosForRepeating = localStorage.getItem('todos-for-repeating');
       state.days = [] as DayInterface[];
       if (todosString) {
         state.days = JSON.parse(todosString);
-      }
-
-      if (todosForRepeating) {
-        state.todosRepeated = JSON.parse(todosForRepeating);
       }
     },
     updateTodo: (state: StateInterface, action: PayloadAction<TodoForUpdateInterface>) => {
@@ -174,15 +138,6 @@ export const todoslice = createSlice({
     changeTodoName: (state: StateInterface, action: PayloadAction<string>) => {
         state.todoName = action.payload;
     },
-    addTodosForRepeating: (state: StateInterface, action: PayloadAction<DayTodosForRepeatingInterface>) => {
-      state.todosRepeated = state.todosRepeated.map((obj: TodoRepeatedInterface) => {
-        if (action.payload.days.includes(obj.day)) {
-          obj.todos = action.payload.todos;
-        }
-        return obj;
-      });
-      saveTodosForRepeatingInLocaleStorage(state.todosRepeated);
-    },
     addDay: (state: StateInterface, action: PayloadAction<DayInterface>) => {
       state.days.push(action.payload);
       saveTodosToLocaleStorage(state.days);
@@ -194,6 +149,6 @@ export const todoslice = createSlice({
   },
 });
 
-export const { addTodo, changeTodoName, getTodosFromStorage, addTodoBeforeThis, addTodoAfterThis, selectTodoToAddBeforeThis, selectTodoToAddAfterThis, selectTodoToChange, changeTheTodo, updateTodo, removeTodo, deleteCompletedTasks, addTodoWithoutTimeline, updateTodoWithout, addTodosForRepeating, addDay, removeTodoWithoutTimeline, clearDaysWhereDealsIsEmpty } = todoslice.actions;
+export const { addTodo, changeTodoName, getTodosFromStorage, addTodoBeforeThis, addTodoAfterThis, selectTodoToAddBeforeThis, selectTodoToAddAfterThis, selectTodoToChange, changeTheTodo, updateTodo, removeTodo, deleteCompletedTasks, addTodoWithoutTimeline, updateTodoWithout, addDay, removeTodoWithoutTimeline, clearDaysWhereDealsIsEmpty } = todoslice.actions;
 
 export default todoslice.reducer;

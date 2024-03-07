@@ -1,12 +1,13 @@
-import { Box } from '@mui/material';
-import React from 'react';
+import { Box, Button } from '@mui/material';
+import React, { Dispatch, SetStateAction } from 'react';
 
 interface Props {
   children: React.ReactNode;
   isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export const Alert: React.FC <Props> = ({ children, isOpen }) => {
+export const Alert: React.FC <Props> = ({ children, isOpen, setIsOpen }) => {
   return (
     <Box
       position="fixed"
@@ -39,6 +40,16 @@ export const Alert: React.FC <Props> = ({ children, isOpen }) => {
         }}
       >
         {children}
+        <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
+          <Button 
+            onClick={() => {
+              setIsOpen(false);
+            }}
+            variant="contained"
+          >
+            ok
+          </Button>
+        </Box>
       </Box>
     </Box>
   )

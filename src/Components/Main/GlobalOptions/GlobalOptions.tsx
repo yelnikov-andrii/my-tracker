@@ -6,15 +6,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { Alert } from '../../../UI/Alert';
 import { WeekDays } from './WeekDays';
-import { addTodosForRepeating, clearDaysWhereDealsIsEmpty } from '../../../store/todosSlice';
+import { clearDaysWhereDealsIsEmpty } from '../../../store/todosSlice';
 import { TodoInterface } from '../../../types/todos';
+import { addWeekdays } from '../../../store/weekdaySlice';
+import { saveWeekdaysToLocaleStorage } from '../../../helpers/saveDataToLocaleStorage';
+import { addTodosForRepeating } from '../../../store/todosRepeatedSlice';
 
 interface Props {
   date: string;
 }
 
 export const GlobalOptions: React.FC<Props> = ({ date }) => {
-  const [selectedDays, setSelectedDays] = React.useState<string[]>([]);
+  // const [selectedDays, setSelectedDays] = React.useState<string[]>([]);
+  const { weekdays } = useSelector((state: RootState) => state.weekday);
   const { days } = useSelector((state: RootState) => state.todos);
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = React.useState(false);
@@ -23,9 +27,9 @@ export const GlobalOptions: React.FC<Props> = ({ date }) => {
   const foundDay = days.find(day => day.date === date);
   
   function handleApplyButtonClick() {
-    dispatch(addTodosForRepeating({ days: selectedDays, todos: foundDay?.todos as TodoInterface[] }));
-    setSelectedDays([]);
+    dispatch(addTodosForRepeating({ days: weekdays, todos: foundDay?.todos as TodoInterface[] }));
     setAlerttext('Тепер справи за цей день будут повторюватись по вибраним дням тижня');
+    saveWeekdaysToLocaleStorage(weekdays);
     setIsOpen(true);
     hideAlert();
   }
@@ -39,6 +43,7 @@ export const GlobalOptions: React.FC<Props> = ({ date }) => {
   function handleOffRepeating() {
     dispatch(addTodosForRepeating({days: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'], todos: []}));
     dispatch(clearDaysWhereDealsIsEmpty());
+    dispatch(addWeekdays([]));
     setIsOpen(true);
     setAlerttext('Повторювання справ вимкнено')
     hideAlert();
@@ -52,7 +57,7 @@ export const GlobalOptions: React.FC<Props> = ({ date }) => {
           <Button 
             variant="contained" 
             onClick={handleApplyButtonClick}
-            disabled={selectedDays.length === 0}
+            disabled={weekdays.length === 0}
           >
             Повторювати список справ
           </Button>
@@ -60,13 +65,13 @@ export const GlobalOptions: React.FC<Props> = ({ date }) => {
             Не повторювати список справ
           </Button>
           </Box>
-          <WeekDays 
-            selectedDays={selectedDays}
-            setSelectedDays={setSelectedDays}
-          />
+          <WeekDays />
         </div>
       </MyDropdown>
-      <Alert isOpen={isOpen}>
+      <Alert 
+        setIsOpen={setIsOpen}
+        isOpen={isOpen}
+      >
         <div>
           {alertText}
         </div>
