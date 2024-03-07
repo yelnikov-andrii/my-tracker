@@ -27,7 +27,7 @@ export const Main: React.FC = () => {
   }
 
   return (
-    <Box paddingTop={6}>
+    <Box paddingTop={3}>
       <MyContainer>
         <GlobalOptions 
           date={formatDate(currentDate)}

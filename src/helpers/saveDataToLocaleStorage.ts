@@ -11,3 +11,7 @@ export const saveTodosWithoutTimeline = (todosWithoutTimeline: TodoWithoutTimeIn
 export const saveTodosForRepeatingInLocaleStorage = (todosForRepeating: TodoRepeatedInterface[]) => {
   localStorage.setItem('todos-for-repeating', JSON.stringify(todosForRepeating));
 }
+
+export const saveWeekdaysToLocaleStorage = (weekdays: string[]) => {
+  localStorage.setItem('weekdays', JSON.stringify(weekdays));
+}
