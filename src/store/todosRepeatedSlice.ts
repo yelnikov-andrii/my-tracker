@@ -1,9 +1,10 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { DayTodosForRepeatingInterface, TodoRepeatedInterface } from "../types/todos"
 import { saveTodosForRepeatingInLocaleStorage } from "../helpers/saveDataToLocaleStorage";
+import { DayTodosForRepeatingInterface, TodoRepeatedInterface } from "../types/todosRepeated";
 
 interface StateInterface {
   todosRepeated: TodoRepeatedInterface[];
+  dateWhenTodosRepeated: string;
 }
 
 const initialState: StateInterface = {
@@ -37,6 +38,7 @@ const initialState: StateInterface = {
       todos: [],
     }
   ],
+  dateWhenTodosRepeated: ''
 }
 
 const todosRepeatedSlice = createSlice({
@@ -59,8 +61,11 @@ const todosRepeatedSlice = createSlice({
         state.todosRepeated = JSON.parse(todosForRepeating);
       }
     },
+    setDateWhenTodosRepeated: (state: StateInterface, action) => {
+      state.dateWhenTodosRepeated = action.payload;
+    }
   }
 });
 
-export const { addTodosForRepeating } = todosRepeatedSlice.actions;
+export const { addTodosForRepeating, setDateWhenTodosRepeated, getDataFromServer } = todosRepeatedSlice.actions;
 export default todosRepeatedSlice.reducer;

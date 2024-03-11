@@ -1,7 +1,7 @@
 import { setFinishHour, setFinishMinutes, setStartHour, setStartMinutes } from "../store/timeSlice";
 import { DayInterface, TodoInterface } from "../types/todos";
 
-export function changeTime(days: DayInterface[], todoId: number, dispatch: any, date: string) {
+export function changeTime(days: DayInterface[], todoId: number | string, dispatch: any, date: string) {
     const foundDay = days.find((day: DayInterface) => day.date === date);
     const foundTodo = foundDay?.todos.find((todo: TodoInterface) => todo.id === todoId);
     const startMinutes = foundTodo?.start.slice(foundTodo.start.indexOf(':') + 1);

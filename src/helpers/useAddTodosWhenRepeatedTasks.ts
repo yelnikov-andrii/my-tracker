@@ -3,8 +3,9 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { formatDate } from "./formateDate";
-import { TodoInterface, TodoRepeatedInterface } from "../types/todos";
+import { DayInterface, TodoInterface } from "../types/todos";
 import { addDay } from "../store/todosSlice";
+import { TodoRepeatedInterface } from "../types/todosRepeated";
 
 export const useAddTodosWhenRepeatedTasks = (currentDate: string) => {
   const { days } = useSelector((state: RootState) => state.todos);
@@ -18,15 +19,14 @@ export const useAddTodosWhenRepeatedTasks = (currentDate: string) => {
   const foundTodoRepeated = todosRepeated.find((todoRepeated: TodoRepeatedInterface) => todoRepeated.day === thisWeekDay);
 
   React.useEffect(() => {
-    const foundDay = days.find(day => day.date === date);
+    const foundDay = days.find((day: DayInterface) => day.date === date);
     if (!foundDay && foundTodoRepeated && foundTodoRepeated.todos.length > 0) {
       const remasteredTodos = foundTodoRepeated.todos.map((todo: TodoInterface) => {
-        return {...todo, id: Date.now()};
+        return {...todo, id: (todo.id.toString() + date)};
       });
 
       const day = {
         date: date,
-        repeated: true,
         todos: remasteredTodos,
       };
 

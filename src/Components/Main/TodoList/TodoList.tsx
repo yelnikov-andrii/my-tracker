@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { List, ListItem, Paper, Typography } from '@mui/material';
 import { TodoInterface } from '../../../types/todos';
-import { useAddTodosWhenRepeatedTasks } from '../../../helpers/addTodosWhenRepeatsWeekdayTasks';
+import { useAddTodosWhenRepeatedTasks } from '../../../helpers/useAddTodosWhenRepeatedTasks';
 import { ListItemComponent } from './ListItemComponent';
 import { ToggleBlock } from './ToggleBlock';
 
@@ -35,6 +35,7 @@ export const TodoList: React.FC<Props> = ({ date, setIsOpen }) => {
       <ToggleBlock 
         date={date}
         foundDay={foundDay || null}
+        active={(foundDay && foundDay?.todos?.length > 0) || false}
       />
       <List>
         {foundDay && foundDay.todos.length > 0 ? foundDay.todos.map((todo: TodoInterface) => (

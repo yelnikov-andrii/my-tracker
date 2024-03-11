@@ -57,7 +57,7 @@ export const Form: React.FC <Props> = ({ date, setIsOpen }) => {
     setIsOpen(false);
   }
 
-  function changeTheTodoHandler(todoId: number) {
+  function changeTheTodoHandler(todoId: number | string) {
     const foundDay = days.find(day => day.date === date);
     
     if (foundDay) {

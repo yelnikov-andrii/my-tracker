@@ -2,7 +2,7 @@ import { Box, Button, Checkbox, List, ListItem, Paper, Typography, useTheme } fr
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
-import { TodoWithoutTimeInterface } from '../../types/todos';
+import { TodoWithoutTimeInterface } from '../../types/todosWithout';
 import { removeTodoWithoutTimeline, updateTodoWithout } from '../../store/todoWithout';
 
 export const TodoList = () => {

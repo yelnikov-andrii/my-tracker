@@ -6,8 +6,8 @@ interface StateInterface {
   days: DayInterface[];
   todoToAddBeforeThis: number | null;
   todoName: string;
-  todoToChange: null | number;
-  todoToAddAfterThis: null | number;
+  todoToChange: null | number | string;
+  todoToAddAfterThis: null | number | string;
 }
 
 const initialState: StateInterface = {
@@ -92,7 +92,7 @@ export const todoslice = createSlice({
         state.todoName = foundDay.todos.find(todo => todo.id === action?.payload?.id)?.name || '';
       }
     },
-    selectTodoToAddAfterThis: (state: StateInterface, action: PayloadAction<number | null>) => {
+    selectTodoToAddAfterThis: (state: StateInterface, action: PayloadAction<number | string | null>) => {
       state.todoToAddAfterThis = action.payload;
     },
     selectTodoToAddBeforeThis: (state, action) => {

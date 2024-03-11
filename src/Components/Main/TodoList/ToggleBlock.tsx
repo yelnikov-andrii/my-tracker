@@ -7,9 +7,10 @@ import { DayInterface } from '../../../types/todos';
 interface Props {
   date: string;
   foundDay: DayInterface | null;
+  active: boolean;
 }
 
-export const ToggleBlock: React.FC <Props> = ({ date, foundDay }) => {
+export const ToggleBlock: React.FC <Props> = ({ date, foundDay, active }) => {
   const [isToggled, setIsToggled] = React.useState(false);
   const dispatch = useDispatch();
   
@@ -26,15 +27,23 @@ export const ToggleBlock: React.FC <Props> = ({ date, foundDay }) => {
   React.useEffect(() => {
     if (foundDay?.todos.every(todo => todo.completed)) {
       setIsToggled(true);
+    } else {
+      setIsToggled(false);
     }
-  }, [foundDay?.todos]);
+  }, [foundDay]);
 
   return (
-    <Box display="flex" justifyContent="flex-end" alignItems="center" paddingRight="5px">
-      <span>
-        Вибрати усі
-      </span>
-      <Checkbox checked={isToggled} onChange={handleCheckboxChange} value={isToggled} />
+      <Box display="flex" justifyContent="flex-end" alignItems="center" paddingRight="5px">
+        {active ? (
+          <>
+            <span>
+              Вибрати усі
+            </span>
+            <Checkbox checked={isToggled} onChange={handleCheckboxChange} value={isToggled} />
+          </>
+        ) : (
+          <></>
+        )}
     </Box>
   )
 }
