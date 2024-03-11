@@ -16,7 +16,7 @@ export const Buttons: React.FC <Props> = ({ date, todo, setIsOpen }) => {
   const dispatch = useDispatch();
   const { days } = useSelector((state: RootState) => state.todos);
 
-  function deleteTodo(todoId: number) {
+  function deleteTodo(todoId: number | string) {
     dispatch(removeTodo({ id: todoId, date: date }));
   }
 
@@ -26,12 +26,12 @@ export const Buttons: React.FC <Props> = ({ date, todo, setIsOpen }) => {
     changeTime(days, todo.id, dispatch, date);
   }
 
-  function addTodoAfter(todoId: number) {
+  function addTodoAfter(todoId: number | string) {
     setIsOpen(true);
     dispatch(selectTodoToAddAfterThis(todoId));
   }
 
-  function addTodoBefore(todoId: number) {
+  function addTodoBefore(todoId: number | string) {
     setIsOpen(true);
     dispatch(selectTodoToAddBeforeThis(todoId));
   }

@@ -1,4 +1,6 @@
-import { DayInterface, TodoRepeatedInterface, TodoWithoutTimeInterface } from "../types/todos";
+import { DayInterface } from "../types/todos";
+import { TodoRepeatedInterface } from "../types/todosRepeated";
+import { TodoWithoutTimeInterface } from "../types/todosWithout";
 
 export const saveTodosToLocaleStorage = (todos: DayInterface[]) => {
   localStorage.setItem('todos', JSON.stringify(todos));

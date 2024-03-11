@@ -16,7 +16,7 @@ export const ListItemComponent: React.FC <Props> = ({ todo, date, setIsOpen }) =
   const theme = useTheme();
   const dispatch = useDispatch();
 
-  function toggleTodo(todoId: number) {
+  function toggleTodo(todoId: number | string) {
     dispatch(updateTodo({ id: todoId, date: date }));
   }
   

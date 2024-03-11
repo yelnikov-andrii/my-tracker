@@ -1,7 +1,7 @@
 export interface TodoInterface {
   completed: boolean;
   finish: string;
-  id: number;
+  id: number | string;
   name: string;
   start: string;
 }
@@ -14,17 +14,6 @@ export interface DayInterface {
 export interface DayWithTodoInterface {
   date: string;
   todo: TodoInterface;
-}
-
-export interface TodoWithoutTimeInterface {
-  id: number;
-  name: string;
-  completed: boolean;
-}
-
-export interface TodoRepeatedInterface {
-  day: string;
-  todos: TodoInterface[];
 }
 
 interface NewTodoInterface {
@@ -40,12 +29,7 @@ export interface TodoToChangeInterface {
 
 export interface TodoForUpdateInterface {
   date: string;
-  id: number;
-}
-
-export interface DayTodosForRepeatingInterface {
-  days: string[];
-  todos: TodoInterface[];
+  id: number | string;
 }
 
 export interface ToggleDayInterface {

@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { TodoWithoutTimeInterface } from "../types/todos";
+import { TodoWithoutTimeInterface } from "../types/todosWithout";
 import { saveTodosWithoutTimeline } from "../helpers/saveDataToLocaleStorage";
 
 interface StateInterface {
