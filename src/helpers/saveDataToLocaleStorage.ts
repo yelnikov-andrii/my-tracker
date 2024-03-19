@@ -1,3 +1,4 @@
+import { TimeInterface } from "../types/time";
 import { DayInterface } from "../types/todos";
 import { TodoRepeatedInterface } from "../types/todosRepeated";
 import { TodoWithoutTimeInterface } from "../types/todosWithout";
@@ -16,4 +17,12 @@ export const saveTodosForRepeatingInLocaleStorage = (todosForRepeating: TodoRepe
 
 export const saveWeekdaysToLocaleStorage = (weekdays: string[]) => {
   localStorage.setItem('weekdays', JSON.stringify(weekdays));
+}
+
+export const saveDateWhenTodosRepeated = (date: string) => {
+  localStorage.setItem('date-when-todos-repeated', date);
+}
+
+export const saveTimeToLocalStorage = (time: TimeInterface) => {
+  localStorage.setItem('time', JSON.stringify(time))
 }

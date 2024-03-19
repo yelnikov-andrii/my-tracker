@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { saveTodosForRepeatingInLocaleStorage } from "../helpers/saveDataToLocaleStorage";
+import { saveDateWhenTodosRepeated, saveTodosForRepeatingInLocaleStorage } from "../helpers/saveDataToLocaleStorage";
 import { DayTodosForRepeatingInterface, TodoRepeatedInterface } from "../types/todosRepeated";
 
 interface StateInterface {
@@ -54,18 +54,24 @@ const todosRepeatedSlice = createSlice({
       });
       saveTodosForRepeatingInLocaleStorage(state.todosRepeated);
     },
-    getDataFromServer: (state: StateInterface, action: PayloadAction) => {
+    getTodosRepeatedFromServer: (state: StateInterface, action: PayloadAction) => {
       const todosForRepeating = localStorage.getItem('todos-for-repeating');
+      const dateWhenTodosRepeated = localStorage.getItem('date-when-todos-repeated');
 
       if (todosForRepeating) {
         state.todosRepeated = JSON.parse(todosForRepeating);
       }
+
+      if (dateWhenTodosRepeated) {
+        state.dateWhenTodosRepeated = dateWhenTodosRepeated;
+      }
     },
     setDateWhenTodosRepeated: (state: StateInterface, action) => {
       state.dateWhenTodosRepeated = action.payload;
+      saveDateWhenTodosRepeated(action.payload);
     }
   }
 });
 
-export const { addTodosForRepeating, setDateWhenTodosRepeated, getDataFromServer } = todosRepeatedSlice.actions;
+export const { addTodosForRepeating, setDateWhenTodosRepeated, getTodosRepeatedFromServer } = todosRepeatedSlice.actions;
 export default todosRepeatedSlice.reducer;

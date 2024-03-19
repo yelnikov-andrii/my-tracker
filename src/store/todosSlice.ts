@@ -154,10 +154,16 @@ export const todoslice = createSlice({
           });
         }
       }
+    },
+    clearTodoIdsAndFields: (state: StateInterface) => {
+      state.todoName = '';
+      state.todoToAddAfterThis = null;
+      state.todoToAddBeforeThis = null;
+      state.todoToChange = null;
     }
   },
 });
 
-export const { addTodo, changeTodoName, getTodosFromStorage, addTodoBeforeThis, addTodoAfterThis, selectTodoToAddBeforeThis, selectTodoToAddAfterThis, selectTodoToChange, changeTheTodo, updateTodo, removeTodo, deleteCompletedTasks, addDay, clearDaysWhereDealsIsEmpty, toggleTodos } = todoslice.actions;
+export const { addTodo, changeTodoName, getTodosFromStorage, addTodoBeforeThis, addTodoAfterThis, selectTodoToAddBeforeThis, selectTodoToAddAfterThis, selectTodoToChange, changeTheTodo, updateTodo, removeTodo, deleteCompletedTasks, addDay, clearDaysWhereDealsIsEmpty, toggleTodos, clearTodoIdsAndFields } = todoslice.actions;
 
 export default todoslice.reducer;

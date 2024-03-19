@@ -5,6 +5,8 @@ import { removeTodo, selectTodoToAddAfterThis, selectTodoToAddBeforeThis, select
 import { TodoInterface } from '../../../types/todos';
 import { changeTime } from '../../../helpers/changeTime';
 import { RootState } from '../../../store/store';
+import { changeTimeAfterAddingTodo } from '../../../helpers/changeTimeAfterAdd';
+import { changeTimeBeforeAddingTodo } from '../../../helpers/changeTimeBeforeAddingTodo';
 
 interface Props {
   date: string;
@@ -23,17 +25,34 @@ export const Buttons: React.FC <Props> = ({ date, todo, setIsOpen }) => {
   function changeTheTodo(todo: TodoInterface) {
     setIsOpen(true);
     dispatch(selectTodoToChange({ id: todo.id, date: date }));
-    changeTime(days, todo.id, dispatch, date);
+    const foundDay = days.find(day => day.date === date)
+    if (foundDay) {
+      changeTime(foundDay, todo.id, dispatch);
+    }
   }
 
   function addTodoAfter(todoId: number | string) {
     setIsOpen(true);
     dispatch(selectTodoToAddAfterThis(todoId));
+    const foundDay = days.find(day => day.date === date);
+    const foundTodo = foundDay?.todos.find(todo => todo.id === todoId);
+    const finishMinutes = foundTodo?.finish.slice(foundTodo.finish.indexOf(':') + 1);
+    const finishHour = foundTodo?.finish.slice(0, foundTodo.finish.lastIndexOf(':'));
+    if (finishHour && finishMinutes) {
+      changeTimeAfterAddingTodo(finishHour, finishMinutes, dispatch);
+    }
   }
 
   function addTodoBefore(todoId: number | string) {
     setIsOpen(true);
     dispatch(selectTodoToAddBeforeThis(todoId));
+    const foundDay = days.find(day => day.date === date);
+    const foundTodo = foundDay?.todos.find(todo => todo.id === todoId);
+    const startMinutes = foundTodo?.start.slice(foundTodo.start.indexOf(':') + 1);
+    const startHour = foundTodo?.start.slice(0, foundTodo.start.lastIndexOf(':'));
+    if (startHour && startMinutes) {
+      changeTimeBeforeAddingTodo(startHour, startMinutes, dispatch);
+    }
   }
 
   return (

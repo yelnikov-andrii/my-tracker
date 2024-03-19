@@ -1,5 +1,7 @@
 import { Box } from '@mui/material';
 import React, { Dispatch, SetStateAction } from 'react'
+import { clearTodoIdsAndFields } from '../store/todosSlice';
+import { useDispatch } from 'react-redux';
 
 interface Props {
   children: React.ReactNode;
@@ -8,6 +10,7 @@ interface Props {
 }
 
 export const MyModal: React.FC <Props> = ({ children, isOpen, setIsOpen }) => {
+  const dispatch = useDispatch();
 
   return (
     <Box
@@ -25,6 +28,7 @@ export const MyModal: React.FC <Props> = ({ children, isOpen, setIsOpen }) => {
       zIndex={1}
       onClick={() => {
         setIsOpen(false);
+        dispatch(clearTodoIdsAndFields());
       }}
     >
       <Box 
