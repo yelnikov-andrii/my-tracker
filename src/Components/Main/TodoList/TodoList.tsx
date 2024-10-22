@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { Dispatch, SetStateAction } from 'react'
+import React, { Dispatch, SetStateAction, useMemo } from 'react'
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { List, ListItem, Paper, Typography } from '@mui/material';
@@ -7,6 +7,7 @@ import { TodoInterface } from '../../../types/todos';
 import { useAddTodosWhenRepeatedTasks } from '../../../helpers/useAddTodosWhenRepeatedTasks';
 import { ListItemComponent } from './ListItemComponent';
 import { ToggleBlock } from './ToggleBlock';
+import dayjs from 'dayjs';
 
 interface Props {
   date: string;
@@ -27,18 +28,28 @@ export const TodoList: React.FC<Props> = ({ date, setIsOpen }) => {
     
   }, [date, days]);
 
+  const getSortedTodos = (todos: TodoInterface[]) => {
+    return todos.slice().sort((a, b) => dayjs(a.start).diff(dayjs(b.start)));
+  };
+
+  const sortedTodos = useMemo(() => {
+    if (!foundDay) {
+      return [];
+    } else {
+      const sortedTodos = getSortedTodos(foundDay?.todos);
+      return sortedTodos;
+    }
+  }, [foundDay?.todos]);
+
   return (
     <React.Fragment>
-    <Typography variant='h6'>
-      Список завдань
-    </Typography>
       <ToggleBlock 
         date={date}
         foundDay={foundDay || null}
         active={(foundDay && foundDay?.todos?.length > 0) || false}
       />
       <List>
-        {foundDay && foundDay.todos.length > 0 ? foundDay.todos.map((todo: TodoInterface) => (
+        {sortedTodos.length > 0 ? sortedTodos.map((todo: TodoInterface) => (
           <ListItemComponent
             todo={todo}
             key={todo.id}

@@ -20,9 +20,6 @@ export const TodoList = () => {
 
   return (
     <React.Fragment>
-    <Typography variant='h6'>
-      Список завдань
-    </Typography>
     <Paper variant="outlined">
       <List>
         {todosWIthoutTimeline.length > 0 ? todosWIthoutTimeline.map((todo: TodoWithoutTimeInterface) => (
