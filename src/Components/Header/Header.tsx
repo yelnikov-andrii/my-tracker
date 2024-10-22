@@ -3,49 +3,39 @@ import { Link } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import AppBar from '@mui/material/AppBar';
 import Container from '@mui/material/Container';
-import { Theme, Toolbar } from '@mui/material';
-import { makeStyles } from '@mui/styles';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  header: {
-    backgroundColor: theme.palette.primary.main,
-  },
-  link: {
-    color: theme.palette.primary.contrastText,
-    marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(2),
-    textDecoration: 'none',
-    '&:hover': {
-      textDecoration: 'underline',
-    },
-  },
-  title: {
-    flexGrow: 1,
-  },
-  toolbar: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-    [theme.breakpoints.up('lg')]: {
-      paddingLeft: theme.spacing(6),
-      paddingRight: theme.spacing(6),
-    },
-  },
-}));
+import { Toolbar } from '@mui/material';
 
 export const Header = () => {
-const classes = useStyles();
 
   return (
     <React.Fragment>
       <CssBaseline />
-      <AppBar position="static" className={classes.header}>
+      <AppBar position="static" sx={{ backgroundColor: 'primary.main' }}>
         <Container maxWidth="sm">
-          <Toolbar className={classes.toolbar}>
-            <Link to="/todos-without-timeline" color="white" className={classes.link}>
-              Справи без ліміту
-            </Link>
-            <Link to="/" color="white" className={classes.link}>
+          <Toolbar sx={{
+            paddingLeft: 2,
+            paddingRight: 2,
+            display: 'flex',
+            justifyContent: 'space-between',
+            '& a': {
+              color: 'primary.contrastText',
+              textDecoration: 'none',
+              marginLeft: 2,
+              marginRight: 2,
+              '&:hover': {
+                textDecoration: 'underline',
+              },
+            },
+            '@media (min-width:1200px)': {
+              paddingLeft: 6,
+              paddingRight: 6,
+            },
+          }}>
+            <Link to="/" color="white" >
               Справи за графіком
+            </Link>
+            <Link to="/todos-without-timeline" color="white" >
+              Справи без ліміту
             </Link>
           </Toolbar>
         </Container>

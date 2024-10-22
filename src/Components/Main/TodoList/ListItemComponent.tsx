@@ -5,6 +5,7 @@ import { MyDropdown } from '../../../UI/MyDropdown';
 import { Buttons } from './Buttons';
 import { useDispatch } from 'react-redux';
 import { updateTodo } from '../../../store/todosSlice';
+import dayjs from 'dayjs';
 
 interface Props {
   todo: TodoInterface;
@@ -43,7 +44,7 @@ export const ListItemComponent: React.FC <Props> = ({ todo, date, setIsOpen }) =
           opacity: todo.completed ? '0.5' : '1'
         }}
       >
-        {`${todo.start} - ${todo.finish}`}
+        {`${dayjs(todo.start).format('HH:mm')} - ${dayjs(todo.finish).format('HH:mm')}`}
         <Box 
           sx={{
             textDecoration: todo.completed ? 'line-through' : 'none',

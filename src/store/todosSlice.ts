@@ -4,16 +4,12 @@ import { DayInterface, DayWithTodoInterface, TodoForUpdateInterface, TodoInterfa
 
 interface StateInterface {
   days: DayInterface[];
-  todoToAddBeforeThis: number | null;
   todoName: string;
   todoToChange: null | number | string;
-  todoToAddAfterThis: null | number | string;
 }
 
 const initialState: StateInterface = {
   days: [],
-  todoToAddBeforeThis: null,
-  todoToAddAfterThis: null,
   todoToChange: null,
   todoName: '',
 };
@@ -35,28 +31,6 @@ export const todoslice = createSlice({
       day.todos.push(action.payload.todo);
       state.days.push(day);
       saveTodosToLocaleStorage(state.days);
-    }
-    },
-    addTodoAfterThis: (state: StateInterface, action: PayloadAction<DayWithTodoInterface>) => {
-    const foundDay = state.days.find(day => day.date === action.payload.date);
-    if (foundDay) {
-      const foundIndex = foundDay.todos.findIndex((todo) => todo.id === state.todoToAddAfterThis);
-
-      if (foundIndex !== -1) {
-        foundDay.todos.splice(foundIndex + 1, 0, action.payload.todo);
-        saveTodosToLocaleStorage(state.days);
-      }
-    }
-    },
-    addTodoBeforeThis: (state: StateInterface, action: PayloadAction<DayWithTodoInterface>) => {
-    const foundDay = state.days.find(day => day.date === action.payload.date);
-    if (foundDay) {
-      const foundIndex = foundDay.todos.findIndex((todo) => todo.id === state.todoToAddBeforeThis);
-
-      if (foundIndex !== -1) {
-        foundDay.todos.splice(foundIndex, 0, action.payload.todo);
-        saveTodosToLocaleStorage(state.days);
-      }
     }
     },
     getTodosFromStorage: (state: StateInterface) => {
@@ -91,12 +65,6 @@ export const todoslice = createSlice({
       if (foundDay) {
         state.todoName = foundDay.todos.find(todo => todo.id === action?.payload?.id)?.name || '';
       }
-    },
-    selectTodoToAddAfterThis: (state: StateInterface, action: PayloadAction<number | string | null>) => {
-      state.todoToAddAfterThis = action.payload;
-    },
-    selectTodoToAddBeforeThis: (state, action) => {
-        state.todoToAddBeforeThis = action.payload;
     },
     changeTheTodo: (state: StateInterface, action: PayloadAction<TodoToChangeInterface>) => {
       const foundDay = state.days.find(day => day.date === action.payload.date);
@@ -158,6 +126,6 @@ export const todoslice = createSlice({
   },
 });
 
-export const { addTodo, changeTodoName, getTodosFromStorage, addTodoBeforeThis, addTodoAfterThis, selectTodoToAddBeforeThis, selectTodoToAddAfterThis, selectTodoToChange, changeTheTodo, updateTodo, removeTodo, deleteCompletedTasks, addDay, clearDaysWhereDealsIsEmpty, toggleTodos } = todoslice.actions;
+export const { addTodo, changeTodoName, getTodosFromStorage, selectTodoToChange, changeTheTodo, updateTodo, removeTodo, deleteCompletedTasks, addDay, clearDaysWhereDealsIsEmpty, toggleTodos } = todoslice.actions;
 
 export default todoslice.reducer;

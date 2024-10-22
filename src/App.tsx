@@ -14,8 +14,6 @@ function App() {
   const dispatch = useDispatch();
   const { todosRepeated } = useSelector((state: RootState) => state.todosRepeated);
   const { days } = useSelector((state: RootState) => state.todos);
-  console.log(todosRepeated, 'todos repeated')
-  console.log(days, 'dqays')
 
   React.useEffect(() => {
     dispatch(getTodosFromStorage());
@@ -26,12 +24,14 @@ function App() {
   return (
     <div>
       <Header />
-      <Routes>
-        <Route path='/' element={<Main />}>
-        </Route>
-        <Route path='/todos-without-timeline' element={<TodosWithoutTime />}>
-        </Route>
-      </Routes>
+      <div className='container'>
+        <Routes>
+          <Route path='/' element={<Main />}>
+          </Route>
+          <Route path='/todos-without-timeline' element={<TodosWithoutTime />}>
+          </Route>
+        </Routes>
+      </div>
     </div>
   );
 }

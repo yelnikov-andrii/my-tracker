@@ -12,7 +12,6 @@ import { DateBlock } from './DateBlock/DateBlock';
 import { DeleteCompleted } from './DeleteCompleted/DeleteCompleted';
 import { ReadyToDelete } from './ReadyToDelete/ReadyToDelete';
 import { Box } from '@mui/material';
-import { GlobalOptions } from './GlobalOptions/GlobalOptions';
 import { AddTodoBlock } from './AddTodoBlock/AddTodoBlock';
 import { MyModal } from '../../UI/MyModal';
 
@@ -29,9 +28,6 @@ export const Main: React.FC = () => {
   return (
     <Box paddingTop={3}>
       <MyContainer>
-        <GlobalOptions 
-          date={formatDate(currentDate)}
-        />
         <MyCalendar
           value={currentDate}
           onChange={changeCurrentDate}
