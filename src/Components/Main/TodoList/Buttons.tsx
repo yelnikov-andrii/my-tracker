@@ -1,9 +1,8 @@
 import { Button } from '@mui/material'
 import React, { Dispatch, SetStateAction } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { removeTodo, selectTodoToChange } from '../../../store/todosSlice';
 import { TodoInterface } from '../../../types/todos';
-import { RootState } from '../../../store/store';
 
 interface Props {
   date: string;
@@ -13,7 +12,6 @@ interface Props {
 
 export const Buttons: React.FC <Props> = ({ date, todo, setIsOpen }) => {
   const dispatch = useDispatch();
-  const { days } = useSelector((state: RootState) => state.todos);
 
   function deleteTodo(todoId: number | string) {
     dispatch(removeTodo({ id: todoId, date: date }));

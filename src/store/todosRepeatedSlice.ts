@@ -54,7 +54,7 @@ const todosRepeatedSlice = createSlice({
       });
       saveTodosForRepeatingInLocaleStorage(state.todosRepeated);
     },
-    getDataFromServer: (state: StateInterface, action: PayloadAction) => {
+    getDataFromServer: (state: StateInterface) => {
       const todosForRepeating = localStorage.getItem('todos-for-repeating');
 
       if (todosForRepeating) {

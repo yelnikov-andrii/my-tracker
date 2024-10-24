@@ -37,7 +37,7 @@ export const Form: React.FC <Props> = ({ setIsOpen }) => {
         }}
       />
       <Button
-        onClick={(e) => {
+        onClick={() => {
           addTodoHandler()
         }}
         variant='contained'

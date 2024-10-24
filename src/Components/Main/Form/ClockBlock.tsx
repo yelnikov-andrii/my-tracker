@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Box, Button, Typography, OutlinedInput } from '@mui/material';
+import React from 'react';
+import { Box, Button } from '@mui/material';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 import { useSelector } from 'react-redux';
@@ -39,14 +39,14 @@ export const ClockBlock = ({ viewValue, changeViewValue, value, setValue, label 
             </DemoItem>
             <Box sx={{ display: 'flex', justifyContent: 'center', gap: '16px' }}>
                 <Button
-                    onClick={(e: any) => {
+                    onClick={() => {
                         changeViewValue('hours')
                     }}
                 >
                     Години
                 </Button>
                 <Button
-                    onClick={(e: any) => {
+                    onClick={() => {
                         changeViewValue('minutes')
                     }}
                 >

@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, List, ListItem, Paper, Typography, useTheme } from '@mui/material';
+import { Box, Button, Checkbox, List, ListItem, Paper, useTheme } from '@mui/material';
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
@@ -40,7 +40,7 @@ export const TodoList = () => {
               {todo.name}
             </div>
             <Checkbox
-              onChange={(e) => {
+              onChange={() => {
                 toggleTodo(todo.id)
               }}
               checked={todo.completed}

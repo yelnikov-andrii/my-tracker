@@ -15,7 +15,7 @@ export const DeleteCompleted: React.FC <Props> = ({ setReadyToDelete, date }) =>
   
   return (
     <Box>
-      <Button onClick={(e) => {
+      <Button onClick={() => {
         if (foundDay && foundDay.todos.find((todo: TodoInterface) => todo.completed === true)) {
           setReadyToDelete(true);
         } else {
