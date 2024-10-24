@@ -2,7 +2,7 @@
 import React, { Dispatch, SetStateAction, useMemo } from 'react'
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
-import { List, ListItem, Paper, Typography } from '@mui/material';
+import { List, ListItem, Paper } from '@mui/material';
 import { TodoInterface } from '../../../types/todos';
 import { useAddTodosWhenRepeatedTasks } from '../../../helpers/useAddTodosWhenRepeatedTasks';
 import { ListItemComponent } from './ListItemComponent';

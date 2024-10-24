@@ -2,8 +2,7 @@ import React, { Dispatch, SetStateAction, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { Box, Button, Typography, OutlinedInput, Alert } from '@mui/material';
-import { changeTheTodo, changeTodoName, selectTodoToChange } from '../../../store/todosSlice';
-import { TodoInterface } from '../../../types/todos';
+import { changeTodoName } from '../../../store/todosSlice';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { ClockBlock } from './ClockBlock';
@@ -17,8 +16,8 @@ interface Props {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export const Form: React.FC<Props> = ({ date, setIsOpen }) => {
-  const { days, todoName, todoToChange } = useSelector((state: RootState) => state.todos);
+export const Form: React.FC<Props> = ({ date }) => {
+  const { todoName, todoToChange } = useSelector((state: RootState) => state.todos);
   const { startTime, finishTime } = useSelector((state: RootState) => state.time);
 
   const [view, setView] = useState<ViewT>({

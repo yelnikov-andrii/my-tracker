@@ -22,8 +22,6 @@ export const Alert: React.FC <Props> = ({ children, isOpen, setIsOpen }) => {
         background: 'rgba(0, 0, 0, 0.5)'
       }}
       zIndex={1}
-      onClick={() => {
-      }}
     >
       <Box 
         onClick={(e) => {

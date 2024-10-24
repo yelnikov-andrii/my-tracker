@@ -25,12 +25,18 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint \"src/**/*.{ts,tsx}\""
   },
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
+      "react-app/jest",
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:react/recommended",
+      "plugin:react-hooks/recommended",
+      "plugin:prettier/recommended"
     ]
   },
   "browserslist": {
@@ -46,8 +52,18 @@
     ]
   },
   "devDependencies": {
+    "@eslint/js": "^9.13.0",
     "@types/react-dom": "^18.2.19",
-    "react-scripts": "^5.0.1"
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "eslint": "^8.50.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.37.2",
+    "globals": "^15.11.0",
+    "prettier": "^3.3.3",
+    "react-scripts": "^5.0.1",
+    "typescript-eslint": "^8.11.0"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0",
