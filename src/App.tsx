@@ -8,6 +8,7 @@ import { Routes, Route } from 'react-router-dom';
 import { TodosWithoutTime } from './Components/TodosWithoutTime/TodosWithoutTime';
 import { getWeekdaysFromStorage } from './store/weekdaySlice';
 import { getDataFromServer } from './store/todosRepeatedSlice';
+import Registration from './Components/Registration/Registration';
 
 function App() {
   const dispatch = useDispatch();
@@ -24,6 +25,10 @@ function App() {
       <div className='container'>
         <Routes>
           <Route path='/' element={<Main />}>
+          </Route>
+          <Route path='/login' element={<Main />}>
+          </Route>
+          <Route path='/registration' element={<Registration />}>
           </Route>
           <Route path='/todos-without-timeline' element={<TodosWithoutTime />}>
           </Route>

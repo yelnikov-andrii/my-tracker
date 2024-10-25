@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import AppBar from '@mui/material/AppBar';
 import Container from '@mui/material/Container';
-import { Toolbar } from '@mui/material';
+import { Box, Toolbar } from '@mui/material';
 
 export const Header = () => {
 
@@ -11,7 +11,7 @@ export const Header = () => {
     <React.Fragment>
       <CssBaseline />
       <AppBar position="static" sx={{ backgroundColor: 'primary.main' }}>
-        <Container maxWidth="sm">
+        <Container maxWidth="md">
           <Toolbar sx={{
             paddingLeft: 2,
             paddingRight: 2,
@@ -31,12 +31,22 @@ export const Header = () => {
               paddingRight: 6,
             },
           }}>
-            <Link to="/" color="white" >
-              Справи за графіком
-            </Link>
-            <Link to="/todos-without-timeline" color="white" >
-              Справи без ліміту
-            </Link>
+            <Box sx={{ display: 'flex', gap: '32px' }}>
+              <Link to="/" color="white" >
+                Справи за графіком
+              </Link>
+              <Link to="/todos-without-timeline" color="white" >
+                Справи без ліміту
+              </Link>
+            </Box>
+            <Box sx={{ display: 'flex', gap: '16px' }}>
+              <Link to="/registration" color="white" >
+                Реєстрація
+              </Link>
+              <Link to="/login" color="white" >
+                Логін
+              </Link>
+            </Box>
           </Toolbar>
         </Container>
       </AppBar>
