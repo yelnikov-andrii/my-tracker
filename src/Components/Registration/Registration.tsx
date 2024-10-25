@@ -61,6 +61,7 @@ const Registration = () => {
                     return response.json();
                 })
                 .then(data => {
+                    console.log(data);
                     setFormData({ email: '', password: '' });
                     setAlertMessage(prev => ({ ...prev, success: 'Успішно зареєстрований користувач' }));
                     setTimeout(() => {
