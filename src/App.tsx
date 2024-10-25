@@ -14,10 +14,13 @@ function App() {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
+    localStorage.clear();
     dispatch(getTodosFromStorage());
     dispatch(getWeekdaysFromStorage());
     dispatch(getDataFromServer());
   }, []);
+
+  
 
   return (
     <div>
