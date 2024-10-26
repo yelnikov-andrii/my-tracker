@@ -13,6 +13,7 @@ const Registration = () => {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
+        confirmPassword: ''
     });
 
     const [errors, setErrors] = useState<any>({});
@@ -22,7 +23,8 @@ const Registration = () => {
 
     const handleChange = (e: any) => {
         const { name, value } = e.target;
-        setAlertMessage(prev => ({...prev, success: '', error: ''}))
+        setAlertMessage(prev => ({...prev, success: '', error: ''}));
+        setErrors({});
         setFormData({
             ...formData,
             [name]: value,
@@ -36,7 +38,13 @@ const Registration = () => {
         } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
             tempErrors.email = "Email is not valid.";
         }
-        if (!formData.password) tempErrors.password = "Password is required.";
+        if (!formData.password) {
+            tempErrors.password = "ВВедіть пароль";
+        }
+
+        if (formData.confirmPassword !== formData.password) {
+            tempErrors.password = 'Паролі не співпадають'
+        }
         setErrors(tempErrors);
         return Object.keys(tempErrors).length === 0;
     };
@@ -62,7 +70,7 @@ const Registration = () => {
                 })
                 .then(data => {
                     console.log(data);
-                    setFormData({ email: '', password: '' });
+                    setFormData({ email: '', password: '', confirmPassword: '' });
                     setAlertMessage(prev => ({ ...prev, success: 'Успішно зареєстрований користувач' }));
                     setTimeout(() => {
                         navigate('/login');
@@ -95,10 +103,22 @@ const Registration = () => {
                     <Grid size={12}>
                         <TextField
                             fullWidth
-                            label="Password"
+                            label="Пароль"
                             name="password"
                             type="password"
                             value={formData.password}
+                            onChange={handleChange}
+                            error={!!errors.password}
+                            helperText={errors.password}
+                        />
+                    </Grid>
+                    <Grid size={12}>
+                        <TextField
+                            fullWidth
+                            label="Повторіть пароль"
+                            name="confirm"
+                            type="password"
+                            value={formData.confirmPassword}
                             onChange={handleChange}
                             error={!!errors.password}
                             helperText={errors.password}
