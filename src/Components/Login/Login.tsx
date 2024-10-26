@@ -9,21 +9,18 @@ import {
 import Grid from '@mui/material/Grid2';
 import { useNavigate } from 'react-router-dom';
 
-const Registration = () => {
+const Login = () => {
     const [formData, setFormData] = useState({
         email: '',
-        password: '',
-        confirmPassword: ''
+        password: ''
     });
 
     const [errors, setErrors] = useState<any>({});
-    const [alertMessage, setAlertMessage] = useState({ success: '', error: '' });
     const navigate = useNavigate();
-    const delay = 3000;
+    const delay = 2000;
 
     const handleChange = (e: any) => {
         const { name, value } = e.target;
-        setAlertMessage(prev => ({...prev, success: '', error: ''}));
         setErrors({});
         setFormData({
             ...formData,
@@ -35,16 +32,12 @@ const Registration = () => {
         const tempErrors: any = {};
         if (!formData.email) {
             tempErrors.email = "Email is required.";
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-            tempErrors.email = "Email is not valid.";
         }
+
         if (!formData.password) {
             tempErrors.password = "ВВедіть пароль";
         }
 
-        if (formData.confirmPassword !== formData.password) {
-            tempErrors.password = 'Паролі не співпадають'
-        }
         setErrors(tempErrors);
         return Object.keys(tempErrors).length === 0;
     };
@@ -52,7 +45,7 @@ const Registration = () => {
     const handleSubmit = (e: any) => {
         e.preventDefault();
         if (validate()) {
-            fetch('http://localhost:2000/registration', {
+            fetch('http://localhost:2000/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -61,8 +54,6 @@ const Registration = () => {
             })
                 .then(response => {
                     if (!response.ok) {
-                        console.log(response)
-                        setAlertMessage(prev => ({...prev, error: response.statusText}));
                         throw new Error('Помилка ' + response.status + ' ' + response.statusText);
                     }
 
@@ -70,10 +61,9 @@ const Registration = () => {
                 })
                 .then(data => {
                     console.log(data);
-                    setFormData({ email: '', password: '', confirmPassword: '' });
-                    setAlertMessage(prev => ({ ...prev, success: 'Успішно зареєстрований користувач' }));
+                    setFormData({ email: '', password: '' });
                     setTimeout(() => {
-                        navigate('/login');
+                        navigate('/');
                     }, delay);
                 })
                 .catch((e) => {
@@ -85,7 +75,7 @@ const Registration = () => {
     return (
         <Container maxWidth="sm" sx={{ padding: '48px 0 0 0' }}>
             <Typography variant="h4" gutterBottom>
-                Реєстрація
+                Логін
             </Typography>
             <form onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
@@ -113,36 +103,10 @@ const Registration = () => {
                         />
                     </Grid>
                     <Grid size={12}>
-                        <TextField
-                            fullWidth
-                            label="Повторіть пароль"
-                            name="confirm"
-                            type="password"
-                            value={formData.confirmPassword}
-                            onChange={handleChange}
-                            error={!!errors.password}
-                            helperText={errors.password}
-                        />
-                    </Grid>
-                    <Grid size={12}>
                         <Button variant="contained" color="primary" type="submit">
-                            Зареєструватися
+                            Логін
                         </Button>
                     </Grid>
-                    {alertMessage && (
-                        <Grid size={12}>
-                            {alertMessage.error && (
-                                <Alert severity='error'>
-                                    {alertMessage.error}
-                                </Alert>
-                            )}
-                            {alertMessage.success && (
-                                <Alert severity='success'>
-                                    {alertMessage.success}
-                                </Alert>
-                            )}
-                        </Grid>
-                    )}
                     {(errors.email || errors.password) && (
                         <Grid size={12}>
                             <Alert severity='error'>
@@ -157,4 +121,4 @@ const Registration = () => {
     );
 };
 
-export default Registration;
+export default Login;
