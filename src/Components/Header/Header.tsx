@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import AppBar from '@mui/material/AppBar';
 import Container from '@mui/material/Container';
-import { Box, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
+import { Box, IconButton, Menu, MenuItem, Toolbar } from '@mui/material';
 import { RootState } from '../../store/store';
 import { useSelector } from 'react-redux';
 
