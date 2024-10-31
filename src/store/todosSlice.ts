@@ -6,12 +6,16 @@ interface StateInterface {
   days: DayInterface[];
   todoName: string;
   todoToChange: null | number | string;
+  todos: any[];
+  filteredTodos: any[];
 }
 
 const initialState: StateInterface = {
   days: [],
   todoToChange: null,
   todoName: '',
+  todos: [],
+  filteredTodos: [],
 };
 
 export const todoslice = createSlice({
@@ -32,6 +36,21 @@ export const todoslice = createSlice({
       state.days.push(day);
       saveTodosToLocaleStorage(state.days);
     }
+    },
+    getTodosFromServer: (state: StateInterface, action: PayloadAction<any>) => {
+      state.todos = action.payload;
+    },
+    setFilteredTodos: (state: StateInterface, action: PayloadAction<any>) => {
+      state.filteredTodos = action.payload;
+    },
+    changeTodoAction: (state: StateInterface, action: PayloadAction<any>) => {
+      const foundTodo = state.todos.find(todo => todo.id === action.payload.todoId);
+      if (foundTodo) {
+        Object.assign(foundTodo, action.payload.todo);
+      }
+    },
+    deleteTodoAction: (state: StateInterface, action: PayloadAction<any>) => {
+      state.todos = state.todos.filter(todo => todo.id !== action.payload);
     },
     getTodosFromStorage: (state: StateInterface) => {
       const todosString = localStorage.getItem('todos');
@@ -126,6 +145,6 @@ export const todoslice = createSlice({
   },
 });
 
-export const { addTodo, changeTodoName, getTodosFromStorage, selectTodoToChange, changeTheTodo, updateTodo, removeTodo, deleteCompletedTasks, addDay, clearDaysWhereDealsIsEmpty, toggleTodos } = todoslice.actions;
+export const { addTodo, changeTodoName, changeTodoAction, setFilteredTodos, deleteTodoAction, getTodosFromServer, getTodosFromStorage, selectTodoToChange, changeTheTodo, updateTodo, removeTodo, deleteCompletedTasks, addDay, clearDaysWhereDealsIsEmpty, toggleTodos } = todoslice.actions;
 
 export default todoslice.reducer;

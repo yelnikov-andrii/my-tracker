@@ -3,10 +3,14 @@ import dayjs from "dayjs";
 import { TodoInterface } from "../types/todos";
 import { useMemo } from "react";
 
-export const useGetOccupiedTimes = (day: any, todoId?: any) => {
-    function getOccupiedTimes(day: any) {
-        if (!day) return [];
-        const filteredTodos = day.todos.filter((todo: any) => {
+export const useGetOccupiedTimes = (todos: any, todoId?: any) => {
+
+    function getOccupiedTimes(todos: any) {
+        if (!todos || todos?.length === 0) {
+            return [];
+        }
+
+        const filteredTodos = todos?.filter((todo: any) => {
             if (todoId) {
                 if (todo.id !== todoId) {
                     return todo;
@@ -22,6 +26,6 @@ export const useGetOccupiedTimes = (day: any, todoId?: any) => {
     }
 
 
-    const occupiedTimes = useMemo(() => getOccupiedTimes(day), [day, todoId]);
+    const occupiedTimes = useMemo(() => getOccupiedTimes(todos), [todos, todoId]);
     return occupiedTimes;
 }

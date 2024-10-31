@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { Dispatch, SetStateAction, useMemo } from 'react'
-import { useSelector } from 'react-redux';
+import React, { Dispatch, SetStateAction, useEffect, useMemo } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { List, ListItem, Paper } from '@mui/material';
 import { TodoInterface } from '../../../types/todos';
@@ -8,6 +8,7 @@ import { useAddTodosWhenRepeatedTasks } from '../../../helpers/useAddTodosWhenRe
 import { ListItemComponent } from './ListItemComponent';
 import { ToggleBlock } from './ToggleBlock';
 import dayjs from 'dayjs';
+import { setFilteredTodos } from '../../../store/todosSlice';
 
 interface Props {
   date: string;
@@ -15,9 +16,28 @@ interface Props {
 }
 
 export const TodoList: React.FC<Props> = ({ date, setIsOpen }) => {
-  const { days } = useSelector((state: RootState) => state.todos);
+  const { days, todos } = useSelector((state: RootState) => state.todos);
   const { currentDate } = useSelector((state: RootState) => state.time);
+  const dispatch = useDispatch();
   useAddTodosWhenRepeatedTasks(currentDate);
+
+  const filteredTodos = useMemo(() => {
+    const res = todos?.filter((todo: any) => {
+      const startTime = todo.start;
+      const todoDate = dayjs(startTime).format('DD.MM.YYYY');
+      if (todoDate === date) {
+        return todo;
+      }
+    });
+
+      return res || [];
+  }, [todos, date]);
+
+  useEffect(() => {
+    dispatch(setFilteredTodos(filteredTodos));
+  }, [filteredTodos]);
+
+  console.log(filteredTodos, 'filterd todos')
 
 
   const foundDay = React.useMemo(() => {
@@ -33,13 +53,19 @@ export const TodoList: React.FC<Props> = ({ date, setIsOpen }) => {
   };
 
   const sortedTodos = useMemo(() => {
-    if (!foundDay) {
+    if (!todos || todos?.length === 0) {
       return [];
     } else {
-      const sortedTodos = getSortedTodos(foundDay?.todos);
+      const sortedTodos = getSortedTodos(filteredTodos);
       return sortedTodos;
     }
-  }, [foundDay?.todos]);
+    // if (!foundDay) {
+    //   return [];
+    // } else {
+    //   const sortedTodos = getSortedTodos(foundDay?.todos);
+    //   return sortedTodos;
+  // }, [foundDay?.todos]);
+  }, [todos]);
 
   return (
     <React.Fragment>

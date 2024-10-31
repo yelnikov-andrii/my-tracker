@@ -9,17 +9,18 @@ import { ClockBlock } from './ClockBlock';
 import { setFinishTime, setStartTime } from '../../../store/timeSlice';
 import { useAddTodo } from '../../../helpers/useAddTodo';
 import { ViewsStrT, ViewT } from '../../../types/mainForm';
-import { useChangeTodo } from '../../../helpers/useChangeTodo';
+import { useChangeTodo, useChangeTodoNew } from '../../../helpers/useChangeTodo';
 
 interface Props {
   date: string;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export const Form: React.FC<Props> = ({ date }) => {
-  const { todoName, todoToChange } = useSelector((state: RootState) => state.todos);
+export const Form: React.FC<Props> = ({ date, setIsOpen }) => {
+  const { todoName, todoToChange, todos } = useSelector((state: RootState) => state.todos);
   const { startTime, finishTime } = useSelector((state: RootState) => state.time);
 
+  const foundTodo = todos?.find(todo => todo.id === todoToChange);
   const [view, setView] = useState<ViewT>({
     start: 'hours',
     finish: 'hours'
@@ -28,7 +29,8 @@ export const Form: React.FC<Props> = ({ date }) => {
   const dispatch = useDispatch();
 
   const [addTodoHandler, alert] = useAddTodo(date);
-  const [changeTheTodoHandler, changeAlert] = useChangeTodo(date);
+  // const [changeTheTodoHandler, changeAlert] = useChangeTodo(date);
+  const [changeTheTodoHandler, changeAlert] = useChangeTodoNew(foundTodo);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -39,6 +41,10 @@ export const Form: React.FC<Props> = ({ date }) => {
           alignSelf="center"
           gap={1}
           mb={1}
+          sx={{
+            '@media (max-width: 768px)': {
+            },
+          }}
         >
           <Box
             display="flex"
@@ -46,10 +52,10 @@ export const Form: React.FC<Props> = ({ date }) => {
             alignSelf="center"
             flexWrap="wrap"
           >
-            <ClockBlock 
+            <ClockBlock
               viewValue={view.start}
               changeViewValue={(value: ViewsStrT) => {
-                setView(prev => ({...prev, start: value}))
+                setView(prev => ({ ...prev, start: value }))
               }}
               label='Початок'
               value={startTime}
@@ -58,30 +64,14 @@ export const Form: React.FC<Props> = ({ date }) => {
               }}
             />
           </Box>
-          <Typography
-            alignSelf="center"
-            sx={{
-              '@media (max-width: 425px)': {
-                alignSelf: 'center'
-              },
-            }}
-          >
-            &mdash;
-          </Typography>
           <Box
             display="flex"
             justifyContent="space-between"
-            flexWrap="wrap"
-            sx={{
-              '@media (max-width: 425px)': {
-                justifyContent: 'flex-end'
-              },
-            }}
-          >
-            <ClockBlock 
+            flexWrap="wrap">
+            <ClockBlock
               viewValue={view.finish}
               changeViewValue={(value: ViewsStrT) => {
-                setView(prev => ({...prev, finish: value}))
+                setView(prev => ({ ...prev, finish: value }))
               }}
               label='Кінець'
               value={finishTime}
@@ -101,14 +91,19 @@ export const Form: React.FC<Props> = ({ date }) => {
         <Box display="flex" justifyContent="center" gap={1}>
           {!todoToChange ? (
             <Button
-              onClick={addTodoHandler}
+              onClick={() => {
+                addTodoHandler();
+                setIsOpen(false);
+              }}
               variant="contained"
             >
               Додати справу
             </Button>
           ) : (
             <Button
-              onClick={() => changeTheTodoHandler(todoToChange)}
+              onClick={() =>
+                changeTheTodoHandler(todoToChange)
+              }
               variant="contained"
             >
               Редагувати справу
