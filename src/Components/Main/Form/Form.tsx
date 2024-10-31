@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
-import { Box, Button, Typography, OutlinedInput, Alert } from '@mui/material';
+import { Box, Button, OutlinedInput, Alert } from '@mui/material';
 import { changeTodoName } from '../../../store/todosSlice';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -9,14 +9,14 @@ import { ClockBlock } from './ClockBlock';
 import { setFinishTime, setStartTime } from '../../../store/timeSlice';
 import { useAddTodo } from '../../../helpers/useAddTodo';
 import { ViewsStrT, ViewT } from '../../../types/mainForm';
-import { useChangeTodo, useChangeTodoNew } from '../../../helpers/useChangeTodo';
+import { useChangeTodoNew } from '../../../helpers/useChangeTodo';
 
 interface Props {
   date: string;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export const Form: React.FC<Props> = ({ date, setIsOpen }) => {
+export const Form: React.FC<Props> = ({ setIsOpen }) => {
   const { todoName, todoToChange, todos } = useSelector((state: RootState) => state.todos);
   const { startTime, finishTime } = useSelector((state: RootState) => state.time);
 
@@ -28,7 +28,7 @@ export const Form: React.FC<Props> = ({ date, setIsOpen }) => {
 
   const dispatch = useDispatch();
 
-  const [addTodoHandler, alert] = useAddTodo(date);
+  const [addTodoHandler, alert] = useAddTodo();
   // const [changeTheTodoHandler, changeAlert] = useChangeTodo(date);
   const [changeTheTodoHandler, changeAlert] = useChangeTodoNew(foundTodo);
 
