@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react'
+import React, { useEffect } from 'react'
 import { MyContainer } from '../../UI/Container';
 import { Form } from './Form/Form';
 import { TodoList } from './TodoList/TodoList';
@@ -14,16 +14,37 @@ import { ReadyToDelete } from './ReadyToDelete/ReadyToDelete';
 import { Box } from '@mui/material';
 import { AddTodoBlock } from './AddTodoBlock/AddTodoBlock';
 import { MyModal } from '../../UI/MyModal';
+import { getTodosFromServer } from '../../store/todosSlice';
+import { baseUrl } from '../../helpers/baseUrl';
 
 export const Main: React.FC = () => {
   const dispatch = useDispatch();
   const { currentDate } = useSelector((state: RootState) => state.time);
   const [readyToDelete, setReadyToDelete] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(false);
+  const { user } = useSelector((state: RootState) => state.auth);
+
+
 
   function changeCurrentDate(newDate: Date) {
     dispatch(setDate(newDate.toISOString()))
   }
+
+  async function getTodos() {
+    try {
+      const response = await fetch(`${baseUrl}/todos/${user.id}`);
+      const todos = await response.json();
+      dispatch(getTodosFromServer(todos));
+    }
+
+    catch(e) {
+      console.log(e);
+    }
+  }
+
+  useEffect(() => {
+    getTodos();
+  })
 
   return (
     <Box paddingTop={3}>

@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { useNavigate } from 'react-router-dom';
+import { baseUrl } from '../../helpers/baseUrl';
 
 const Registration = () => {
     const [formData, setFormData] = useState({
@@ -52,7 +53,7 @@ const Registration = () => {
     const handleSubmit = (e: any) => {
         e.preventDefault();
         if (validate()) {
-            fetch('http://localhost:2000/registration', {
+            fetch(`${baseUrl}/registration`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -61,15 +62,13 @@ const Registration = () => {
             })
                 .then(response => {
                     if (!response.ok) {
-                        console.log(response)
                         setAlertMessage(prev => ({...prev, error: response.statusText}));
                         throw new Error('Помилка ' + response.status + ' ' + response.statusText);
                     }
 
                     return response.json();
                 })
-                .then(data => {
-                    console.log(data);
+                .then(() => {
                     setFormData({ email: '', password: '', confirmPassword: '' });
                     setAlertMessage(prev => ({ ...prev, success: 'Успішно зареєстрований користувач' }));
                     setTimeout(() => {
@@ -116,7 +115,7 @@ const Registration = () => {
                         <TextField
                             fullWidth
                             label="Повторіть пароль"
-                            name="confirm"
+                            name="confirmPassword"
                             type="password"
                             value={formData.confirmPassword}
                             onChange={handleChange}

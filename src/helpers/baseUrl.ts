@@ -1,0 +1,1 @@
+export const baseUrl = 'https://tracker-back-uf9y.onrender.com';

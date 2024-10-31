@@ -4,6 +4,7 @@ import todosSlice from './todosSlice';
 import weekdaySlice from './weekdaySlice';
 import todosRepeatedSlice from './todosRepeatedSlice';
 import todosWithouttimelineSlice from './todoWithout';
+import authSlice from './authSlice';
 
 export const store = configureStore({
   reducer: {
@@ -11,8 +12,10 @@ export const store = configureStore({
     todoswithout: todosWithouttimelineSlice,
     todosRepeated: todosRepeatedSlice,
     time: timeSlice,
-    weekday: weekdaySlice
+    weekday: weekdaySlice,
+    auth: authSlice
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

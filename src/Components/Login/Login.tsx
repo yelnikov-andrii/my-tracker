@@ -8,6 +8,9 @@ import {
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { changeAuth, changeUser } from '../../store/authSlice';
+import { baseUrl } from '../../helpers/baseUrl';
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -16,12 +19,15 @@ const Login = () => {
     });
 
     const [errors, setErrors] = useState<any>({});
+    const [alertError, setAlertError] = useState('');
     const navigate = useNavigate();
     const delay = 2000;
+    const dispatch = useDispatch();
 
     const handleChange = (e: any) => {
         const { name, value } = e.target;
         setErrors({});
+        setAlertError('');
         setFormData({
             ...formData,
             [name]: value,
@@ -45,29 +51,36 @@ const Login = () => {
     const handleSubmit = (e: any) => {
         e.preventDefault();
         if (validate()) {
-            fetch('http://localhost:2000/login', {
+            fetch(`${baseUrl}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email: formData.email, password: formData.password })
+                body: JSON.stringify({ email: formData.email, password: formData.password }),
+                credentials: 'include',
             })
-                .then(response => {
+                .then(async response => {
                     if (!response.ok) {
-                        throw new Error('Помилка ' + response.status + ' ' + response.statusText);
+                        return response.json().then(errData => {
+                            setAlertError(errData.message);
+                            throw new Error('Error: ' + errData.message);
+                        });
                     }
 
                     return response.json();
                 })
                 .then(data => {
-                    console.log(data);
                     setFormData({ email: '', password: '' });
+                    localStorage.setItem('accessToken', data.accessToken);
+                    localStorage.setItem('user_todo', JSON.stringify(data.user));
+                    dispatch(changeAuth(true));
+                    dispatch(changeUser(data.user));
                     setTimeout(() => {
                         navigate('/');
                     }, delay);
                 })
                 .catch((e) => {
-                    console.log(e);
+                    console.log(e, 'error login');
                 })
         }
     };
@@ -112,6 +125,13 @@ const Login = () => {
                             <Alert severity='error'>
                                 {errors.email}
                                 {errors.password}
+                            </Alert>
+                        </Grid>
+                    )}
+                    {(alertError) && (
+                        <Grid size={12}>
+                            <Alert severity='error'>
+                                {alertError}
                             </Alert>
                         </Grid>
                     )}
