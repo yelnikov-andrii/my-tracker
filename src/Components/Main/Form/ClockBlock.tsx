@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import dayjs from 'dayjs';
 import { ViewsStrT } from '../../../types/mainForm';
-import { TimePicker } from '@mui/x-date-pickers';
+import { TimeField } from '@mui/x-date-pickers';
 
 type Props = {
     viewValue: ViewsStrT;
@@ -14,7 +14,7 @@ type Props = {
     label: string;
 }
 
-export const ClockBlock = ({ viewValue, value, setValue, label }: Props) => {
+export const ClockBlock = ({ value, setValue, label }: Props) => {
     const { currentDate } = useSelector((state: RootState) => state.time);
 
     const handleTimeChange = (newTime: any) => {
@@ -26,14 +26,13 @@ export const ClockBlock = ({ viewValue, value, setValue, label }: Props) => {
     };
 
     return (
-        <DemoContainer components={['TimeClock']}>
+        <DemoContainer components={['TimePicker']}>
             <DemoItem label={label}>
-                <TimePicker
+                <TimeField
                     value={value && dayjs(value)}
                     onChange={handleTimeChange}
-                    view={viewValue}
-                    views={['hours', 'minutes']}
-                    ampm={false} />
+                    ampm={false}
+                    />
             </DemoItem>
         </DemoContainer>
     )

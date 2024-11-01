@@ -16,7 +16,7 @@ interface Props {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export const Form: React.FC<Props> = ({ setIsOpen }) => {
+export const Form: React.FC<Props> = () => {
   const { todoName, todoToChange, todos } = useSelector((state: RootState) => state.todos);
   const { startTime, finishTime } = useSelector((state: RootState) => state.time);
 
@@ -93,7 +93,6 @@ export const Form: React.FC<Props> = ({ setIsOpen }) => {
             <Button
               onClick={() => {
                 addTodoHandler();
-                setIsOpen(false);
               }}
               variant="contained"
             >

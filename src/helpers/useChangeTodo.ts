@@ -96,8 +96,8 @@ export const useChangeTodoNew = (todo: any): [(todoId: number | string | null) =
         }
 
         const isTimeOccupied = occupiedTimes.some((occupied: any) =>
-            (dayjs(startTime).isBetween(occupied.start, occupied.finish, null, '[)') ||
-                dayjs(finishTime).isBetween(occupied.start, occupied.finish, null, '(]')) ||
+            (dayjs(startTime).isBetween(occupied.start, occupied.finish, null, '[]') ||
+                dayjs(finishTime).isBetween(occupied.start, occupied.finish, null, '[]')) ||
             (dayjs(startTime).isSame(occupied.start) && dayjs(finishTime).isSame(occupied.finish))
         );
 

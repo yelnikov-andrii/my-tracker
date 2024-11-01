@@ -4,8 +4,10 @@ import { TodoInterface } from '../../../types/todos'
 import { MyDropdown } from '../../../UI/MyDropdown';
 import { Buttons } from './Buttons';
 import { useDispatch } from 'react-redux';
-import { updateTodo } from '../../../store/todosSlice';
+// import { updateTodo } from '../../../store/todosSlice';
 import dayjs from 'dayjs';
+import { baseUrl } from '../../../helpers/baseUrl';
+import { changeTodoAction } from '../../../store/todosSlice';
 
 interface Props {
   todo: TodoInterface;
@@ -13,14 +15,41 @@ interface Props {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export const ListItemComponent: React.FC <Props> = ({ todo, date, setIsOpen }) => {
+export const ListItemComponent: React.FC<Props> = ({ todo, date, setIsOpen }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
 
-  function toggleTodo(todoId: number | string) {
-    dispatch(updateTodo({ id: todoId, date: date }));
+  async function updateTodo(todo: any) {
+    console.log(todo, 'todo ')
+    try {
+      const newTodo = { ...todo };
+      newTodo.completed = !todo.completed;
+      const response = await fetch(`${baseUrl}/todos/${todo.id}`, {
+        method: 'PATCH',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ newTodo, todoId: todo.id })
+      });
+
+      if (!response.ok) {
+        console.error('Error: Cannot update todo');
+        return;
+      }
+
+      dispatch(changeTodoAction({ todo: newTodo, todoId: todo.id }));
+
+
+    } catch (e) {
+      console.log(e);
+    }
   }
-  
+
+  function toggleTodo(todo: any) {
+    // dispatch(updateTodo({ id: todoId, date: date }));
+    updateTodo(todo)
+  }
+
   return (
     <ListItem
       key={todo.id}
@@ -34,10 +63,10 @@ export const ListItemComponent: React.FC <Props> = ({ todo, date, setIsOpen }) =
         padding: '4px'
       }}
     >
-      <Box 
-        display="flex" 
-        justifyContent="space-between" 
-        width="100%" 
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        width="100%"
         alignItems="center"
         sx={{
           textDecoration: todo.completed ? 'line-through' : 'none',
@@ -45,7 +74,7 @@ export const ListItemComponent: React.FC <Props> = ({ todo, date, setIsOpen }) =
         }}
       >
         {`${dayjs(todo.start).format('HH:mm')} - ${dayjs(todo.finish).format('HH:mm')}`}
-        <Box 
+        <Box
           sx={{
             textDecoration: todo.completed ? 'line-through' : 'none',
           }}
@@ -53,12 +82,12 @@ export const ListItemComponent: React.FC <Props> = ({ todo, date, setIsOpen }) =
           {todo.name}
         </Box>
         <Checkbox
-          onChange={() => toggleTodo(todo.id)}
+          onChange={() => toggleTodo(todo)}
           checked={todo.completed}
         />
       </Box >
       <MyDropdown butttonContent="Вибрати опцію">
-        <Buttons 
+        <Buttons
           date={date}
           todo={todo}
           setIsOpen={setIsOpen}

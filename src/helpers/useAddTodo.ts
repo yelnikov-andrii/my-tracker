@@ -62,11 +62,13 @@ export const useAddTodo = ():[AddTodoHandler, string] => {
         //   (dayjs(startTime).isSame(occupied.start) && dayjs(finishTime).isSame(occupied.finish))
         // );
 
-        const isTimeOccupiedNew = occupiedTimesNew.some((occupied: any) => 
-          (dayjs(startTime).isBetween(occupied.start, occupied.finish, null, '[)') ||
-          dayjs(finishTime).isBetween(occupied.start, occupied.finish, null, '(]')) ||
-          (dayjs(startTime).isSame(occupied.start) && dayjs(finishTime).isSame(occupied.finish))
-        );
+        const isTimeOccupiedNew = occupiedTimesNew.some((occupied: any) => {
+          const res = (dayjs(startTime).isBetween(occupied.start, occupied.finish) ||
+          dayjs(finishTime).isBetween(occupied.start, occupied.finish));
+          return res;
+    });
+
+        
 
         if (isTimeOccupiedNew) {
           setAlert('Вибраний час вже зайнято');

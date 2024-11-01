@@ -37,8 +37,6 @@ export const TodoList: React.FC<Props> = ({ date, setIsOpen }) => {
     dispatch(setFilteredTodos(filteredTodos));
   }, [filteredTodos]);
 
-  console.log(filteredTodos, 'filterd todos')
-
 
   const foundDay = React.useMemo(() => {
     const foundDay = days.find(day => day.date === date);
