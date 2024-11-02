@@ -1,7 +1,6 @@
 import { Box, Button } from '@mui/material';
 import React, { Dispatch, SetStateAction } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../store/store';
 import { TodoInterface } from '../../../types/todos';
 
 interface Props {

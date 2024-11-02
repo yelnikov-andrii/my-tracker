@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store/store";
 import { TodoInterface } from "../types/todos";
 import { changeTheTodo, changeTodoAction, changeTodoName, selectTodoToChange } from "../store/todosSlice";
 import { useState } from "react";

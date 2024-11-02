@@ -1,6 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../store/store';
 import { Box, Button, OutlinedInput, Alert } from '@mui/material';
 import { changeTodoName } from '../../../store/todosSlice';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';

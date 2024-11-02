@@ -1,4 +1,4 @@
-import { Box, Checkbox, ListItem, useTheme } from '@mui/material'
+import { Box, Checkbox, ListItem } from '@mui/material'
 import React, { Dispatch, SetStateAction } from 'react'
 import { TodoInterface } from '../../../types/todos'
 import { MyDropdown } from '../../../UI/MyDropdown';
@@ -16,11 +16,9 @@ interface Props {
 }
 
 export const ListItemComponent: React.FC<Props> = ({ todo, date, setIsOpen }) => {
-  const theme = useTheme();
   const dispatch = useDispatch();
 
   async function updateTodo(todo: any) {
-    console.log(todo, 'todo ')
     try {
       const newTodo = { ...todo };
       newTodo.completed = !todo.completed;
@@ -46,7 +44,6 @@ export const ListItemComponent: React.FC<Props> = ({ todo, date, setIsOpen }) =>
   }
 
   function toggleTodo(todo: any) {
-    // dispatch(updateTodo({ id: todoId, date: date }));
     updateTodo(todo)
   }
 
@@ -56,11 +53,13 @@ export const ListItemComponent: React.FC<Props> = ({ todo, date, setIsOpen }) =>
       style={{
         display: 'flex',
         flexDirection: 'column',
-        border: `1px solid ${theme.palette.primary.main}`,
         fontWeight: '500',
         fontSize: '18px',
         alignItems: 'flex-start',
-        padding: '4px'
+        padding: '4px',
+        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+        borderRadius: '8px',
+        backgroundColor: 'white'
       }}
     >
       <Box

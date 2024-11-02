@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store/store";
 import { changeTodoName } from "../store/todosSlice";
 import { useState } from "react";
 import dayjs from "dayjs";

@@ -1,6 +1,5 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../store/store';
 import { formatDate } from '../../../helpers/formateDate';
 import { Box, Typography } from '@mui/material';
 

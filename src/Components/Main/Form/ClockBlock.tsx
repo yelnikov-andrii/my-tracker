@@ -1,7 +1,6 @@
 import React from 'react';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../../store/store';
 import dayjs from 'dayjs';
 import { ViewsStrT } from '../../../types/mainForm';
 import { TimeField } from '@mui/x-date-pickers';
@@ -18,6 +17,7 @@ export const ClockBlock = ({ value, setValue, label }: Props) => {
     const { currentDate } = useSelector((state: RootState) => state.time);
 
     const handleTimeChange = (newTime: any) => {
+        if (!newTime || !dayjs(newTime).isValid()) return;
         const updatedValue = dayjs(currentDate)
             .hour(newTime.hour())
             .minute(newTime.minute())

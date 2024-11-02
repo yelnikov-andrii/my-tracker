@@ -3,7 +3,6 @@ import React, { Dispatch, SetStateAction } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteTodoAction, selectTodoToChange } from '../../../store/todosSlice';
 import { TodoInterface } from '../../../types/todos';
-import { RootState } from '../../../store/store';
 import { baseUrl } from '../../../helpers/baseUrl';
 
 interface Props {

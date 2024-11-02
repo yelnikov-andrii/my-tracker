@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store/store";
 import { formatDate } from "./formateDate";
 import { DayInterface, TodoInterface } from "../types/todos";
 import { addDay } from "../store/todosSlice";

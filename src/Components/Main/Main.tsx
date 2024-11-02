@@ -5,7 +5,6 @@ import { Form } from './Form/Form';
 import { TodoList } from './TodoList/TodoList';
 import { useDispatch, useSelector } from 'react-redux';
 import { MyCalendar } from '../../UI/MyCalendar';
-import { RootState } from '../../store/store';
 import { setDate } from '../../store/timeSlice';
 import { formatDate } from '../../helpers/formateDate';
 import { DateBlock } from './DateBlock/DateBlock';
@@ -16,6 +15,7 @@ import { AddTodoBlock } from './AddTodoBlock/AddTodoBlock';
 import { MyModal } from '../../UI/MyModal';
 import { getTodosFromServer } from '../../store/todosSlice';
 import { baseUrl } from '../../helpers/baseUrl';
+import { MyDropdown } from '../../UI/MyDropdown';
 
 export const Main: React.FC = () => {
   const dispatch = useDispatch();
@@ -37,7 +37,7 @@ export const Main: React.FC = () => {
       dispatch(getTodosFromServer(todos));
     }
 
-    catch(e) {
+    catch (e) {
       console.log(e);
     }
   }
@@ -49,16 +49,18 @@ export const Main: React.FC = () => {
   return (
     <Box paddingTop={3}>
       <MyContainer>
-        <MyCalendar
-          value={currentDate}
-          onChange={changeCurrentDate}
-        />
+        <MyDropdown butttonContent="Календар">
+          <MyCalendar
+            value={currentDate}
+            onChange={changeCurrentDate}
+          />
+        </MyDropdown>
         <DateBlock />
         <MyModal
           isOpen={isOpen}
           setIsOpen={setIsOpen}
         >
-          <Form 
+          <Form
             date={formatDate(currentDate)}
             setIsOpen={setIsOpen}
           />
@@ -67,7 +69,7 @@ export const Main: React.FC = () => {
           date={formatDate(currentDate)}
           setIsOpen={setIsOpen}
         />
-        <AddTodoBlock 
+        <AddTodoBlock
           setIsOpen={setIsOpen}
         />
         <DeleteCompleted
@@ -75,7 +77,7 @@ export const Main: React.FC = () => {
           date={formatDate(currentDate)}
         />
         {readyToDelete === true && (
-          <ReadyToDelete 
+          <ReadyToDelete
             readyToDelete={readyToDelete}
             setReadyToDelete={setReadyToDelete}
             date={formatDate(currentDate)}

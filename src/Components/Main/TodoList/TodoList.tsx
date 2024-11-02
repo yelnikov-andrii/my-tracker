@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { Dispatch, SetStateAction, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../store/store';
-import { List, ListItem, Paper } from '@mui/material';
+import { List, ListItem } from '@mui/material';
 import { TodoInterface } from '../../../types/todos';
 import { useAddTodosWhenRepeatedTasks } from '../../../helpers/useAddTodosWhenRepeatedTasks';
 import { ListItemComponent } from './ListItemComponent';
@@ -72,7 +71,7 @@ export const TodoList: React.FC<Props> = ({ date, setIsOpen }) => {
         foundDay={foundDay || null}
         active={(foundDay && foundDay?.todos?.length > 0) || false}
       />
-      <List>
+      <List sx={{display: 'flex', flexDirection:'column', gap: '32px'}}>
         {sortedTodos.length > 0 ? sortedTodos.map((todo: TodoInterface) => (
           <ListItemComponent
             todo={todo}
@@ -81,11 +80,9 @@ export const TodoList: React.FC<Props> = ({ date, setIsOpen }) => {
             setIsOpen={setIsOpen}
           />
         )) : (
-          <Paper variant='outlined'>
             <ListItem>
               Немає завдань
             </ListItem>
-          </Paper>
         )}
       </List>
     </React.Fragment>

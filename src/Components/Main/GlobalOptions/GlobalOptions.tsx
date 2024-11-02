@@ -3,7 +3,6 @@ import React from 'react'
 import { MyDropdown } from '../../../UI/MyDropdown'
 import { Box, Button } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../store/store';
 import { Alert } from '../../../UI/Alert';
 import { WeekDays } from './WeekDays';
 import { clearDaysWhereDealsIsEmpty } from '../../../store/todosSlice';

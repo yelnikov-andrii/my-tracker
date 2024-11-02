@@ -1,7 +1,6 @@
 import { Box, Button, Checkbox, List, ListItem, Paper, useTheme } from '@mui/material';
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
 import { TodoWithoutTimeInterface } from '../../types/todosWithout';
 import { removeTodoWithoutTimeline, updateTodoWithout } from '../../store/todoWithout';
 
