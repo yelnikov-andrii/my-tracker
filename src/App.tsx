@@ -5,7 +5,6 @@ import { Main } from './Components/Main/Main';
 import { useDispatch } from 'react-redux';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { TodosWithoutTime } from './Components/TodosWithoutTime/TodosWithoutTime';
-import { getWeekdaysFromStorage } from './store/weekdaySlice';
 import Registration from './Components/Registration/Registration';
 import Login from './Components/Login/Login';
 import { changeAuth, changeUser } from './store/authSlice';
@@ -13,10 +12,6 @@ import { changeAuth, changeUser } from './store/authSlice';
 function App() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    dispatch(getWeekdaysFromStorage());
-  }, []);
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
@@ -31,7 +26,7 @@ function App() {
       dispatch(changeAuth(true));
     }
 
-    if (!token) {
+    if (!token || !user) {
       navigate('/login');
     }
   }, [navigate]);

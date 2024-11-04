@@ -1,6 +1,7 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { MyModal } from '../../UI/MyModal';
 import { Box, Button, Typography } from '@mui/material';
+import { useDeleteAll } from '../../../helpers/useDeleteAll';
 // import { useDispatch } from 'react-redux';
 
 interface Props {
@@ -10,7 +11,7 @@ interface Props {
 }
 
 export const ReadyToDelete: React.FC <Props> = ({ readyToDelete, setReadyToDelete }) => {
-  // const dispatch = useDispatch();
+  const deleteAllCompletedTodos = useDeleteAll();
 
   return (
     <MyModal
@@ -24,7 +25,7 @@ export const ReadyToDelete: React.FC <Props> = ({ readyToDelete, setReadyToDelet
         <Button
           variant="contained"
           onClick={() => {
-            // dispatch(deleteCompletedTasks(date));
+            deleteAllCompletedTodos();
             setReadyToDelete(false);
           }}
         >

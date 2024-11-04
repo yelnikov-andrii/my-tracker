@@ -56,4 +56,10 @@ declare global {
         email?: string;
         password?: string;
     }
+
+    interface UserI {
+      email: string;
+      password: string;
+      id: string;
+    }
 }

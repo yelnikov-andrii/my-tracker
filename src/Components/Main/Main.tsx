@@ -13,36 +13,25 @@ import { ReadyToDelete } from './ReadyToDelete/ReadyToDelete';
 import { Box } from '@mui/material';
 import { AddTodoBlock } from './AddTodoBlock/AddTodoBlock';
 import { MyModal } from '../UI/MyModal';
-import { getTodosFromServer } from '../../store/todosSlice';
-import { baseUrl } from '../../helpers/baseUrl';
 import { MyDropdown } from '../UI/MyDropdown';
+import { useGetTodos } from '../../helpers/useGetTodos';
+import { useCheckIfCompletedExist } from '../../helpers/useCheckIfCompletedIxist';
 
 export const Main: React.FC = () => {
   const dispatch = useDispatch();
   const { currentDate } = useSelector((state: RootState) => state.time);
   const [readyToDelete, setReadyToDelete] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(false);
-  const { user } = useSelector((state: RootState) => state.auth);
+  const [getTodos] = useGetTodos();
+  const isCheckedExist = useCheckIfCompletedExist();
 
   function changeCurrentDate(newDate: Date) {
     dispatch(setDate(newDate.toISOString()))
   }
 
-  async function getTodos() {
-    try {
-      const response = await fetch(`${baseUrl}/todos/${user.id}`);
-      const todos = await response.json();
-      dispatch(getTodosFromServer(todos));
-    }
-
-    catch (e) {
-      console.log(e);
-    }
-  }
-
   useEffect(() => {
     getTodos();
-  }, []);
+  }, [currentDate]);
 
   return (
     <Box paddingTop={3}>
@@ -70,10 +59,12 @@ export const Main: React.FC = () => {
         <AddTodoBlock
           setIsOpen={setIsOpen}
         />
-        <DeleteCompleted
-          // setReadyToDelete={setReadyToDelete}
-          // date={formatDate(currentDate)}
-        />
+        {isCheckedExist && (
+          <DeleteCompleted
+            setReadyToDelete={setReadyToDelete}
+            date={formatDate(currentDate)}
+          />
+        )}
         {readyToDelete === true && (
           <ReadyToDelete
             readyToDelete={readyToDelete}

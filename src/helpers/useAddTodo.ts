@@ -7,12 +7,13 @@ import isBetween from "dayjs/plugin/isBetween";
 import { fetchWithAuth } from "./fetchWithAuth";
 import { baseUrl } from "./baseUrl";
 import { changeTime } from "../store/timeSlice";
+import { useGetTodos } from "./useGetTodos";
 
 dayjs.extend(isBetween);
 
 type AddTodoHandler = () => void;
 
-async function createTodo(todo: TodoInterfaceToAdd, userId: string) {
+async function createTodo(todo: TodoInterfaceToAdd, userId: string, getTodos: () => void) {
   try {
     const response = await fetchWithAuth(`${baseUrl}/todos`, {
       method: 'POST',
@@ -21,8 +22,13 @@ async function createTodo(todo: TodoInterfaceToAdd, userId: string) {
       },
       body: JSON.stringify({ todo, userId })
     });
+
     if (!response.ok) {
       throw new Error(`Failed to create todo: ${response.statusText}`);
+    }
+
+    if (response.ok) {
+      getTodos();
     }
   } catch (error) {
     console.error("Error creating todo:", error);
@@ -36,6 +42,7 @@ export const useAddTodo = ():[AddTodoHandler, string] => {
     const [alert, setAlert] = useState('');
     const occupiedTimesNew = useGetOccupiedTimes(todos || []);
     const { user } = useSelector((state: RootState) => state.auth);
+    const [getTodos] = useGetTodos();
 
     function addTodoHandler() {
         if (!todoName) {
@@ -77,7 +84,7 @@ export const useAddTodo = ():[AddTodoHandler, string] => {
 
         const userId = user.id;
 
-        createTodo(todoNew, userId);
+        createTodo(todoNew, userId, getTodos);
         dispatch(changeTodoName(''));
         dispatch(changeTime(todoNew));
     }
