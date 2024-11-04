@@ -36,18 +36,20 @@ export const Form: React.FC<Props> = () => {
           display="flex"
           justifyContent="space-between"
           alignSelf="center"
+          width="100%"
           gap={1}
           mb={1}
           sx={{
-            '@media (max-width: 768px)': {
+            '@media (max-width: 475px)': {
+              flexWrap: 'wrap',
+              flexDirection: 'column'
             },
           }}
         >
           <Box
             display="flex"
             justifyContent="space-between"
-            alignSelf="center"
-            flexWrap="wrap"
+            width="100%"
           >
             <ClockBlock
               viewValue={view.start}
@@ -64,7 +66,8 @@ export const Form: React.FC<Props> = () => {
           <Box
             display="flex"
             justifyContent="space-between"
-            flexWrap="wrap">
+            width="100%"
+          >
             <ClockBlock
               viewValue={view.finish}
               changeViewValue={(value: ViewsStrT) => {
@@ -78,7 +81,7 @@ export const Form: React.FC<Props> = () => {
             />
           </Box>
         </Box>
-        <Box display="flex" justifyContent="space-between" gap={1} marginBottom={2}>
+        <Box display="flex" justifyContent="space-between" gap={1} marginBottom={2} flexWrap="wrap">
           <OutlinedInput
             fullWidth
             value={todoName}

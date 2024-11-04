@@ -25,13 +25,13 @@ export const ClockBlock = ({ value, setValue, label }: Props) => {
     };
 
     return (
-        <DemoContainer components={['TimePicker']}>
+        <DemoContainer components={['TimePicker']} sx={{ width: "100%" }}>
             <DemoItem label={label}>
                 <TimeField
                     value={value && dayjs(value) || null}
                     onChange={handleTimeChange}
                     ampm={false}
-                    />
+                />
             </DemoItem>
         </DemoContainer>
     )
