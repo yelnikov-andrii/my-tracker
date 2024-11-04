@@ -1,15 +1,14 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
-import { ViewsStrT } from '../../../types/mainForm';
 import { TimeField } from '@mui/x-date-pickers';
 
 type Props = {
     viewValue: ViewsStrT;
     changeViewValue: (value: ViewsStrT) => void;
-    value: any;
-    setValue: any;
+    value: string;
+    setValue: Dispatch<SetStateAction<string>>;
     label: string;
 }
 
@@ -29,7 +28,7 @@ export const ClockBlock = ({ value, setValue, label }: Props) => {
         <DemoContainer components={['TimePicker']}>
             <DemoItem label={label}>
                 <TimeField
-                    value={value && dayjs(value)}
+                    value={value && dayjs(value) || null}
                     onChange={handleTimeChange}
                     ampm={false}
                     />

@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react'
-import { MyContainer } from '../../UI/Container';
+import { MyContainer } from '../UI/Container';
 import { Form } from './Form/Form';
 import { TodoList } from './TodoList/TodoList';
 import { useDispatch, useSelector } from 'react-redux';
-import { MyCalendar } from '../../UI/MyCalendar';
+import { MyCalendar } from '../UI/MyCalendar';
 import { setDate } from '../../store/timeSlice';
 import { formatDate } from '../../helpers/formateDate';
 import { DateBlock } from './DateBlock/DateBlock';
@@ -12,10 +12,10 @@ import { DeleteCompleted } from './DeleteCompleted/DeleteCompleted';
 import { ReadyToDelete } from './ReadyToDelete/ReadyToDelete';
 import { Box } from '@mui/material';
 import { AddTodoBlock } from './AddTodoBlock/AddTodoBlock';
-import { MyModal } from '../../UI/MyModal';
+import { MyModal } from '../UI/MyModal';
 import { getTodosFromServer } from '../../store/todosSlice';
 import { baseUrl } from '../../helpers/baseUrl';
-import { MyDropdown } from '../../UI/MyDropdown';
+import { MyDropdown } from '../UI/MyDropdown';
 
 export const Main: React.FC = () => {
   const dispatch = useDispatch();
@@ -23,8 +23,6 @@ export const Main: React.FC = () => {
   const [readyToDelete, setReadyToDelete] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(false);
   const { user } = useSelector((state: RootState) => state.auth);
-
-
 
   function changeCurrentDate(newDate: Date) {
     dispatch(setDate(newDate.toISOString()))
@@ -44,7 +42,7 @@ export const Main: React.FC = () => {
 
   useEffect(() => {
     getTodos();
-  })
+  }, []);
 
   return (
     <Box paddingTop={3}>
@@ -73,8 +71,8 @@ export const Main: React.FC = () => {
           setIsOpen={setIsOpen}
         />
         <DeleteCompleted
-          setReadyToDelete={setReadyToDelete}
-          date={formatDate(currentDate)}
+          // setReadyToDelete={setReadyToDelete}
+          // date={formatDate(currentDate)}
         />
         {readyToDelete === true && (
           <ReadyToDelete

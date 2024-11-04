@@ -7,8 +7,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { ClockBlock } from './ClockBlock';
 import { setFinishTime, setStartTime } from '../../../store/timeSlice';
 import { useAddTodo } from '../../../helpers/useAddTodo';
-import { ViewsStrT, ViewT } from '../../../types/mainForm';
-import { useChangeTodoNew } from '../../../helpers/useChangeTodo';
+import { useChangeTodo } from '../../../helpers/useChangeTodo';
 
 interface Props {
   date: string;
@@ -28,8 +27,7 @@ export const Form: React.FC<Props> = () => {
   const dispatch = useDispatch();
 
   const [addTodoHandler, alert] = useAddTodo();
-  // const [changeTheTodoHandler, changeAlert] = useChangeTodo(date);
-  const [changeTheTodoHandler, changeAlert] = useChangeTodoNew(foundTodo);
+  const [changeTheTodoHandler, changeAlert] = useChangeTodo(foundTodo);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

@@ -1,7 +1,6 @@
 import { Box, Checkbox, ListItem } from '@mui/material'
 import React, { Dispatch, SetStateAction } from 'react'
-import { TodoInterface } from '../../../types/todos'
-import { MyDropdown } from '../../../UI/MyDropdown';
+import { MyDropdown } from '../../UI/MyDropdown';
 import { Buttons } from './Buttons';
 import { useDispatch } from 'react-redux';
 // import { updateTodo } from '../../../store/todosSlice';

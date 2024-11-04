@@ -6,12 +6,13 @@ import { useGetOccupiedTimes } from "./getOccupiedTime";
 import isBetween from "dayjs/plugin/isBetween";
 import { fetchWithAuth } from "./fetchWithAuth";
 import { baseUrl } from "./baseUrl";
+import { changeTime } from "../store/timeSlice";
 
 dayjs.extend(isBetween);
 
 type AddTodoHandler = () => void;
 
-async function createTodo(todo: any, userId: string) {
+async function createTodo(todo: TodoInterfaceToAdd, userId: string) {
   try {
     const response = await fetchWithAuth(`${baseUrl}/todos`, {
       method: 'POST',
@@ -33,8 +34,6 @@ export const useAddTodo = ():[AddTodoHandler, string] => {
     const { todoName, todos } = useSelector((state: RootState) => state.todos);
     const dispatch = useDispatch();
     const [alert, setAlert] = useState('');
-    // const foundDay = days.find(day => day.date === date);
-    // const occupiedTimes = useGetOccupiedTimes(foundDay?.todos);
     const occupiedTimesNew = useGetOccupiedTimes(todos || []);
     const { user } = useSelector((state: RootState) => state.auth);
 
@@ -55,13 +54,7 @@ export const useAddTodo = ():[AddTodoHandler, string] => {
           return;
         }
 
-        // const isTimeOccupied = occupiedTimes.some((occupied: any) => 
-        //   (dayjs(startTime).isBetween(occupied.start, occupied.finish, null, '[)') ||
-        //   dayjs(finishTime).isBetween(occupied.start, occupied.finish, null, '(]')) ||
-        //   (dayjs(startTime).isSame(occupied.start) && dayjs(finishTime).isSame(occupied.finish))
-        // );
-
-        const isTimeOccupiedNew = occupiedTimesNew.some((occupied: any) => {
+        const isTimeOccupied = occupiedTimesNew.some((occupied: any) => {
           const res = (dayjs(startTime).isBetween(occupied.start, occupied.finish) ||
           dayjs(finishTime).isBetween(occupied.start, occupied.finish));
           return res;
@@ -69,25 +62,11 @@ export const useAddTodo = ():[AddTodoHandler, string] => {
 
         
 
-        if (isTimeOccupiedNew) {
+        if (isTimeOccupied) {
           setAlert('Вибраний час вже зайнято');
           setTimeout(() => setAlert(''), 3000);
           return;
         }
-    
-        // if (isTimeOccupied) {
-        //   setAlert('Вибраний час вже зайнято');
-        //   setTimeout(() => setAlert(''), 3000);
-        //   return;
-        // }
-    
-        // const todo = {
-        //   name: todoName,
-        //   start: startTime,
-        //   finish: finishTime,
-        //   completed: false,
-        //   id: Date.now()
-        // };
 
         const todoNew = {
           name: todoName,
@@ -99,8 +78,8 @@ export const useAddTodo = ():[AddTodoHandler, string] => {
         const userId = user.id;
 
         createTodo(todoNew, userId);
-        // dispatch(addTodo({ date: date, todo: todo }));
         dispatch(changeTodoName(''));
+        dispatch(changeTime(todoNew));
     }
 
     return [addTodoHandler, alert];

@@ -1,36 +1,33 @@
 import { Box, Checkbox } from '@mui/material'
 import React from 'react'
-import { useDispatch } from 'react-redux';
-import { toggleTodos } from '../../../store/todosSlice';
-import { DayInterface } from '../../../types/todos';
+// import { useDispatch } from 'react-redux';
 
 interface Props {
   date: string;
-  foundDay: DayInterface | null;
   active: boolean;
 }
 
-export const ToggleBlock: React.FC <Props> = ({ date, foundDay, active }) => {
+export const ToggleBlock: React.FC <Props> = ({ active }) => {
   const [isToggled, setIsToggled] = React.useState(false);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   
   function handleCheckboxChange() {
-    if (!isToggled) {
-      dispatch(toggleTodos({ date, isToggled: true }));
-    } else {
-      dispatch(toggleTodos({ date, isToggled: false }));
-    }
+    // if (!isToggled) {
+    //   dispatch(toggleTodos({ date, isToggled: true }));
+    // } else {
+    //   dispatch(toggleTodos({ date, isToggled: false }));
+    // }
 
     setIsToggled(!isToggled);
   }
 
   React.useEffect(() => {
-    if (foundDay?.todos.every(todo => todo.completed)) {
-      setIsToggled(true);
-    } else {
-      setIsToggled(false);
-    }
-  }, [foundDay]);
+    // if (foundDay?.todos.every(todo => todo.completed)) {
+    //   setIsToggled(true);
+    // } else {
+    //   setIsToggled(false);
+    // }
+  }, []);
 
   return (
       <Box display="flex" justifyContent="flex-end" alignItems="center" paddingRight="5px">

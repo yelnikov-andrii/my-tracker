@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import dayjs from "dayjs";
-import { TodoInterface } from "../types/todos";
 import { useMemo } from "react";
 
 export const useGetOccupiedTimes = (todos: any, todoId?: any) => {

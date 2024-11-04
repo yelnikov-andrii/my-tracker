@@ -18,13 +18,13 @@ const Login = () => {
         password: ''
     });
 
-    const [errors, setErrors] = useState<any>({});
+    const [errors, setErrors] = useState<ErrorI>({});
     const [alertError, setAlertError] = useState('');
     const navigate = useNavigate();
     const delay = 2000;
     const dispatch = useDispatch();
 
-    const handleChange = (e: any) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setErrors({});
         setAlertError('');
@@ -35,7 +35,7 @@ const Login = () => {
     };
 
     const validate = () => {
-        const tempErrors: any = {};
+        const tempErrors: ErrorI = {};
         if (!formData.email) {
             tempErrors.email = "Email is required.";
         }
@@ -48,7 +48,7 @@ const Login = () => {
         return Object.keys(tempErrors).length === 0;
     };
 
-    const handleSubmit = (e: any) => {
+    const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (validate()) {
             fetch(`${baseUrl}/login`, {

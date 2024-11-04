@@ -1,7 +1,6 @@
 import { Box, Button, OutlinedInput } from '@mui/material';
 import React, { Dispatch, SetStateAction } from 'react'
-import { useDispatch } from 'react-redux';
-import { addTodoWithoutTimeline } from '../../store/todoWithout';
+// import { useDispatch } from 'react-redux';
 
 interface Props {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -9,16 +8,14 @@ interface Props {
 
 export const Form: React.FC <Props> = ({ setIsOpen }) => {
   const [todoName, setTodoName] = React.useState('');
-  const dispatch = useDispatch();
 
   function addTodoHandler() {
-    const newTodo = {
-      name: todoName,
-      id: Date.now(),
-      completed: false,
-    };
+    // const newTodo = {
+    //   name: todoName,
+    //   id: Date.now(),
+    //   completed: false,
+    // };
 
-    dispatch(addTodoWithoutTimeline(newTodo));
     setTodoName('');
     setIsOpen(false);
   }

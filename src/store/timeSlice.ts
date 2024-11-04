@@ -1,10 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import dayjs from 'dayjs';
 
-export interface TimeState {
-  currentDate: string;
-  startTime: any;
-  finishTime: any;
-}
+
 
 const initialState: TimeState = {
   currentDate: new Date().toISOString(),
@@ -24,10 +21,14 @@ export const timeSlice = createSlice({
     },
     setFinishTime: (state, action) => {
       state.finishTime = action.payload;
+    },
+    changeTime: (state, action: PayloadAction<TodoInterfaceToAdd>) => {
+      state.startTime = action.payload.finish;
+      state.finishTime = dayjs(action.payload.finish).add(5, 'minute').toISOString();
     }
   },
 });
 
-export const { setDate, setStartTime, setFinishTime } = timeSlice.actions;
+export const { setDate, setStartTime, setFinishTime, changeTime } = timeSlice.actions;
 
 export default timeSlice.reducer;

@@ -1,8 +1,7 @@
 import { Button } from '@mui/material'
 import React, { Dispatch, SetStateAction } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteTodoAction, selectTodoToChange } from '../../../store/todosSlice';
-import { TodoInterface } from '../../../types/todos';
+import { deleteTodoAction } from '../../../store/todosSlice';
 import { baseUrl } from '../../../helpers/baseUrl';
 
 interface Props {
@@ -11,7 +10,7 @@ interface Props {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export const Buttons: React.FC<Props> = ({ date, todo, setIsOpen }) => {
+export const Buttons: React.FC<Props> = ({ todo, setIsOpen }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);
 
@@ -41,9 +40,9 @@ export const Buttons: React.FC<Props> = ({ date, todo, setIsOpen }) => {
     }
   }
 
-  function changeTheTodo(todo: TodoInterface) {
+  function changeTheTodo() {
     setIsOpen(true);
-    dispatch(selectTodoToChange({ id: todo.id, date: date }));
+    // dispatch(selectTodoToChange({ id: todo.id, date: date }));
   }
 
   return (
@@ -62,7 +61,7 @@ export const Buttons: React.FC<Props> = ({ date, todo, setIsOpen }) => {
       </Button>
       <Button
         variant="contained"
-        onClick={() => changeTheTodo(todo)}
+        onClick={() => changeTheTodo()}
         sx={{
           '@media (max-width: 425px)': {
             fontSize: '14px'

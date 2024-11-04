@@ -3,11 +3,9 @@ import React, { useEffect } from 'react';
 import { Header } from './Components/Header/Header';
 import { Main } from './Components/Main/Main';
 import { useDispatch } from 'react-redux';
-import { getTodosFromStorage } from './store/todosSlice';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { TodosWithoutTime } from './Components/TodosWithoutTime/TodosWithoutTime';
 import { getWeekdaysFromStorage } from './store/weekdaySlice';
-import { getDataFromServer } from './store/todosRepeatedSlice';
 import Registration from './Components/Registration/Registration';
 import Login from './Components/Login/Login';
 import { changeAuth, changeUser } from './store/authSlice';
@@ -17,9 +15,7 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(getTodosFromStorage());
     dispatch(getWeekdaysFromStorage());
-    dispatch(getDataFromServer());
   }, []);
 
   useEffect(() => {
