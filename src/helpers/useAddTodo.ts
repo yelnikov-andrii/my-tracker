@@ -86,7 +86,7 @@ export const useAddTodo = ():[AddTodoHandler, string] => {
 
         createTodo(todoNew, userId, getTodos);
         dispatch(changeTodoName(''));
-        dispatch(changeTime(todoNew));
+        dispatch(changeTime({start: todoNew.finish, finish: dayjs(todoNew.finish).add(5, 'minute').toISOString()}));
     }
 
     return [addTodoHandler, alert];

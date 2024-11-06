@@ -2,8 +2,7 @@ import { Box, Checkbox, ListItem } from '@mui/material'
 import React, { Dispatch, SetStateAction } from 'react'
 import { MyDropdown } from '../../UI/MyDropdown';
 import { Buttons } from './Buttons';
-import { useDispatch } from 'react-redux';
-// import { updateTodo } from '../../../store/todosSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { baseUrl } from '../../../helpers/baseUrl';
 import { changeTodoAction } from '../../../store/todosSlice';
@@ -16,8 +15,9 @@ interface Props {
 
 export const ListItemComponent: React.FC<Props> = ({ todo, date, setIsOpen }) => {
   const dispatch = useDispatch();
+  const { user } = useSelector((state: RootState) => state.auth);
 
-  async function updateTodo(todo: any) {
+  async function updateTodo(todo: TodoInterface) {
     try {
       const newTodo = { ...todo };
       newTodo.completed = !todo.completed;
@@ -26,7 +26,7 @@ export const ListItemComponent: React.FC<Props> = ({ todo, date, setIsOpen }) =>
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ newTodo, todoId: todo.id })
+        body: JSON.stringify({ newTodo, todoId: todo.id, userId: user.id })
       });
 
       if (!response.ok) {
@@ -42,7 +42,7 @@ export const ListItemComponent: React.FC<Props> = ({ todo, date, setIsOpen }) =>
     }
   }
 
-  function toggleTodo(todo: any) {
+  function toggleTodo(todo: TodoInterface) {
     updateTodo(todo)
   }
 

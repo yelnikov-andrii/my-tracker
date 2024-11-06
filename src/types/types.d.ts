@@ -17,9 +17,10 @@ declare global {
 
     interface StateInterface {
         todoName: string;
-        todoToChange: null | number | string;
+        todoToChange: null | TodoInterface;
         todos: any[];
         filteredTodos: any[];
+        allChecked: boolean;
       }
 
     // hours, minutes
@@ -40,7 +41,7 @@ declare global {
     // todos
 
     interface TodoInterfaceToAdd {
-        completed: boolean;
+        completed?: boolean;
         finish: string;
         name: string;
         start: string;

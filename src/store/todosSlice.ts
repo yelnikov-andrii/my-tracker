@@ -5,6 +5,7 @@ const initialState: StateInterface = {
   todoName: '',
   todos: [],
   filteredTodos: [],
+  allChecked: false,
 };
 
 export const todoslice = createSlice({
@@ -13,6 +14,20 @@ export const todoslice = createSlice({
   reducers: {
     getTodosFromServer: (state: StateInterface, action: PayloadAction<any>) => {
       state.todos = action.payload;
+    },
+    selectTodoToChange: (state: StateInterface, action: PayloadAction<TodoInterface | null>) => {
+      if (action.payload) {
+        state.todoToChange = action.payload;
+        state.todoName = action.payload.name;
+        return;
+      }
+
+      state.todoName = '';
+      state.todoToChange = null;
+
+    },
+    toggleAllAction: (state: StateInterface, action: PayloadAction<boolean>) => {
+      state.allChecked = action.payload;
     },
     setFilteredTodos: (state: StateInterface, action: PayloadAction<any>) => {
       state.filteredTodos = action.payload;
@@ -27,45 +42,11 @@ export const todoslice = createSlice({
       state.todos = state.todos.filter(todo => todo.id !== action.payload);
     },
     changeTodoName: (state: StateInterface, action: PayloadAction<string>) => {
-        state.todoName = action.payload;
+      state.todoName = action.payload;
     },
-    // addDay: (state: StateInterface, action: PayloadAction<DayInterface>) => {
-    //   state.days.push(action.payload);
-    //   saveTodosToLocaleStorage(state.days);
-    // },
-    // clearDaysWhereDealsIsEmpty: (state: StateInterface) => {
-    //   state.days = state.days.filter(day => day.todos.length > 0);
-    //   saveTodosToLocaleStorage(state.days);
-    // },
-    // toggleTodos: (state: StateInterface, action: PayloadAction<ToggleDayInterface>) => {
-    //   const foundDay = state.days.find(day => day.date === action.payload.date);
-    //   if (foundDay) {
-    //     if (action.payload.isToggled) {
-    //       foundDay.todos = foundDay?.todos.map(todo => {
-    //         if (todo.completed) {
-    //           return todo;
-    //         } else {
-    //           const newTodo = {...todo};
-    //           newTodo.completed = true;
-    //           return newTodo;
-    //         }
-    //       });
-    //     } else {
-    //       foundDay.todos = foundDay?.todos.map(todo => {
-    //         if (todo.completed) {
-    //           const newTodo = {...todo};
-    //           newTodo.completed = false;
-    //           return newTodo;
-    //         } else {
-    //           return todo;
-    //         }
-    //       });
-    //     }
-    //   }
-    // }
   },
 });
 
-export const { changeTodoName, changeTodoAction, setFilteredTodos, deleteTodoAction, getTodosFromServer } = todoslice.actions;
+export const { changeTodoName, changeTodoAction, setFilteredTodos, deleteTodoAction, getTodosFromServer, selectTodoToChange, toggleAllAction } = todoslice.actions;
 
 export default todoslice.reducer;

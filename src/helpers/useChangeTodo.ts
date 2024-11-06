@@ -5,15 +5,16 @@ import dayjs from "dayjs";
 import { useGetOccupiedTimes } from "./getOccupiedTime";
 import { baseUrl } from "./baseUrl";
 
-export const useChangeTodo = (todo: any): [(todoId: number | string | null) => void, string] => {
+export const useChangeTodo = (todo: TodoInterface): [(todoId: TodoInterface | null) => void, string] => {
     const { todoName, filteredTodos } = useSelector((state: RootState) => state.todos);
     const { startTime, finishTime } = useSelector((state: RootState) => state.time);
+    const { user } = useSelector((state: RootState) => state.auth);
     const dispatch = useDispatch();
     const [changeAlert, setChangeAlert] = useState('');
     const occupiedTimes = useGetOccupiedTimes(filteredTodos, todo);
 
-    function changeTheTodoHandler(todoId: number | string | null) {
-        if (!todoId) {
+    function changeTheTodoHandler(todo: TodoInterface | null) {
+        if (!todo?.id) {
             return;
         }
 
@@ -51,20 +52,24 @@ export const useChangeTodo = (todo: any): [(todoId: number | string | null) => v
             finish: finishTime,
         };
 
-        changeTodo(todoId, newTodo, dispatch);
+        if (user) {
+            changeTodo(todo.id, newTodo, dispatch, user);
+        }
+
+        
     }
 
     return [changeTheTodoHandler, changeAlert];
 }
 
-async function changeTodo(todoId: any, newTodo: any, dispatch: any) {
+async function changeTodo(todoId: string | number, newTodo: TodoInterfaceToAdd, dispatch: any, user: UserI) {
     try {
         const response = await fetch(`${baseUrl}/todos/${todoId}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({todoId, newTodo})
+            body: JSON.stringify({ todoId, newTodo, userId: user.id })
         });
 
         if (!response.ok) {
@@ -74,7 +79,7 @@ async function changeTodo(todoId: any, newTodo: any, dispatch: any) {
 
         const updatedTodo = await response.json();
         console.log('Todo updated successfully:', updatedTodo);
-        dispatch(changeTodoAction({todo: newTodo, todoId: todoId}))
+        dispatch(changeTodoAction({ todo: newTodo, todoId: todoId }))
     }
 
     catch (error) {

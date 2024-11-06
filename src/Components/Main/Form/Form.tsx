@@ -18,7 +18,7 @@ export const Form: React.FC<Props> = () => {
   const { todoName, todoToChange, todos } = useSelector((state: RootState) => state.todos);
   const { startTime, finishTime } = useSelector((state: RootState) => state.time);
 
-  const foundTodo = todos?.find(todo => todo.id === todoToChange);
+  const foundTodo = todos?.find(todo => todo.id === todoToChange?.id);
   const [view, setView] = useState<ViewT>({
     start: 'hours',
     finish: 'hours'

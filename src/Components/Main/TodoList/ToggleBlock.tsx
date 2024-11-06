@@ -1,46 +1,28 @@
-import { Box, Checkbox } from '@mui/material'
-import React from 'react'
-// import { useDispatch } from 'react-redux';
+import { Box, Checkbox } from '@mui/material';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useToggleAll } from '../../../helpers/useToggleAll';
+import { useGetTodos } from '../../../helpers/useGetTodos';
+import { toggleAllAction } from '../../../store/todosSlice';
 
-interface Props {
-  date: string;
-  active: boolean;
-}
+export const ToggleBlock = () => {
+  const { allChecked } = useSelector((state: RootState) => state.todos);
+  const toggleAll = useToggleAll();
+  const [getTodos] = useGetTodos();
+  const dispatch = useDispatch();
 
-export const ToggleBlock: React.FC <Props> = ({ active }) => {
-  const [isToggled, setIsToggled] = React.useState(false);
-  // const dispatch = useDispatch();
-  
-  function handleCheckboxChange() {
-    // if (!isToggled) {
-    //   dispatch(toggleTodos({ date, isToggled: true }));
-    // } else {
-    //   dispatch(toggleTodos({ date, isToggled: false }));
-    // }
-
-    setIsToggled(!isToggled);
+  async function handleCheckboxChange() {
+    await toggleAll();
+    dispatch(toggleAllAction(!allChecked));
+    await getTodos();
   }
 
-  React.useEffect(() => {
-    // if (foundDay?.todos.every(todo => todo.completed)) {
-    //   setIsToggled(true);
-    // } else {
-    //   setIsToggled(false);
-    // }
-  }, []);
-
   return (
-      <Box display="flex" justifyContent="flex-end" alignItems="center" paddingRight="5px">
-        {active ? (
-          <>
-            <span>
-              Вибрати усі
-            </span>
-            <Checkbox checked={isToggled} onChange={handleCheckboxChange} value={isToggled} />
-          </>
-        ) : (
-          <></>
-        )}
+    <Box display="flex" justifyContent="flex-end" alignItems="center" paddingRight="5px">
+      <span>
+        Вибрати усі
+      </span>
+      <Checkbox checked={allChecked} onChange={handleCheckboxChange} value={allChecked} />
     </Box>
   )
 }

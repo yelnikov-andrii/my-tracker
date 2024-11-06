@@ -6,8 +6,8 @@ import { baseUrl } from "./baseUrl";
 export const useGetTodos = () => {
     const dispatch = useDispatch();
     const { user } = useSelector((state: RootState) => state.auth);
-    
-    async function getTodos() {
+
+    const getTodos = async () => {
         try {
             if (user) {
                 const response = await fetch(`${baseUrl}/todos/${user?.id}`);
@@ -22,5 +22,4 @@ export const useGetTodos = () => {
     }
 
     return [getTodos];
-
 }

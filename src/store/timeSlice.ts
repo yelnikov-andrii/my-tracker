@@ -1,7 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import dayjs from 'dayjs';
-
-
 
 const initialState: TimeState = {
   currentDate: new Date().toISOString(),
@@ -22,9 +19,9 @@ export const timeSlice = createSlice({
     setFinishTime: (state, action) => {
       state.finishTime = action.payload;
     },
-    changeTime: (state, action: PayloadAction<TodoInterfaceToAdd>) => {
-      state.startTime = action.payload.finish;
-      state.finishTime = dayjs(action.payload.finish).add(5, 'minute').toISOString();
+    changeTime: (state, action: PayloadAction<{start: string; finish: string}>) => {
+      state.startTime = action.payload.start;
+      state.finishTime = action.payload.finish;
     }
   },
 });

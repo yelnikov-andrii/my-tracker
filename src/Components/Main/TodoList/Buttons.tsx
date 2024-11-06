@@ -1,8 +1,9 @@
 import { Button } from '@mui/material'
 import React, { Dispatch, SetStateAction } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteTodoAction } from '../../../store/todosSlice';
+import { deleteTodoAction, selectTodoToChange } from '../../../store/todosSlice';
 import { baseUrl } from '../../../helpers/baseUrl';
+import { changeTime } from '../../../store/timeSlice';
 
 interface Props {
   date: string;
@@ -15,15 +16,13 @@ export const Buttons: React.FC<Props> = ({ todo, setIsOpen }) => {
   const { user } = useSelector((state: RootState) => state.auth);
 
   async function deleteTodo(todoId: number | string) {
-    // dispatch(removeTodo({ id: todoId, date: date }));
-    
     try {
       const response = await fetch(`${baseUrl}/todos/${todoId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({userId: user.id})
+        body: JSON.stringify({ userId: user.id })
       });
 
       if (!response.ok) {
@@ -42,7 +41,8 @@ export const Buttons: React.FC<Props> = ({ todo, setIsOpen }) => {
 
   function changeTheTodo() {
     setIsOpen(true);
-    // dispatch(selectTodoToChange({ id: todo.id, date: date }));
+    dispatch(selectTodoToChange(todo));
+    dispatch(changeTime({ start: todo.start, finish: todo.finish }));
   }
 
   return (

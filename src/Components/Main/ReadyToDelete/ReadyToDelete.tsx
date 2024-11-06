@@ -2,7 +2,6 @@ import React, { Dispatch, SetStateAction } from 'react';
 import { MyModal } from '../../UI/MyModal';
 import { Box, Button, Typography } from '@mui/material';
 import { useDeleteAll } from '../../../helpers/useDeleteAll';
-// import { useDispatch } from 'react-redux';
 
 interface Props {
   readyToDelete: boolean;
