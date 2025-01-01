@@ -31,8 +31,6 @@ export const Buttons: React.FC<Props> = ({ todo, setIsOpen }) => {
         return;
       }
 
-      dispatch(deleteTodoAction(todoId));
-
       console.log('Todo deleted successfully');
     } catch (error) {
       console.error('Error deleting todo:', error);
@@ -49,7 +47,11 @@ export const Buttons: React.FC<Props> = ({ todo, setIsOpen }) => {
     <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', textDecoration: 'none' }}>
       <Button
         variant="contained"
-        onClick={() => deleteTodo(todo.id)}
+        onClick={() => {
+          deleteTodo(todo.id);
+          dispatch(deleteTodoAction(todo.id));
+        }
+        }
         sx={{
           textDecoration: 'none',
           '@media (max-width: 425px)': {

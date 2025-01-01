@@ -1,15 +1,25 @@
 import { Box, Checkbox } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useToggleAll } from '../../../helpers/useToggleAll';
 import { useGetTodos } from '../../../helpers/useGetTodos';
-import { toggleAllAction } from '../../../store/todosSlice';
+import { setFilteredTodos, toggleAllAction } from '../../../store/todosSlice';
 
 export const ToggleBlock = () => {
-  const { allChecked } = useSelector((state: RootState) => state.todos);
+  const { allChecked, filteredTodos } = useSelector((state: RootState) => state.todos);
   const toggleAll = useToggleAll();
   const [getTodos] = useGetTodos();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const checkAllChecked = filteredTodos.every(el => el.completed === true);
+
+    if (checkAllChecked) {
+      dispatch(toggleAllAction(true));
+    } else {
+      dispatch(toggleAllAction(false));
+    }
+  }, [filteredTodos, dispatch]);
 
   async function handleCheckboxChange() {
     await toggleAll();
@@ -22,7 +32,14 @@ export const ToggleBlock = () => {
       <span>
         Вибрати усі
       </span>
-      <Checkbox checked={allChecked} onChange={handleCheckboxChange} value={allChecked} />
+      <Checkbox 
+        checked={allChecked} 
+        onChange={(e: any) => {
+          handleCheckboxChange();
+          const updatedTodos = filteredTodos.map(todo => ({ ...todo, completed: !allChecked }));
+          dispatch(setFilteredTodos(updatedTodos));
+        }} 
+        value={allChecked} />
     </Box>
   )
 }

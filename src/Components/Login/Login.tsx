@@ -86,8 +86,8 @@ const Login = () => {
     };
 
     return (
-        <Container maxWidth="sm" sx={{ padding: '48px 0 0 0' }}>
-            <Typography variant="h4" gutterBottom>
+        <Container maxWidth="sm" sx={{ paddingTop: '48px'}}>
+            <Typography variant="h5" gutterBottom>
                 Логін
             </Typography>
             <form onSubmit={handleSubmit}>

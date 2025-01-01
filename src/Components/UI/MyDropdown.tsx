@@ -1,7 +1,7 @@
 import { Box, Button } from '@mui/material';
 import React from 'react';
 
-export const MyDropdown: React.FC <any> = ({ butttonContent, children }) => {
+const MyDropdown: React.FC <any> = ({ butttonContent, children }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const dropdownRef = React.useRef<any>(null);
 
@@ -46,3 +46,5 @@ export const MyDropdown: React.FC <any> = ({ butttonContent, children }) => {
     </Box>
   );
 };
+
+export default React.memo(MyDropdown);

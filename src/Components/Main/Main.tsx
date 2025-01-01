@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react'
 import { MyContainer } from '../UI/Container';
 import { Form } from './Form/Form';
-import { TodoList } from './TodoList/TodoList';
+import TodoList from './TodoList/TodoList';
 import { useDispatch, useSelector } from 'react-redux';
 import { MyCalendar } from '../UI/MyCalendar';
 import { setDate } from '../../store/timeSlice';
@@ -13,7 +13,7 @@ import { ReadyToDelete } from './ReadyToDelete/ReadyToDelete';
 import { Box } from '@mui/material';
 import { AddTodoBlock } from './AddTodoBlock/AddTodoBlock';
 import { MyModal } from '../UI/MyModal';
-import { MyDropdown } from '../UI/MyDropdown';
+import MyDropdown from '../UI/MyDropdown';
 import { useGetTodos } from '../../helpers/useGetTodos';
 import { useCheckIfCompletedExist } from '../../helpers/useCheckIfCompletedIxist';
 
@@ -24,6 +24,8 @@ export const Main: React.FC = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [getTodos] = useGetTodos();
   const isCheckedExist = useCheckIfCompletedExist();
+
+  console.log('main renders');
 
   function changeCurrentDate(newDate: Date) {
     dispatch(setDate(newDate.toISOString()))

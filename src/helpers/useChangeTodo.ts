@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { changeTodoAction } from "../store/todosSlice";
+import { changeTodoAction, setFilteredTodos } from "../store/todosSlice";
 import { useState } from "react";
 import dayjs from "dayjs";
 import { useGetOccupiedTimes } from "./getOccupiedTime";
@@ -11,7 +11,7 @@ export const useChangeTodo = (todo: TodoInterface): [(todoId: TodoInterface | nu
     const { user } = useSelector((state: RootState) => state.auth);
     const dispatch = useDispatch();
     const [changeAlert, setChangeAlert] = useState('');
-    const occupiedTimes = useGetOccupiedTimes(filteredTodos, todo);
+    const occupiedTimes = useGetOccupiedTimes(filteredTodos, todo?.id);
 
     function changeTheTodoHandler(todo: TodoInterface | null) {
         if (!todo?.id) {
@@ -54,9 +54,17 @@ export const useChangeTodo = (todo: TodoInterface): [(todoId: TodoInterface | nu
 
         if (user) {
             changeTodo(todo.id, newTodo, dispatch, user);
+            const updatedTodos = filteredTodos.map(filteredTodo => {
+                if (filteredTodo.id === todo.id) {
+                    return { ...filteredTodo, name: todoName, start: startTime, finish: finishTime };
+                } else {
+                    return filteredTodo;
+                }
+            });
+            dispatch(setFilteredTodos(updatedTodos));
         }
 
-        
+
     }
 
     return [changeTheTodoHandler, changeAlert];

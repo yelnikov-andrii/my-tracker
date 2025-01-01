@@ -2,6 +2,8 @@ import React, { Dispatch, SetStateAction } from 'react';
 import { MyModal } from '../../UI/MyModal';
 import { Box, Button, Typography } from '@mui/material';
 import { useDeleteAll } from '../../../helpers/useDeleteAll';
+import { useDispatch, useSelector } from 'react-redux';
+import { setFilteredTodos } from '../../../store/todosSlice';
 
 interface Props {
   readyToDelete: boolean;
@@ -11,6 +13,8 @@ interface Props {
 
 export const ReadyToDelete: React.FC <Props> = ({ readyToDelete, setReadyToDelete }) => {
   const deleteAllCompletedTodos = useDeleteAll();
+  const { filteredTodos } = useSelector((state: RootState) => state.todos);
+  const dispatch = useDispatch();
 
   return (
     <MyModal
@@ -25,6 +29,8 @@ export const ReadyToDelete: React.FC <Props> = ({ readyToDelete, setReadyToDelet
           variant="contained"
           onClick={() => {
             deleteAllCompletedTodos();
+            const updatedTodos = filteredTodos.filter(todo => !todo.completed);
+            dispatch(setFilteredTodos(updatedTodos));
             setReadyToDelete(false);
           }}
         >

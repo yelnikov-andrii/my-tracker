@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 import { useMemo } from "react";
 
 export const useGetOccupiedTimes = (todos: any, todoId?: any) => {
-
     function getOccupiedTimes(todos: any) {
         if (!todos || todos?.length === 0) {
             return [];
@@ -17,7 +16,8 @@ export const useGetOccupiedTimes = (todos: any, todoId?: any) => {
             } else {
                 return todo;
             }
-        })
+        });
+
         return filteredTodos.map((todo: TodoInterface) => ({
             start: dayjs(todo.start),
             finish: dayjs(todo.finish)

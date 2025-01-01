@@ -17,12 +17,12 @@ const Registration = () => {
         confirmPassword: ''
     });
 
-    const [errors, setErrors] = useState<any>({});
+    const [errors, setErrors] = useState<ErrorI>({});
     const [alertMessage, setAlertMessage] = useState({ success: '', error: '' });
     const navigate = useNavigate();
     const delay = 3000;
 
-    const handleChange = (e: any) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setAlertMessage(prev => ({...prev, success: '', error: ''}));
         setErrors({});
@@ -33,7 +33,7 @@ const Registration = () => {
     };
 
     const validate = () => {
-        const tempErrors: any = {};
+        const tempErrors: ErrorI = {};
         if (!formData.email) {
             tempErrors.email = "Email is required.";
         } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -50,7 +50,7 @@ const Registration = () => {
         return Object.keys(tempErrors).length === 0;
     };
 
-    const handleSubmit = (e: any) => {
+    const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (validate()) {
             fetch(`${baseUrl}/registration`, {
@@ -82,8 +82,8 @@ const Registration = () => {
     };
 
     return (
-        <Container maxWidth="sm" sx={{ padding: '48px 0 0 0' }}>
-            <Typography variant="h4" gutterBottom>
+        <Container maxWidth="sm" sx={{ paddingTop: '48px'}}>
+            <Typography variant="h5" gutterBottom>
                 Реєстрація
             </Typography>
             <form onSubmit={handleSubmit}>

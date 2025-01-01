@@ -1,6 +1,6 @@
 import { Box, Checkbox, ListItem } from '@mui/material'
 import React, { Dispatch, SetStateAction } from 'react'
-import { MyDropdown } from '../../UI/MyDropdown';
+import MyDropdown from '../../UI/MyDropdown';
 import { Buttons } from './Buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
@@ -18,9 +18,9 @@ export const ListItemComponent: React.FC<Props> = ({ todo, date, setIsOpen }) =>
   const { user } = useSelector((state: RootState) => state.auth);
 
   async function updateTodo(todo: TodoInterface) {
+    const newTodo = { ...todo };
+    newTodo.completed = !todo.completed;
     try {
-      const newTodo = { ...todo };
-      newTodo.completed = !todo.completed;
       const response = await fetch(`${baseUrl}/todos/${todo.id}`, {
         method: 'PATCH',
         headers: {
@@ -33,17 +33,14 @@ export const ListItemComponent: React.FC<Props> = ({ todo, date, setIsOpen }) =>
         console.error('Error: Cannot update todo');
         return;
       }
-
-      dispatch(changeTodoAction({ todo: newTodo, todoId: todo.id }));
-
-
     } catch (e) {
       console.log(e);
     }
   }
 
   function toggleTodo(todo: TodoInterface) {
-    updateTodo(todo)
+    updateTodo(todo);
+    dispatch(changeTodoAction({ todo: { ...todo, completed: !todo.completed }, todoId: todo.id }));
   }
 
   return (

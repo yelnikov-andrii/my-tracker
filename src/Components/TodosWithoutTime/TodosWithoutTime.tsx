@@ -12,8 +12,8 @@ export const TodosWithoutTime = () => {
   return (
     <Box paddingTop={6}>
       <MyContainer>
-      <Typography variant='h3'>
-        Справи без ліміту
+      <Typography variant='h5' margin="0 0 16px 0">
+        Справи без часових меж
       </Typography>
       <MyModal
         isOpen={isOpen}

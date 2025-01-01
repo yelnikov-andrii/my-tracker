@@ -51,6 +51,12 @@ declare global {
         id: number | string;
       }
 
+      interface TodoWithoutTmeI {
+        completed: boolean;
+        name: string;
+        id?: string | number;
+      }
+
     // login 
 
     interface ErrorI {

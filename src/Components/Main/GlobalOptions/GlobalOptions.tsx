@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react'
-import { MyDropdown } from '../../UI/MyDropdown'
+import MyDropdown from '../../UI/MyDropdown'
 import { Box, Button } from '@mui/material'
 import { useSelector } from 'react-redux';
 import { Alert } from '../../UI/Alert';

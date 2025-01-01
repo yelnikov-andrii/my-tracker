@@ -1,31 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { Dispatch, SetStateAction, useEffect, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import React, { Dispatch, SetStateAction, useMemo } from 'react'
+import { useSelector } from 'react-redux';
 import { List, ListItem } from '@mui/material';
 import { ListItemComponent } from './ListItemComponent';
 import { ToggleBlock } from './ToggleBlock';
 import { useGetFilteredTodos } from '../../../helpers/useGetFilteredTodos';
 import { useGetSortedTodos } from '../../../helpers/useGetSortedTodos';
-import { toggleAllAction } from '../../../store/todosSlice';
 
 interface Props {
   date: string;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export const TodoList: React.FC<Props> = ({ date, setIsOpen }) => {
+const TodoList: React.FC<Props> = ({ date, setIsOpen }) => {
   const { todos, filteredTodos } = useSelector((state: RootState) => state.todos);
   useGetFilteredTodos(todos, date);
   const [sortedTodos] = useGetSortedTodos(filteredTodos);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const checkAllChecked = filteredTodos.every(el => el.completed === true);
-
-    if (checkAllChecked) {
-      dispatch(toggleAllAction(true));
-    }
-  }, [filteredTodos]);
 
   const isEmptyArr = useMemo(() => {
     if (filteredTodos.length === 0) {
@@ -34,6 +24,8 @@ export const TodoList: React.FC<Props> = ({ date, setIsOpen }) => {
 
     return false;
   }, [filteredTodos]);
+
+  console.log(todos, 'todos', filteredTodos, 'filteredTodos', sortedTodos, 'sorted todos');
 
   return (
     <React.Fragment>
@@ -57,3 +49,5 @@ export const TodoList: React.FC<Props> = ({ date, setIsOpen }) => {
     </React.Fragment>
   )
 }
+
+export default React.memo(TodoList);

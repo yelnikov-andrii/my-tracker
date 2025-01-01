@@ -35,7 +35,7 @@ export const MyModal: React.FC <Props> = ({ children, isOpen, setIsOpen }) => {
           background: 'white',
           padding: '25px',
           minWidth: '250px',
-          borderRadius: '16px',
+          borderRadius: '4px',
           maxWidth: '500px',
           '@media (max-width: 768px)': {
             width: '90%',

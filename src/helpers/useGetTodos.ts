@@ -2,12 +2,13 @@
 import { useDispatch, useSelector } from "react-redux";
 import { getTodosFromServer } from "../store/todosSlice";
 import { baseUrl } from "./baseUrl";
+import { useCallback } from "react";
 
 export const useGetTodos = () => {
     const dispatch = useDispatch();
     const { user } = useSelector((state: RootState) => state.auth);
 
-    const getTodos = async () => {
+    const getTodos = useCallback(async () => {
         try {
             if (user) {
                 const response = await fetch(`${baseUrl}/todos/${user?.id}`);
@@ -19,7 +20,7 @@ export const useGetTodos = () => {
         catch (e) {
             console.log(e);
         }
-    }
+    }, [user, dispatch])
 
     return [getTodos];
 }

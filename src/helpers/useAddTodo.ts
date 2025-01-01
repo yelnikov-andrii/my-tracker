@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { changeTodoName } from "../store/todosSlice";
+import { addTodoAction, changeTodoName } from "../store/todosSlice";
 import { useState } from "react";
 import dayjs from "dayjs";
 import { useGetOccupiedTimes } from "./getOccupiedTime";
@@ -8,6 +8,7 @@ import { fetchWithAuth } from "./fetchWithAuth";
 import { baseUrl } from "./baseUrl";
 import { changeTime } from "../store/timeSlice";
 import { useGetTodos } from "./useGetTodos";
+import { getTodosFromLocalStorage, saveTodosToLocalStorage } from "./todosInLocaleStorage";
 
 dayjs.extend(isBetween);
 
@@ -83,6 +84,12 @@ export const useAddTodo = ():[AddTodoHandler, string] => {
         };
 
         const userId = user.id;
+
+        const todosFromStorage = getTodosFromLocalStorage();
+        const todosFromStorageNew = [...todosFromStorage, {...todoNew, id: Date.now()}];
+        saveTodosToLocalStorage(todosFromStorageNew);
+
+        dispatch(addTodoAction({...todoNew, id: Date.now()}));
 
         createTodo(todoNew, userId, getTodos);
         dispatch(changeTodoName(''));
