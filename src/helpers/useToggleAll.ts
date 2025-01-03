@@ -1,10 +1,9 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { baseUrl } from "./baseUrl";
 import { useCallback } from "react";
 
 export const useToggleAll = () => {
     const { filteredTodos, allChecked } = useSelector((state: RootState) => state.todos);
-    const dispatch = useDispatch();
 
     const updatedTodos = filteredTodos.map(todo => ({ ...todo, completed: !allChecked }));
 
@@ -24,7 +23,7 @@ export const useToggleAll = () => {
         } catch (e) {
             console.error("Error toggling todos:", e);
         }
-    }, [filteredTodos, allChecked, dispatch]);
+    }, [updatedTodos]);
 
     return toggleAll;
 };

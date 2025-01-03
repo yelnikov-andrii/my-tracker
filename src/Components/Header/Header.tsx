@@ -88,7 +88,7 @@ export const Header = () => {
               </Box>
             </Box>
             {isAuth && (
-              <Button onClick={(e: any) => {
+              <Button onClick={() => {
                 unauthorize();
               }}
                 style={{ color: 'white', textDecoration: 'none' }}

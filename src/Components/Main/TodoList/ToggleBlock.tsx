@@ -34,7 +34,7 @@ export const ToggleBlock = () => {
       </span>
       <Checkbox 
         checked={allChecked} 
-        onChange={(e: any) => {
+        onChange={() => {
           handleCheckboxChange();
           const updatedTodos = filteredTodos.map(todo => ({ ...todo, completed: !allChecked }));
           dispatch(setFilteredTodos(updatedTodos));
