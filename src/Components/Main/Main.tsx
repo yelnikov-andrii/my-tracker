@@ -28,7 +28,9 @@ export const Main: React.FC = () => {
   console.log('main renders');
 
   function changeCurrentDate(newDate: Date) {
-    dispatch(setDate(newDate.toISOString()))
+    const formatedDate = newDate.toISOString();
+    dispatch(setDate(formatedDate));
+    localStorage.setItem('date_tracker', formatedDate);
   }
 
   useEffect(() => {

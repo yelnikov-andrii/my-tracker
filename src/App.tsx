@@ -10,12 +10,14 @@ import Login from './Components/Login/Login';
 import { changeAuth, changeUser } from './store/authSlice';
 import { getTodosFromServer } from './store/todosSlice';
 import { getTodosFromLocalStorage } from './helpers/todosInLocaleStorage';
+import { setDate } from './store/timeSlice';
 
 function App() {
   const dispatch = useDispatch();
 
   const token = localStorage.getItem('accessToken');
   const userStr = localStorage.getItem('user_todo');
+  const date = localStorage.getItem('date_tracker');
   
   const todosFromStorage = getTodosFromLocalStorage();
 
@@ -35,14 +37,22 @@ function App() {
     if (todosFromStorage.length) {
       dispatch(getTodosFromServer(todosFromStorage));
     }
-  }, [todosFromStorage]);
+
+    if (date) {
+      const formatedDate = date.toString();
+    dispatch(setDate(formatedDate));
+    }
+  }, [todosFromStorage, date]);
 
   useEffect(() => {
     if (token && user && userIsLoaded) {
       dispatch(changeAuth(true));
     }
 
-    setInitialized(true);
+    if (userIsLoaded) {
+      setInitialized(true);
+    }
+
   }, [userIsLoaded, token, user]);
 
   if (!initialized) {
