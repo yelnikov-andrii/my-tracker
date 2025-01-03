@@ -82,6 +82,7 @@ const Login = () => {
                 })
                 .catch((e) => {
                     console.log(e, 'error login');
+                    setAlertError(e.message);
                     setResult('Error login' + ' ' + e);
                 })
         }
