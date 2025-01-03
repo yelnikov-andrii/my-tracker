@@ -7,6 +7,7 @@ const initialState: StateInterface = {
   todos: [],
   filteredTodos: [],
   allChecked: false,
+  todosWithoutTime: [],
 };
 
 export const todoslice = createSlice({
@@ -16,6 +17,9 @@ export const todoslice = createSlice({
     getTodosFromServer: (state: StateInterface, action: PayloadAction<any>) => {
       state.todos = action.payload;
       localStorage.setItem('todos_tracker', JSON.stringify(action.payload));
+    },
+    getTodosWithoutTimeFromServer: (state: StateInterface, action: PayloadAction<any>) => {
+      state.todosWithoutTime = action.payload;
     },
     selectTodoToChange: (state: StateInterface, action: PayloadAction<TodoInterface | null>) => {
       if (action.payload) {
@@ -58,10 +62,16 @@ export const todoslice = createSlice({
     addTodoAction: (state: StateInterface, action: PayloadAction<any>) => {
       state.todos.push(action.payload);
       localStorage.setItem('todos_tracker', JSON.stringify(state.todos));
-    }
+    },
+    addTodoWithout: (state: StateInterface, action: PayloadAction<TodoWithoutTmeI>) => {
+      state.todosWithoutTime.push(action.payload);
+    },
+    deleteTodoWithoutAction: (state: StateInterface, action: PayloadAction<any>) => {
+      state.todosWithoutTime = state.todosWithoutTime.filter(todo => todo.id !== action.payload);
+    },
   },
 });
 
-export const { changeTodoName, changeTodoAction, setFilteredTodos, deleteTodoAction, getTodosFromServer, selectTodoToChange, toggleAllAction, addTodoAction } = todoslice.actions;
+export const { changeTodoName, changeTodoAction, setFilteredTodos, deleteTodoAction, getTodosFromServer, selectTodoToChange, toggleAllAction, addTodoAction, addTodoWithout, getTodosWithoutTimeFromServer, deleteTodoWithoutAction } = todoslice.actions;
 
 export default todoslice.reducer;

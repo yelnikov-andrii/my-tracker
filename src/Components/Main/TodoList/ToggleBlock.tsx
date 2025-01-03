@@ -28,8 +28,8 @@ export const ToggleBlock = () => {
   }
 
   return (
-    <Box display="flex" justifyContent="flex-end" alignItems="center" paddingRight="5px">
-      <span>
+    <Box display="flex" justifyContent="flex-end" alignItems="center" paddingRight="5px" marginBottom={3}>
+      <span style={{ fontWeight: '500', fontSize: '16px', textTransform: 'uppercase'}}>
         Вибрати усі
       </span>
       <Checkbox 

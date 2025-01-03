@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { deleteTodoAction, selectTodoToChange } from '../../../store/todosSlice';
 import { baseUrl } from '../../../helpers/baseUrl';
 import { changeTime } from '../../../store/timeSlice';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 interface Props {
   date: string;
@@ -47,6 +49,7 @@ export const Buttons: React.FC<Props> = ({ todo, setIsOpen }) => {
     <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', textDecoration: 'none' }}>
       <Button
         variant="contained"
+        size='small'
         onClick={() => {
           deleteTodo(todo.id);
           dispatch(deleteTodoAction(todo.id));
@@ -59,9 +62,10 @@ export const Buttons: React.FC<Props> = ({ todo, setIsOpen }) => {
           },
         }}
       >
-        Видалити
+        <DeleteIcon />
       </Button>
       <Button
+        size='small'
         variant="contained"
         onClick={() => changeTheTodo()}
         sx={{
@@ -70,7 +74,7 @@ export const Buttons: React.FC<Props> = ({ todo, setIsOpen }) => {
           },
         }}
       >
-        Редагувати
+        <EditIcon />
       </Button>
     </div>
   )

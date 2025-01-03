@@ -18,7 +18,8 @@ declare global {
     interface StateInterface {
         todoName: string;
         todoToChange: null | TodoInterface;
-        todos: any[];
+        todosWithoutTime: TodoWithoutTmeI[];
+        todos: TodoInterface[];
         filteredTodos: any[];
         allChecked: boolean;
       }
