@@ -1,150 +1,77 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { saveTodosToLocaleStorage } from '../helpers/saveDataToLocaleStorage';
-import { DayInterface, DayWithTodoInterface, TodoForUpdateInterface, TodoInterface, TodoToChangeInterface, ToggleDayInterface } from '../types/todos';
-
-interface StateInterface {
-  days: DayInterface[];
-  todoName: string;
-  todoToChange: null | number | string;
-  todos: any[];
-  filteredTodos: any[];
-}
+import { saveTodosToLocalStorage } from '../helpers/todosInLocaleStorage';
 
 const initialState: StateInterface = {
-  days: [],
   todoToChange: null,
   todoName: '',
   todos: [],
   filteredTodos: [],
+  allChecked: false,
+  todosWithoutTime: [],
 };
 
 export const todoslice = createSlice({
   name: 'todos',
   initialState,
   reducers: {
-    addTodo: (state: StateInterface, action: PayloadAction<DayWithTodoInterface>) => {
-    const foundDay = state.days.find((day: DayInterface) => day.date === action.payload.date);
-    if (foundDay) {
-      foundDay.todos = [...foundDay.todos, action.payload.todo];
-      saveTodosToLocaleStorage(state.days);
-    } else {
-      const day = {
-        date: action.payload.date,
-        todos: [] as TodoInterface[],
-      };
-      day.todos.push(action.payload.todo);
-      state.days.push(day);
-      saveTodosToLocaleStorage(state.days);
-    }
-    },
     getTodosFromServer: (state: StateInterface, action: PayloadAction<any>) => {
       state.todos = action.payload;
+      localStorage.setItem('todos_tracker', JSON.stringify(action.payload));
+    },
+    getTodosWithoutTimeFromServer: (state: StateInterface, action: PayloadAction<any>) => {
+      state.todosWithoutTime = action.payload;
+    },
+    selectTodoToChange: (state: StateInterface, action: PayloadAction<TodoInterface | null>) => {
+      if (action.payload) {
+        state.todoToChange = action.payload;
+        state.todoName = action.payload.name;
+        return;
+      }
+
+      state.todoName = '';
+      state.todoToChange = null;
+
+    },
+    toggleAllAction: (state: StateInterface, action: PayloadAction<boolean>) => {
+      state.allChecked = action.payload;
     },
     setFilteredTodos: (state: StateInterface, action: PayloadAction<any>) => {
       state.filteredTodos = action.payload;
+      localStorage.setItem('todos_tracker', JSON.stringify(state.todos));
     },
     changeTodoAction: (state: StateInterface, action: PayloadAction<any>) => {
-      const foundTodo = state.todos.find(todo => todo.id === action.payload.todoId);
-      if (foundTodo) {
-        Object.assign(foundTodo, action.payload.todo);
-      }
+      const updatedTodos = state.todos.map(todo => {
+        if (todo.id === action.payload.todoId) {
+          const newTodo = {...todo};
+          Object.assign(newTodo, action.payload.todo);
+          return newTodo;
+        } else {
+          return todo;
+        }
+      });
+      state.todos = updatedTodos;
+      saveTodosToLocalStorage(updatedTodos);
     },
     deleteTodoAction: (state: StateInterface, action: PayloadAction<any>) => {
       state.todos = state.todos.filter(todo => todo.id !== action.payload);
-    },
-    getTodosFromStorage: (state: StateInterface) => {
-      const todosString = localStorage.getItem('todos');
-      state.days = [] as DayInterface[];
-      if (todosString) {
-        state.days = JSON.parse(todosString);
-      }
-    },
-    updateTodo: (state: StateInterface, action: PayloadAction<TodoForUpdateInterface>) => {
-      const foundDay = state.days.find((day: DayInterface) => day.date === action.payload.date);
-      if (foundDay) {
-      const foundTodo = foundDay.todos.find(todo => todo.id === action.payload.id);
-      if (foundTodo) {
-        foundTodo.completed = !foundTodo.completed;
-      }
-      saveTodosToLocaleStorage([...state.days]);
-    }
-
-    },
-    removeTodo: (state: StateInterface, action: PayloadAction<TodoForUpdateInterface>) => {
-    const foundDay = state.days.find((day: DayInterface) => day.date === action.payload.date);
-    if (foundDay) {
-    foundDay.todos = foundDay.todos.filter(todo => todo.id !== action.payload.id);
-    saveTodosToLocaleStorage([...state.days]);
-    }
-    },
-    selectTodoToChange: (state: StateInterface, action: PayloadAction<TodoForUpdateInterface | null>) => {
-      state.todoToChange = action?.payload?.id || null;
-      const foundDay = state.days.find(day => day.date === action.payload?.date);
-
-      if (foundDay) {
-        state.todoName = foundDay.todos.find(todo => todo.id === action?.payload?.id)?.name || '';
-      }
-    },
-    changeTheTodo: (state: StateInterface, action: PayloadAction<TodoToChangeInterface>) => {
-      const foundDay = state.days.find(day => day.date === action.payload.date);
-      if (foundDay) {
-        const foundTodo = foundDay.todos.find(todo => todo.id === state.todoToChange);
-
-        if (foundTodo) {
-          foundTodo.name = action.payload.todo.name;
-          foundTodo.start = action.payload.todo.start;
-          foundTodo.finish = action.payload.todo.finish;
-        }
-        saveTodosToLocaleStorage([...state.days]);
-      }
-    },
-    deleteCompletedTasks: (state: StateInterface, action: PayloadAction<string>) => {
-      const foundDay = state.days.find(day => day.date === action.payload);
-      if (foundDay) {
-        foundDay.todos = foundDay.todos.filter(todo =>  !todo.completed );
-      }
-      saveTodosToLocaleStorage([...state.days]);
+      localStorage.setItem('todos_tracker', JSON.stringify(state.todos));
     },
     changeTodoName: (state: StateInterface, action: PayloadAction<string>) => {
-        state.todoName = action.payload;
+      state.todoName = action.payload;
     },
-    addDay: (state: StateInterface, action: PayloadAction<DayInterface>) => {
-      state.days.push(action.payload);
-      saveTodosToLocaleStorage(state.days);
+    addTodoAction: (state: StateInterface, action: PayloadAction<any>) => {
+      state.todos.push(action.payload);
+      localStorage.setItem('todos_tracker', JSON.stringify(state.todos));
     },
-    clearDaysWhereDealsIsEmpty: (state: StateInterface) => {
-      state.days = state.days.filter(day => day.todos.length > 0);
-      saveTodosToLocaleStorage(state.days);
+    addTodoWithout: (state: StateInterface, action: PayloadAction<TodoWithoutTmeI>) => {
+      state.todosWithoutTime.push(action.payload);
     },
-    toggleTodos: (state: StateInterface, action: PayloadAction<ToggleDayInterface>) => {
-      const foundDay = state.days.find(day => day.date === action.payload.date);
-      if (foundDay) {
-        if (action.payload.isToggled) {
-          foundDay.todos = foundDay?.todos.map(todo => {
-            if (todo.completed) {
-              return todo;
-            } else {
-              const newTodo = {...todo};
-              newTodo.completed = true;
-              return newTodo;
-            }
-          });
-        } else {
-          foundDay.todos = foundDay?.todos.map(todo => {
-            if (todo.completed) {
-              const newTodo = {...todo};
-              newTodo.completed = false;
-              return newTodo;
-            } else {
-              return todo;
-            }
-          });
-        }
-      }
-    }
+    deleteTodoWithoutAction: (state: StateInterface, action: PayloadAction<any>) => {
+      state.todosWithoutTime = state.todosWithoutTime.filter(todo => todo.id !== action.payload);
+    },
   },
 });
 
-export const { addTodo, changeTodoName, changeTodoAction, setFilteredTodos, deleteTodoAction, getTodosFromServer, getTodosFromStorage, selectTodoToChange, changeTheTodo, updateTodo, removeTodo, deleteCompletedTasks, addDay, clearDaysWhereDealsIsEmpty, toggleTodos } = todoslice.actions;
+export const { changeTodoName, changeTodoAction, setFilteredTodos, deleteTodoAction, getTodosFromServer, selectTodoToChange, toggleAllAction, addTodoAction, addTodoWithout, getTodosWithoutTimeFromServer, deleteTodoWithoutAction } = todoslice.actions;
 
 export default todoslice.reducer;

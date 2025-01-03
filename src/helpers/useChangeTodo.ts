@@ -1,81 +1,20 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store/store";
-import { TodoInterface } from "../types/todos";
-import { changeTheTodo, changeTodoAction, changeTodoName, selectTodoToChange } from "../store/todosSlice";
+import { changeTodoAction, setFilteredTodos } from "../store/todosSlice";
 import { useState } from "react";
 import dayjs from "dayjs";
 import { useGetOccupiedTimes } from "./getOccupiedTime";
 import { baseUrl } from "./baseUrl";
 
-export const useChangeTodo = (date: any): [(todoId: number | string | null) => void, string] => {
-    const { days, todoName, todoToChange } = useSelector((state: RootState) => state.todos);
-    const { startTime, finishTime } = useSelector((state: RootState) => state.time);
-    const dispatch = useDispatch();
-    const [changeAlert, setChangeAlert] = useState('');
-    const foundDay = days.find(day => day.date === date);
-    const occupiedTimes = useGetOccupiedTimes(foundDay?.todos, todoToChange);
-
-    function changeTheTodoHandler(todoId: number | string | null) {
-        if (!todoId) {
-            return;
-        }
-
-        if (foundDay) {
-            const foundTodo = foundDay.todos.find((todo: TodoInterface) => todo.id === todoId);
-
-            if (!todoName) {
-                setChangeAlert('Введіть назву справи');
-
-                setTimeout(() => {
-                    setChangeAlert('');
-                }, 3000);
-
-                return;
-            }
-
-            if (dayjs(startTime).isAfter(dayjs(finishTime))) {
-                setChangeAlert('Початковий час не може бути пізніше кінцевого часу');
-                setTimeout(() => setChangeAlert(''), 3000);
-                return;
-            }
-
-            const isTimeOccupied = occupiedTimes.some((occupied: any) =>
-                (dayjs(startTime).isBetween(occupied.start, occupied.finish, null, '[)') ||
-                    dayjs(finishTime).isBetween(occupied.start, occupied.finish, null, '(]')) ||
-                (dayjs(startTime).isSame(occupied.start) && dayjs(finishTime).isSame(occupied.finish))
-            );
-
-            if (isTimeOccupied) {
-                setChangeAlert('Вибраний час вже зайнято');
-                setTimeout(() => setChangeAlert(''), 3000);
-                return;
-            }
-
-            const newTodo = {
-                ...foundTodo,
-                name: todoName,
-                start: startTime,
-                finish: finishTime,
-            };
-
-            dispatch(changeTheTodo({ todo: newTodo, date: date }));
-            dispatch(changeTodoName(''));
-            dispatch(selectTodoToChange(null));
-        }
-    }
-
-    return [changeTheTodoHandler, changeAlert];
-}
-
-export const useChangeTodoNew = (todo: any): [(todoId: number | string | null) => void, string] => {
+export const useChangeTodo = (todo: TodoInterface | undefined): [(todoId: TodoInterface | null) => void, string] => {
     const { todoName, filteredTodos } = useSelector((state: RootState) => state.todos);
     const { startTime, finishTime } = useSelector((state: RootState) => state.time);
+    const { user } = useSelector((state: RootState) => state.auth);
     const dispatch = useDispatch();
     const [changeAlert, setChangeAlert] = useState('');
-    const occupiedTimes = useGetOccupiedTimes(filteredTodos, todo);
+    const occupiedTimes = useGetOccupiedTimes(filteredTodos, todo?.id);
 
-    function changeTheTodoHandler(todoId: number | string | null) {
-        if (!todoId) {
+    function changeTheTodoHandler(todo: TodoInterface | null) {
+        if (!todo?.id) {
             return;
         }
 
@@ -96,8 +35,8 @@ export const useChangeTodoNew = (todo: any): [(todoId: number | string | null) =
         }
 
         const isTimeOccupied = occupiedTimes.some((occupied: any) =>
-            (dayjs(startTime).isBetween(occupied.start, occupied.finish, null, '[)') ||
-                dayjs(finishTime).isBetween(occupied.start, occupied.finish, null, '(]')) ||
+            (dayjs(startTime).isBetween(occupied.start, occupied.finish, null, '[]') ||
+                dayjs(finishTime).isBetween(occupied.start, occupied.finish, null, '[]')) ||
             (dayjs(startTime).isSame(occupied.start) && dayjs(finishTime).isSame(occupied.finish))
         );
 
@@ -113,20 +52,32 @@ export const useChangeTodoNew = (todo: any): [(todoId: number | string | null) =
             finish: finishTime,
         };
 
-        changeTodo(todoId, newTodo, dispatch);
+        if (user) {
+            changeTodo(todo.id, newTodo, dispatch, user);
+            const updatedTodos = filteredTodos.map(filteredTodo => {
+                if (filteredTodo.id === todo.id) {
+                    return { ...filteredTodo, name: todoName, start: startTime, finish: finishTime };
+                } else {
+                    return filteredTodo;
+                }
+            });
+            dispatch(setFilteredTodos(updatedTodos));
+        }
+
+
     }
 
     return [changeTheTodoHandler, changeAlert];
 }
 
-async function changeTodo(todoId: any, newTodo: any, dispatch: any) {
+async function changeTodo(todoId: string | number, newTodo: TodoInterfaceToAdd, dispatch: any, user: UserI) {
     try {
         const response = await fetch(`${baseUrl}/todos/${todoId}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({todoId, newTodo})
+            body: JSON.stringify({ todoId, newTodo, userId: user.id })
         });
 
         if (!response.ok) {
@@ -136,7 +87,7 @@ async function changeTodo(todoId: any, newTodo: any, dispatch: any) {
 
         const updatedTodo = await response.json();
         console.log('Todo updated successfully:', updatedTodo);
-        dispatch(changeTodoAction({todo: newTodo, todoId: todoId}))
+        dispatch(changeTodoAction({ todo: newTodo, todoId: todoId }))
     }
 
     catch (error) {

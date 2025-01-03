@@ -1,18 +1,20 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store/store";
-import { changeTodoName } from "../store/todosSlice";
+import { addTodoAction, changeTodoName } from "../store/todosSlice";
 import { useState } from "react";
 import dayjs from "dayjs";
 import { useGetOccupiedTimes } from "./getOccupiedTime";
 import isBetween from "dayjs/plugin/isBetween";
 import { fetchWithAuth } from "./fetchWithAuth";
 import { baseUrl } from "./baseUrl";
+import { changeTime } from "../store/timeSlice";
+import { useGetTodos } from "./useGetTodos";
+import { getTodosFromLocalStorage, saveTodosToLocalStorage } from "./todosInLocaleStorage";
 
 dayjs.extend(isBetween);
 
 type AddTodoHandler = () => void;
 
-async function createTodo(todo: any, userId: string) {
+async function createTodo(todo: TodoInterfaceToAdd, userId: string, getTodos: () => void) {
   try {
     const response = await fetchWithAuth(`${baseUrl}/todos`, {
       method: 'POST',
@@ -21,8 +23,13 @@ async function createTodo(todo: any, userId: string) {
       },
       body: JSON.stringify({ todo, userId })
     });
+
     if (!response.ok) {
       throw new Error(`Failed to create todo: ${response.statusText}`);
+    }
+
+    if (response.ok) {
+      getTodos();
     }
   } catch (error) {
     console.error("Error creating todo:", error);
@@ -34,10 +41,9 @@ export const useAddTodo = ():[AddTodoHandler, string] => {
     const { todoName, todos } = useSelector((state: RootState) => state.todos);
     const dispatch = useDispatch();
     const [alert, setAlert] = useState('');
-    // const foundDay = days.find(day => day.date === date);
-    // const occupiedTimes = useGetOccupiedTimes(foundDay?.todos);
     const occupiedTimesNew = useGetOccupiedTimes(todos || []);
     const { user } = useSelector((state: RootState) => state.auth);
+    const [getTodos] = useGetTodos();
 
     function addTodoHandler() {
         if (!todoName) {
@@ -56,37 +62,19 @@ export const useAddTodo = ():[AddTodoHandler, string] => {
           return;
         }
 
-        // const isTimeOccupied = occupiedTimes.some((occupied: any) => 
-        //   (dayjs(startTime).isBetween(occupied.start, occupied.finish, null, '[)') ||
-        //   dayjs(finishTime).isBetween(occupied.start, occupied.finish, null, '(]')) ||
-        //   (dayjs(startTime).isSame(occupied.start) && dayjs(finishTime).isSame(occupied.finish))
-        // );
+        const isTimeOccupied = occupiedTimesNew.some((occupied: any) => {
+          const res = (dayjs(startTime).isBetween(occupied.start, occupied.finish) ||
+          dayjs(finishTime).isBetween(occupied.start, occupied.finish));
+          return res;
+    });
 
-        const isTimeOccupiedNew = occupiedTimesNew.some((occupied: any) => 
-          (dayjs(startTime).isBetween(occupied.start, occupied.finish, null, '[)') ||
-          dayjs(finishTime).isBetween(occupied.start, occupied.finish, null, '(]')) ||
-          (dayjs(startTime).isSame(occupied.start) && dayjs(finishTime).isSame(occupied.finish))
-        );
+        
 
-        if (isTimeOccupiedNew) {
+        if (isTimeOccupied) {
           setAlert('Вибраний час вже зайнято');
           setTimeout(() => setAlert(''), 3000);
           return;
         }
-    
-        // if (isTimeOccupied) {
-        //   setAlert('Вибраний час вже зайнято');
-        //   setTimeout(() => setAlert(''), 3000);
-        //   return;
-        // }
-    
-        // const todo = {
-        //   name: todoName,
-        //   start: startTime,
-        //   finish: finishTime,
-        //   completed: false,
-        //   id: Date.now()
-        // };
 
         const todoNew = {
           name: todoName,
@@ -97,9 +85,15 @@ export const useAddTodo = ():[AddTodoHandler, string] => {
 
         const userId = user.id;
 
-        createTodo(todoNew, userId);
-        // dispatch(addTodo({ date: date, todo: todo }));
+        const todosFromStorage = getTodosFromLocalStorage();
+        const todosFromStorageNew = [...todosFromStorage, {...todoNew, id: Date.now()}];
+        saveTodosToLocalStorage(todosFromStorageNew);
+
+        dispatch(addTodoAction({...todoNew, id: Date.now()}));
+
+        createTodo(todoNew, userId, getTodos);
         dispatch(changeTodoName(''));
+        dispatch(changeTime({start: todoNew.finish, finish: dayjs(todoNew.finish).add(5, 'minute').toISOString()}));
     }
 
     return [addTodoHandler, alert];

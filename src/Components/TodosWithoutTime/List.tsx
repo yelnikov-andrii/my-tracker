@@ -1,59 +1,141 @@
-import { Box, Button, Checkbox, List, ListItem, Paper, useTheme } from '@mui/material';
-import React from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Box, Button, Checkbox, List, ListItem } from '@mui/material';
+import React, { useEffect } from 'react';
+import { baseUrl } from '../../helpers/baseUrl';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
-import { TodoWithoutTimeInterface } from '../../types/todosWithout';
-import { removeTodoWithoutTimeline, updateTodoWithout } from '../../store/todoWithout';
+import { deleteTodoWithoutAction, getTodosWithoutTimeFromServer } from '../../store/todosSlice';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const TodoList = () => {
-  const theme = useTheme();
-  const { todosWIthoutTimeline } = useSelector((state: RootState) => state.todoswithout);
+  const { user } = useSelector((state: RootState) => state.auth);
+  const { todosWithoutTime } = useSelector((state: RootState) => state.todos);
   const dispatch = useDispatch();
 
-  function toggleTodo(todoId: number) {
-    dispatch(updateTodoWithout(todoId));
+  async function getTodosWithoutTime() {
+    try {
+      const response = await fetch(`${baseUrl}/todos-without-time/${user?.id}`);
+      const todos = await response.json();
+      dispatch(getTodosWithoutTimeFromServer(todos));
+    } catch (e) {
+      console.log(e);
+    }
   }
 
-  function deleteTodo(todoId: number) {
-    dispatch(removeTodoWithoutTimeline(todoId));
+  useEffect(() => {
+    if (user) {
+      getTodosWithoutTime();
+    }
+  }, [user]);
+
+  async function updateTodo(todo: TodoWithoutTmeI) {
+    const newTodo = { ...todo };
+    newTodo.completed = !todo.completed;
+
+    try {
+      const response = await fetch(`${baseUrl}/todos-without-time/${todo.id}`, {
+        method: 'PATCH',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ newTodo, todoId: todo.id, userId: user.id })
+      });
+
+      if (!response.ok) {
+        console.error('Error: Cannot update todo');
+        return;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  function toggleTodo(todo: TodoWithoutTmeI) {
+    updateTodo(todo);
+    const updatedTodos = todosWithoutTime.map(t => {
+      if (t.id !== todo.id) {
+        return t;
+      } else {
+        const newTodo = { ...t };
+        newTodo.completed = !t.completed;
+        return newTodo;
+      }
+    });
+    dispatch(getTodosWithoutTimeFromServer(updatedTodos));
+  }
+
+  async function deleteTodo(todo: TodoWithoutTmeI) {
+    try {
+      const response = await fetch(`${baseUrl}/todos-without-time/${todo.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: user.id })
+      });
+
+      if (!response.ok) {
+        console.log(response, 'response delete')
+        console.log('Error: Cannot delete todo');
+        return;
+      }
+
+      console.log('Todo deleted successfully');
+    } catch (error) {
+      console.error('Error deleting todo:', error);
+    }
   }
 
   return (
     <React.Fragment>
-    <Paper variant="outlined">
-      <List>
-        {todosWIthoutTimeline.length > 0 ? todosWIthoutTimeline.map((todo: TodoWithoutTimeInterface) => (
-          <ListItem
-            key={todo.id}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              textDecoration: todo.completed ? 'line-through' : 'none',
-              border: `1px solid ${theme.palette.primary.main}`,
-              fontWeight: '500',
-              fontSize: '18px',
-              alignItems: 'flex-start'
+      <List sx={{
+        margin: '0 0 24px 0'
+      }}>
+        {todosWithoutTime.length > 0 ? todosWithoutTime.map(todo => (
+          <ListItem key={todo.id} style={{
+            fontWeight: '500',
+            fontSize: '18px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px',
+            padding: '12px',
+            border: '1px solid #e0e0e0',
+            boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.2)',
+            borderRadius: '12px',
+            backgroundColor: todo.completed ? '#f9f9f9' : 'white',
+            transition: 'all 0.3s ease',
+            cursor: 'pointer',
+            textDecoration: todo.completed ? 'line-through' : '',
+            color: todo.completed ? '#9e9e9e' : 'inherit',
+            opacity: todo.completed ? '0.7' : '1'
+          }}
+            onMouseEnter={(e) => {
+              (e.currentTarget.style.border = '1px solid #0057b8');
+              (e.currentTarget.style.boxShadow = '0px 0px 16px rgba(0, 87, 184, 0.4)');
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget.style.border = '1px solid #e0e0e0');
+              (e.currentTarget.style.boxShadow = '0px 0px 12px rgba(0, 0, 0, 0.2)');
             }}
           >
-            <Box display="flex" justifyContent="space-between" width="100%" alignItems="center">
-            <div>
-              {todo.name}
-            </div>
-            <Checkbox
-              onChange={() => {
-                toggleTodo(todo.id)
-              }}
-              checked={todo.completed}
-            />
+            <Box style={{
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+              {todo?.name}
+              <Checkbox
+                onChange={() => toggleTodo(todo)}
+                checked={todo.completed}
+              />
             </Box>
-            <Box>
-              <Button 
-                onClick={() => {
-                  deleteTodo(todo.id);
-                }}
-                variant='contained'
-              >
-                Видалити
+            <Box sx={{display: 'flex', justifyContent: 'flex-start', width: '100%'}} onClick={() => {
+              deleteTodo(todo);
+              dispatch(deleteTodoWithoutAction(todo.id));
+
+            }}>
+              <Button variant="outlined" size="small">
+                <DeleteIcon />
               </Button>
             </Box>
           </ListItem>
@@ -62,8 +144,8 @@ export const TodoList = () => {
             Немає завдань
           </ListItem>
         )}
+
       </List>
-    </Paper>
     </React.Fragment>
   )
 }

@@ -1,8 +1,9 @@
 import React, { Dispatch, SetStateAction } from 'react';
-import { MyModal } from '../../../UI/MyModal';
-import { deleteCompletedTasks } from '../../../store/todosSlice';
+import { MyModal } from '../../UI/MyModal';
 import { Box, Button, Typography } from '@mui/material';
-import { useDispatch } from 'react-redux';
+import { useDeleteAll } from '../../../helpers/useDeleteAll';
+import { useDispatch, useSelector } from 'react-redux';
+import { setFilteredTodos } from '../../../store/todosSlice';
 
 interface Props {
   readyToDelete: boolean;
@@ -10,7 +11,9 @@ interface Props {
   date: string;
 }
 
-export const ReadyToDelete: React.FC <Props> = ({ readyToDelete, setReadyToDelete, date }) => {
+export const ReadyToDelete: React.FC <Props> = ({ readyToDelete, setReadyToDelete }) => {
+  const deleteAllCompletedTodos = useDeleteAll();
+  const { filteredTodos } = useSelector((state: RootState) => state.todos);
   const dispatch = useDispatch();
 
   return (
@@ -25,7 +28,9 @@ export const ReadyToDelete: React.FC <Props> = ({ readyToDelete, setReadyToDelet
         <Button
           variant="contained"
           onClick={() => {
-            dispatch(deleteCompletedTasks(date));
+            deleteAllCompletedTodos();
+            const updatedTodos = filteredTodos.filter(todo => !todo.completed);
+            dispatch(setFilteredTodos(updatedTodos));
             setReadyToDelete(false);
           }}
         >

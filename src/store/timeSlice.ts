@@ -1,10 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
-
-export interface TimeState {
-  currentDate: string;
-  startTime: any;
-  finishTime: any;
-}
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: TimeState = {
   currentDate: new Date().toISOString(),
@@ -24,10 +18,14 @@ export const timeSlice = createSlice({
     },
     setFinishTime: (state, action) => {
       state.finishTime = action.payload;
+    },
+    changeTime: (state, action: PayloadAction<{start: string; finish: string}>) => {
+      state.startTime = action.payload.start;
+      state.finishTime = action.payload.finish;
     }
   },
 });
 
-export const { setDate, setStartTime, setFinishTime } = timeSlice.actions;
+export const { setDate, setStartTime, setFinishTime, changeTime } = timeSlice.actions;
 
 export default timeSlice.reducer;

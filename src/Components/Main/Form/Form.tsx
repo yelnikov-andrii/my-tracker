@@ -1,26 +1,24 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../store/store';
-import { Box, Button, Typography, OutlinedInput, Alert } from '@mui/material';
+import { Box, Button, OutlinedInput, Alert } from '@mui/material';
 import { changeTodoName } from '../../../store/todosSlice';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { ClockBlock } from './ClockBlock';
 import { setFinishTime, setStartTime } from '../../../store/timeSlice';
 import { useAddTodo } from '../../../helpers/useAddTodo';
-import { ViewsStrT, ViewT } from '../../../types/mainForm';
-import { useChangeTodo, useChangeTodoNew } from '../../../helpers/useChangeTodo';
+import { useChangeTodo } from '../../../helpers/useChangeTodo';
 
 interface Props {
   date: string;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export const Form: React.FC<Props> = ({ date, setIsOpen }) => {
+export const Form: React.FC<Props> = () => {
   const { todoName, todoToChange, todos } = useSelector((state: RootState) => state.todos);
   const { startTime, finishTime } = useSelector((state: RootState) => state.time);
 
-  const foundTodo = todos?.find(todo => todo.id === todoToChange);
+  const foundTodo = todos?.find(todo => todo.id === todoToChange?.id);
   const [view, setView] = useState<ViewT>({
     start: 'hours',
     finish: 'hours'
@@ -28,9 +26,8 @@ export const Form: React.FC<Props> = ({ date, setIsOpen }) => {
 
   const dispatch = useDispatch();
 
-  const [addTodoHandler, alert] = useAddTodo(date);
-  // const [changeTheTodoHandler, changeAlert] = useChangeTodo(date);
-  const [changeTheTodoHandler, changeAlert] = useChangeTodoNew(foundTodo);
+  const [addTodoHandler, alert] = useAddTodo();
+  const [changeTheTodoHandler, changeAlert] = useChangeTodo(foundTodo);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -39,18 +36,20 @@ export const Form: React.FC<Props> = ({ date, setIsOpen }) => {
           display="flex"
           justifyContent="space-between"
           alignSelf="center"
+          width="100%"
           gap={1}
           mb={1}
           sx={{
-            '@media (max-width: 768px)': {
+            '@media (max-width: 475px)': {
+              flexWrap: 'wrap',
+              flexDirection: 'column'
             },
           }}
         >
           <Box
             display="flex"
             justifyContent="space-between"
-            alignSelf="center"
-            flexWrap="wrap"
+            width="100%"
           >
             <ClockBlock
               viewValue={view.start}
@@ -67,7 +66,8 @@ export const Form: React.FC<Props> = ({ date, setIsOpen }) => {
           <Box
             display="flex"
             justifyContent="space-between"
-            flexWrap="wrap">
+            width="100%"
+          >
             <ClockBlock
               viewValue={view.finish}
               changeViewValue={(value: ViewsStrT) => {
@@ -81,7 +81,7 @@ export const Form: React.FC<Props> = ({ date, setIsOpen }) => {
             />
           </Box>
         </Box>
-        <Box display="flex" justifyContent="space-between" gap={1} marginBottom={2}>
+        <Box display="flex" justifyContent="space-between" gap={1} marginBottom={2} flexWrap="wrap">
           <OutlinedInput
             fullWidth
             value={todoName}
@@ -93,7 +93,6 @@ export const Form: React.FC<Props> = ({ date, setIsOpen }) => {
             <Button
               onClick={() => {
                 addTodoHandler();
-                setIsOpen(false);
               }}
               variant="contained"
             >

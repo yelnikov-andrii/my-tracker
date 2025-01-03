@@ -1,7 +1,6 @@
 import { Box, Checkbox, FormControlLabel } from '@mui/material'
 import React, { ChangeEvent } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../../../store/store';
 import { addWeekday } from '../../../store/weekdaySlice';
 
 export const WeekDays = () => {

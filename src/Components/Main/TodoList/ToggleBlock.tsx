@@ -1,49 +1,45 @@
-import { Box, Checkbox } from '@mui/material'
-import React from 'react'
-import { useDispatch } from 'react-redux';
-import { toggleTodos } from '../../../store/todosSlice';
-import { DayInterface } from '../../../types/todos';
+import { Box, Checkbox } from '@mui/material';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useToggleAll } from '../../../helpers/useToggleAll';
+import { useGetTodos } from '../../../helpers/useGetTodos';
+import { setFilteredTodos, toggleAllAction } from '../../../store/todosSlice';
 
-interface Props {
-  date: string;
-  foundDay: DayInterface | null;
-  active: boolean;
-}
-
-export const ToggleBlock: React.FC <Props> = ({ date, foundDay, active }) => {
-  const [isToggled, setIsToggled] = React.useState(false);
+export const ToggleBlock = () => {
+  const { allChecked, filteredTodos } = useSelector((state: RootState) => state.todos);
+  const toggleAll = useToggleAll();
+  const [getTodos] = useGetTodos();
   const dispatch = useDispatch();
-  
-  function handleCheckboxChange() {
-    if (!isToggled) {
-      dispatch(toggleTodos({ date, isToggled: true }));
-    } else {
-      dispatch(toggleTodos({ date, isToggled: false }));
-    }
 
-    setIsToggled(!isToggled);
+  useEffect(() => {
+    const checkAllChecked = filteredTodos.every(el => el.completed === true);
+
+    if (checkAllChecked) {
+      dispatch(toggleAllAction(true));
+    } else {
+      dispatch(toggleAllAction(false));
+    }
+  }, [filteredTodos, dispatch]);
+
+  async function handleCheckboxChange() {
+    await toggleAll();
+    dispatch(toggleAllAction(!allChecked));
+    await getTodos();
   }
 
-  React.useEffect(() => {
-    if (foundDay?.todos.every(todo => todo.completed)) {
-      setIsToggled(true);
-    } else {
-      setIsToggled(false);
-    }
-  }, [foundDay]);
-
   return (
-      <Box display="flex" justifyContent="flex-end" alignItems="center" paddingRight="5px">
-        {active ? (
-          <>
-            <span>
-              Вибрати усі
-            </span>
-            <Checkbox checked={isToggled} onChange={handleCheckboxChange} value={isToggled} />
-          </>
-        ) : (
-          <></>
-        )}
+    <Box display="flex" justifyContent="flex-end" alignItems="center" paddingRight="5px" marginBottom={3}>
+      <span style={{ fontWeight: '500', fontSize: '16px', textTransform: 'uppercase'}}>
+        Вибрати усі
+      </span>
+      <Checkbox 
+        checked={allChecked} 
+        onChange={() => {
+          handleCheckboxChange();
+          const updatedTodos = filteredTodos.map(todo => ({ ...todo, completed: !allChecked }));
+          dispatch(setFilteredTodos(updatedTodos));
+        }} 
+        value={allChecked} />
     </Box>
   )
 }

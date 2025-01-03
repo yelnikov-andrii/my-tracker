@@ -18,13 +18,13 @@ const Login = () => {
         password: ''
     });
 
-    const [errors, setErrors] = useState<any>({});
+    const [errors, setErrors] = useState<ErrorI>({});
     const [alertError, setAlertError] = useState('');
     const navigate = useNavigate();
     const delay = 2000;
     const dispatch = useDispatch();
 
-    const handleChange = (e: any) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setErrors({});
         setAlertError('');
@@ -35,7 +35,7 @@ const Login = () => {
     };
 
     const validate = () => {
-        const tempErrors: any = {};
+        const tempErrors: ErrorI = {};
         if (!formData.email) {
             tempErrors.email = "Email is required.";
         }
@@ -48,7 +48,7 @@ const Login = () => {
         return Object.keys(tempErrors).length === 0;
     };
 
-    const handleSubmit = (e: any) => {
+    const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (validate()) {
             fetch(`${baseUrl}/login`, {
@@ -75,21 +75,29 @@ const Login = () => {
                     localStorage.setItem('user_todo', JSON.stringify(data.user));
                     dispatch(changeAuth(true));
                     dispatch(changeUser(data.user));
+                    setResult('success login' + ' ' + data.user + data.accessToken);
                     setTimeout(() => {
                         navigate('/');
                     }, delay);
                 })
                 .catch((e) => {
                     console.log(e, 'error login');
+                    setAlertError(e.message);
+                    setResult('Error login' + ' ' + e);
                 })
         }
     };
 
+    const [result, setResult] = useState('');
+
     return (
-        <Container maxWidth="sm" sx={{ padding: '48px 0 0 0' }}>
-            <Typography variant="h4" gutterBottom>
+        <Container maxWidth="sm" sx={{ paddingTop: '48px'}}>
+            <Typography variant="h5" gutterBottom>
                 Логін
             </Typography>
+            <p>
+                {result}
+            </p>
             <form onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
                     <Grid size={12}>
