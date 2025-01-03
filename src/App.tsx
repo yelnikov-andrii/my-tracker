@@ -40,8 +40,9 @@ function App() {
   useEffect(() => {
     if (token && user && userIsLoaded) {
       dispatch(changeAuth(true));
-      setInitialized(true);
     }
+
+    setInitialized(true);
   }, [userIsLoaded, token, user]);
 
   if (!initialized) {
