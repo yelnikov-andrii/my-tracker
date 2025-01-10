@@ -21,7 +21,7 @@ const Login = () => {
     const [errors, setErrors] = useState<ErrorI>({});
     const [alertError, setAlertError] = useState('');
     const navigate = useNavigate();
-    const delay = 2000;
+    const delay = 500;
     const dispatch = useDispatch();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,7 +75,6 @@ const Login = () => {
                     localStorage.setItem('user_todo', JSON.stringify(data.user));
                     dispatch(changeAuth(true));
                     dispatch(changeUser(data.user));
-                    setResult('success login' + ' ' + data.user + data.accessToken);
                     setTimeout(() => {
                         navigate('/');
                     }, delay);
@@ -83,21 +82,15 @@ const Login = () => {
                 .catch((e) => {
                     console.log(e, 'error login');
                     setAlertError(e.message);
-                    setResult('Error login' + ' ' + e);
                 })
         }
     };
-
-    const [result, setResult] = useState('');
 
     return (
         <Container maxWidth="sm" sx={{ paddingTop: '48px'}}>
             <Typography variant="h5" gutterBottom>
                 Логін
             </Typography>
-            <p>
-                {result}
-            </p>
             <form onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
                     <Grid size={12}>

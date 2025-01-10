@@ -9,13 +9,12 @@ import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
 
 interface Props {
   todo: TodoInterface;
-  date: string;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export const ListItemComponent: React.FC<Props> = ({ todo, date, setIsOpen }) => {
+export const ListItemComponent: React.FC<Props> = ({ todo, setIsOpen }) => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const user = useSelector((state: RootState) => state.auth.user);
 
   async function updateTodo(todo: TodoInterface) {
     const newTodo = { ...todo };
@@ -104,7 +103,6 @@ export const ListItemComponent: React.FC<Props> = ({ todo, date, setIsOpen }) =>
         />
       </Box >
       <Buttons
-        date={date}
         todo={todo}
         setIsOpen={setIsOpen}
       />

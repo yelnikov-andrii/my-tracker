@@ -14,11 +14,13 @@ interface Props {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export const Form: React.FC<Props> = () => {
-  const { todoName, todoToChange, todos } = useSelector((state: RootState) => state.todos);
+export const Form: React.FC<Props> = React.memo(() => {
+  const todoName = useSelector((state: RootState) => state.todos.todoName);
+  const todoToChange = useSelector((state: RootState) => state.todos.todoToChange);
+  const filteredTodos = useSelector((state: RootState) => state.todos.filteredTodos);
   const { startTime, finishTime } = useSelector((state: RootState) => state.time);
 
-  const foundTodo = todos?.find(todo => todo.id === todoToChange?.id);
+  const foundTodo = filteredTodos?.find(todo => todo.id === todoToChange?.id);
   const [view, setView] = useState<ViewT>({
     start: 'hours',
     finish: 'hours'
@@ -122,4 +124,6 @@ export const Form: React.FC<Props> = () => {
       </Box>
     </LocalizationProvider>
   )
-}
+});
+
+Form.displayName = 'Form';

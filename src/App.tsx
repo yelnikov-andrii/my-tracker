@@ -11,6 +11,7 @@ import { changeAuth, changeUser } from './store/authSlice';
 import { getTodosFromServer } from './store/todosSlice';
 import { getTodosFromLocalStorage } from './helpers/todosInLocaleStorage';
 import { setDate } from './store/timeSlice';
+import { useGetTodos } from './helpers/useGetTodos';
 
 function App() {
   const dispatch = useDispatch();
@@ -18,20 +19,14 @@ function App() {
   const token = localStorage.getItem('accessToken');
   const userStr = localStorage.getItem('user_todo');
   const date = localStorage.getItem('date_tracker');
-  
-  const todosFromStorage = getTodosFromLocalStorage();
 
-  const { user, isAuth } = useSelector((state: RootState) => state.auth);
-  const [userIsLoaded, setIsUserLoaded] = useState(false);
+  const todosFromStorage = React.useMemo(() => getTodosFromLocalStorage(), []);
+  const [getTodos] = useGetTodos();
+
+  const { isAuth } = useSelector((state: RootState) => state.auth);
   const [initialized, setInitialized] = useState(false);
 
-  useEffect(() => {
-    if (userStr && !userIsLoaded) {
-      const obj = JSON.parse(userStr);
-      dispatch(changeUser(obj));
-      setIsUserLoaded(true);
-    }
-  }, [userStr, dispatch, userIsLoaded]);
+  const user = userStr ? JSON.parse(userStr) : '';
 
   useEffect(() => {
     if (todosFromStorage.length) {
@@ -40,20 +35,34 @@ function App() {
 
     if (date) {
       const formatedDate = date.toString();
-    dispatch(setDate(formatedDate));
+      dispatch(setDate(formatedDate));
     }
   }, [todosFromStorage, date]);
 
   useEffect(() => {
-    if (token && user && userIsLoaded) {
-      dispatch(changeAuth(true));
-    }
-
-    if (userIsLoaded) {
+    if (user) {
+      dispatch(changeUser(user));
+      setInitialized(true);
+    } else {
       setInitialized(true);
     }
 
-  }, [userIsLoaded, token, user]);
+    if (token) {
+      dispatch(changeAuth(true));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (user.id) {
+      getTodos(user.id);
+    }
+  }, [user.id]);
+
+  useEffect(() => {
+    if (user.id) {
+      getTodos(user.id);
+    }
+  }, []);
 
   if (!initialized) {
     return (
@@ -64,8 +73,6 @@ function App() {
       </div>
     )
   }
-
-  console.log('app renders');
 
   return (
     <div>

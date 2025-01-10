@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { Dispatch, SetStateAction, useMemo } from 'react'
 import { useSelector } from 'react-redux';
@@ -8,13 +9,12 @@ import { useGetFilteredTodos } from '../../../helpers/useGetFilteredTodos';
 import { useGetSortedTodos } from '../../../helpers/useGetSortedTodos';
 
 interface Props {
-  date: string;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const TodoList: React.FC<Props> = ({ date, setIsOpen }) => {
-  const { todos, filteredTodos } = useSelector((state: RootState) => state.todos);
-  useGetFilteredTodos(todos, date);
+export const TodoList: React.FC<Props> = React.memo(({ setIsOpen }) => {
+  const filteredTodos = useSelector((state: RootState) => state.todos.filteredTodos);
+  useGetFilteredTodos();
   const [sortedTodos] = useGetSortedTodos(filteredTodos);
 
   const isEmptyArr = useMemo(() => {
@@ -24,8 +24,6 @@ const TodoList: React.FC<Props> = ({ date, setIsOpen }) => {
 
     return false;
   }, [filteredTodos]);
-
-  console.log(todos, 'todos', filteredTodos, 'filteredTodos', sortedTodos, 'sorted todos');
 
   return (
     <React.Fragment>
@@ -37,7 +35,6 @@ const TodoList: React.FC<Props> = ({ date, setIsOpen }) => {
           <ListItemComponent
             todo={todo}
             key={todo.id}
-            date={date}
             setIsOpen={setIsOpen}
           />
         )) : (
@@ -48,6 +45,6 @@ const TodoList: React.FC<Props> = ({ date, setIsOpen }) => {
       </List>
     </React.Fragment>
   )
-}
+});
 
-export default React.memo(TodoList);
+TodoList.displayName = 'TodoList';

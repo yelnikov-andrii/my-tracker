@@ -13,7 +13,7 @@ type Props = {
 }
 
 export const ClockBlock = ({ value, setValue, label }: Props) => {
-    const { currentDate } = useSelector((state: RootState) => state.time);
+    const currentDate = useSelector((state: RootState) => state.time.currentDate);
 
     const handleTimeChange = (newTime: Dayjs | null) => {
         if (!newTime || !dayjs(newTime).isValid()) return;

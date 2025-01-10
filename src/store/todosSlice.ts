@@ -63,7 +63,7 @@ export const todoslice = createSlice({
       state.todos.push(action.payload);
       localStorage.setItem('todos_tracker', JSON.stringify(state.todos));
     },
-    addTodoWithout: (state: StateInterface, action: PayloadAction<TodoWithoutTmeI>) => {
+    addTodoWithoutTime: (state: StateInterface, action: PayloadAction<TodoWithoutTmeI>) => {
       state.todosWithoutTime.push(action.payload);
     },
     deleteTodoWithoutAction: (state: StateInterface, action: PayloadAction<any>) => {
@@ -72,6 +72,6 @@ export const todoslice = createSlice({
   },
 });
 
-export const { changeTodoName, changeTodoAction, setFilteredTodos, deleteTodoAction, getTodosFromServer, selectTodoToChange, toggleAllAction, addTodoAction, addTodoWithout, getTodosWithoutTimeFromServer, deleteTodoWithoutAction } = todoslice.actions;
+export const { changeTodoName, changeTodoAction, setFilteredTodos, deleteTodoAction, getTodosFromServer, selectTodoToChange, toggleAllAction, addTodoAction, addTodoWithoutTime, getTodosWithoutTimeFromServer, deleteTodoWithoutAction } = todoslice.actions;
 
 export default todoslice.reducer;

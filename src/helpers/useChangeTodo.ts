@@ -6,9 +6,11 @@ import { useGetOccupiedTimes } from "./getOccupiedTime";
 import { baseUrl } from "./baseUrl";
 
 export const useChangeTodo = (todo: TodoInterface | undefined): [(todoId: TodoInterface | null) => void, string] => {
-    const { todoName, filteredTodos } = useSelector((state: RootState) => state.todos);
-    const { startTime, finishTime } = useSelector((state: RootState) => state.time);
-    const { user } = useSelector((state: RootState) => state.auth);
+    const filteredTodos = useSelector((state: RootState) => state.todos.filteredTodos);
+    const todoName = useSelector((state: RootState) => state.todos.todoName);
+    const startTime = useSelector((state: RootState) => state.time.startTime);
+    const finishTime = useSelector((state: RootState) => state.time.finishTime);
+    const user = useSelector((state: RootState) => state.auth.user);
     const dispatch = useDispatch();
     const [changeAlert, setChangeAlert] = useState('');
     const occupiedTimes = useGetOccupiedTimes(filteredTodos, todo?.id);
@@ -34,10 +36,12 @@ export const useChangeTodo = (todo: TodoInterface | undefined): [(todoId: TodoIn
             return;
         }
 
-        const isTimeOccupied = occupiedTimes.some((occupied: any) =>
-            (dayjs(startTime).isBetween(occupied.start, occupied.finish, null, '[]') ||
-                dayjs(finishTime).isBetween(occupied.start, occupied.finish, null, '[]')) ||
-            (dayjs(startTime).isSame(occupied.start) && dayjs(finishTime).isSame(occupied.finish))
+        const isTimeOccupied = occupiedTimes.some((occupied: any) => {
+            return (dayjs(startTime).isBetween(occupied.start, occupied.finish, null, '()') ||
+                dayjs(finishTime).isBetween(occupied.start, occupied.finish, null, '()')) ||
+                (dayjs(startTime).isSame(occupied.start) && dayjs(finishTime).isSame(occupied.finish))
+        }
+
         );
 
         if (isTimeOccupied) {
