@@ -25,8 +25,6 @@ export const TodoList: React.FC<Props> = React.memo(({ setIsOpen }) => {
     return false;
   }, [filteredTodos]);
 
-    console.log('todo list renders')
-
   return (
     <React.Fragment>
       {!isEmptyArr && (

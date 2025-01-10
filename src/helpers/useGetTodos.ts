@@ -16,7 +16,6 @@ export const useGetTodos = () => {
                 const todosFromServer = await response.json();
 
                 const todosAreEqual = arraysAreEquals(todos, todosFromServer);
-                console.log(todosAreEqual, 'todos are equal')
 
                 if (!todosAreEqual) {
                     dispatch(getTodosFromServer(todosFromServer));

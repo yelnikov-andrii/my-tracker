@@ -54,10 +54,15 @@ function App() {
 
   useEffect(() => {
     if (user.id) {
-      console.log('user id is exist')
       getTodos(user.id);
     }
   }, [user.id]);
+
+  useEffect(() => {
+    if (user.id) {
+      getTodos(user.id);
+    }
+  }, []);
 
   if (!initialized) {
     return (
@@ -68,8 +73,6 @@ function App() {
       </div>
     )
   }
-
-  console.log('apprenders')
 
   return (
     <div>

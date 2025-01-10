@@ -42,10 +42,12 @@ export const Main: React.FC = () => {
           isOpen={isOpen}
           setIsOpen={setIsOpen}
         >
-          <Form
-            date={formatDate(currentDate)}
-            setIsOpen={setIsOpen}
-          />
+          {isOpen && (
+            <Form
+              date={formatDate(currentDate)}
+              setIsOpen={setIsOpen}
+            />
+          )}
         </MyModal>
         <TodoList
           setIsOpen={setIsOpen}
@@ -53,9 +55,9 @@ export const Main: React.FC = () => {
         <AddTodoBlock
           setIsOpen={setIsOpen}
         />
-          <DeleteCompleted
-            setReadyToDelete={setReadyToDelete}
-          />
+        <DeleteCompleted
+          setReadyToDelete={setReadyToDelete}
+        />
         {readyToDelete === true && (
           <ReadyToDelete
             readyToDelete={readyToDelete}

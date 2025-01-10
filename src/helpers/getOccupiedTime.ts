@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { useMemo } from "react";
 
 export const useGetOccupiedTimes = (todos: any, todoId?: any) => {
-    function getOccupiedTimes(todos: any) {
+    function getOccupiedTimes(todos: any, todoId?: any) {
         if (!todos || todos?.length === 0) {
             return [];
         }
@@ -25,6 +25,6 @@ export const useGetOccupiedTimes = (todos: any, todoId?: any) => {
     }
 
 
-    const occupiedTimes = useMemo(() => getOccupiedTimes(todos), [todos, todoId]);
+    const occupiedTimes = useMemo(() => getOccupiedTimes(todos, todoId), [todos, todoId]);
     return occupiedTimes;
 }

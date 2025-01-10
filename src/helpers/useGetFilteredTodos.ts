@@ -28,10 +28,6 @@ export const useGetFilteredTodos = () => {
   }, [todos, date]);
 
   useEffect(() => {
-    console.log('filtered todos render');
-    if (filteredTodos.length) {
       dispatch(setFilteredTodos(filteredTodos));
-    }
-
   }, [filteredTodos]);
 }

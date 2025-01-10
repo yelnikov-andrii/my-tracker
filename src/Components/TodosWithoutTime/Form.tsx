@@ -1,8 +1,8 @@
 import { Box, Button, OutlinedInput } from '@mui/material';
 import React, { Dispatch, SetStateAction } from 'react'
 import { baseUrl } from '../../helpers/baseUrl';
-import { useSelector } from 'react-redux';
-// import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { addTodoWithoutTime } from '../../store/todosSlice';
 
 interface Props {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -10,7 +10,9 @@ interface Props {
 
 export const Form: React.FC<Props> = () => {
   const [todoName, setTodoName] = React.useState('');
-  const { user } = useSelector((state: RootState) => state.auth);
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  const dispatch = useDispatch();
 
   async function addTodo(todo: TodoWithoutTmeI) {
     try {
@@ -41,6 +43,7 @@ export const Form: React.FC<Props> = () => {
     if (user) {
       addTodo(newTodo);
       setTodoName('');
+      dispatch(addTodoWithoutTime(newTodo));
     }
 
   }

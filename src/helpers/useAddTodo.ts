@@ -37,8 +37,10 @@ async function createTodo(todo: TodoInterfaceToAdd, userId: string, getTodos: (i
 }
 
 export const useAddTodo = ():[AddTodoHandler, string] => {
-    const { startTime, finishTime } = useSelector((state: RootState) => state.time);
-    const { todoName, todos } = useSelector((state: RootState) => state.todos);
+    const startTime = useSelector((state: RootState) => state.time.startTime);
+    const finishTime = useSelector((state: RootState) => state.time.finishTime);
+    const todos = useSelector((state: RootState) => state.todos.todos);
+    const todoName = useSelector((state: RootState) => state.todos.todoName);
     const dispatch = useDispatch();
     const [alert, setAlert] = useState('');
     const occupiedTimesNew = useGetOccupiedTimes(todos || []);

@@ -5,21 +5,13 @@ import { baseUrl } from '../../helpers/baseUrl';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteTodoWithoutAction, getTodosWithoutTimeFromServer } from '../../store/todosSlice';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useGetTodosWIthoutTime } from '../../helpers/useGetTodosWithoutTIme';
 
 export const TodoList = () => {
-  const { user } = useSelector((state: RootState) => state.auth);
+  const user = useSelector((state: RootState) => state.auth.user);
   const todosWithoutTime = useSelector((state: RootState) => state.todos.todosWithoutTime);
   const dispatch = useDispatch();
-
-  async function getTodosWithoutTime() {
-    try {
-      const response = await fetch(`${baseUrl}/todos-without-time/${user?.id}`);
-      const todos = await response.json();
-      dispatch(getTodosWithoutTimeFromServer(todos));
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  const getTodosWithoutTime = useGetTodosWIthoutTime();
 
   useEffect(() => {
     if (user) {
@@ -43,6 +35,8 @@ export const TodoList = () => {
       if (!response.ok) {
         console.error('Error: Cannot update todo');
         return;
+      } else {
+        getTodosWithoutTime();
       }
     } catch (e) {
       console.log(e);
@@ -60,6 +54,7 @@ export const TodoList = () => {
         return newTodo;
       }
     });
+    
     dispatch(getTodosWithoutTimeFromServer(updatedTodos));
   }
 
