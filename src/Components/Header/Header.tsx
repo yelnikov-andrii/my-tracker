@@ -65,8 +65,6 @@ export const Header = () => {
     dispatch(changeUser(null));
   }
 
-  console.log('header renders')
-
   return (
     <React.Fragment>
       <CssBaseline />

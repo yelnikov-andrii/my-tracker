@@ -8,7 +8,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 export const TodoList = () => {
   const { user } = useSelector((state: RootState) => state.auth);
-  const { todosWithoutTime } = useSelector((state: RootState) => state.todos);
+  const todosWithoutTime = useSelector((state: RootState) => state.todos.todosWithoutTime);
   const dispatch = useDispatch();
 
   async function getTodosWithoutTime() {
@@ -74,7 +74,6 @@ export const TodoList = () => {
       });
 
       if (!response.ok) {
-        console.log(response, 'response delete')
         console.log('Error: Cannot delete todo');
         return;
       }

@@ -1,13 +1,12 @@
+import { useMemo } from "react";
 import { useSelector } from "react-redux"
 
 export const useCheckIfCompletedExist = () => {
-    const { filteredTodos } = useSelector((state: RootState) => state.todos);
+    const filteredTodos = useSelector((state: RootState) => state.todos.filteredTodos);
 
-    const isCheckedExist = filteredTodos.some((todo) => todo.completed);
+    const isCheckedExist = useMemo(() => {
+        return filteredTodos.some((todo) => todo.completed);
+    }, [filteredTodos])
 
-    if (isCheckedExist) {
-        return true;
-    }
-
-    return false;
+    return isCheckedExist;
 }

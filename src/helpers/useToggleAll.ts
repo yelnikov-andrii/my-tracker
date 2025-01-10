@@ -3,7 +3,8 @@ import { baseUrl } from "./baseUrl";
 import { useCallback } from "react";
 
 export const useToggleAll = () => {
-    const { filteredTodos, allChecked } = useSelector((state: RootState) => state.todos);
+    const filteredTodos = useSelector((state: RootState) => state.todos.filteredTodos);
+    const allChecked = useSelector((state: RootState) => state.todos.allChecked);
 
     const updatedTodos = filteredTodos.map(todo => ({ ...todo, completed: !allChecked }));
 

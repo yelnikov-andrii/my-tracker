@@ -6,7 +6,8 @@ import { useGetTodos } from '../../../helpers/useGetTodos';
 import { setFilteredTodos, toggleAllAction } from '../../../store/todosSlice';
 
 export const ToggleBlock = () => {
-  const { allChecked, filteredTodos } = useSelector((state: RootState) => state.todos);
+  const filteredTodos = useSelector((state: RootState) => state.todos.filteredTodos);
+  const allChecked = useSelector((state: RootState) => state.todos.allChecked);
   const toggleAll = useToggleAll();
   const [getTodos] = useGetTodos();
   const dispatch = useDispatch();

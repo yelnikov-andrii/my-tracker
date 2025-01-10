@@ -13,7 +13,7 @@ interface Props {
 
 export const ReadyToDelete: React.FC <Props> = ({ readyToDelete, setReadyToDelete }) => {
   const deleteAllCompletedTodos = useDeleteAll();
-  const { filteredTodos } = useSelector((state: RootState) => state.todos);
+  const filteredTodos = useSelector((state: RootState) => state.todos.filteredTodos);
   const dispatch = useDispatch();
 
   return (

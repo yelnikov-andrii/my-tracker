@@ -6,7 +6,8 @@ import { useGetOccupiedTimes } from "./getOccupiedTime";
 import { baseUrl } from "./baseUrl";
 
 export const useChangeTodo = (todo: TodoInterface | undefined): [(todoId: TodoInterface | null) => void, string] => {
-    const { todoName, filteredTodos } = useSelector((state: RootState) => state.todos);
+    const filteredTodos = useSelector((state: RootState) => state.todos.filteredTodos);
+    const todoName = useSelector((state: RootState) => state.todos.todoName);
     const { startTime, finishTime } = useSelector((state: RootState) => state.time);
     const { user } = useSelector((state: RootState) => state.auth);
     const dispatch = useDispatch();

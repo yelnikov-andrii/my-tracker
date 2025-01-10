@@ -1,18 +1,26 @@
 import { Box, Button } from '@mui/material';
 import React, { Dispatch, SetStateAction } from 'react';
+import { useCheckIfCompletedExist } from '../../../helpers/useCheckIfCompletedIxist';
 
 interface Props {
   setReadyToDelete: Dispatch<SetStateAction<boolean>>;
-  date: string;
 }
 
 export const DeleteCompleted: React.FC<Props> = ({ setReadyToDelete }) => {
+  const isCheckedExist = useCheckIfCompletedExist();
 
   return (
-    <Box>
-      <Button onClick={() => setReadyToDelete(true)}>
-        Видалити завершені
-      </Button>
-    </Box>
+    <>
+      {
+        isCheckedExist ? (
+          <Box>
+            <Button onClick={() => setReadyToDelete(true)}>
+              Видалити завершені
+            </Button>
+          </Box >
+        ) : (
+          <></>
+        )}
+    </>
   )
 }

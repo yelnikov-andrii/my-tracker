@@ -26,7 +26,7 @@ async function deleteTodos(completedTodosIds: string[], user: UserI, getTodos: (
 }
 
 export const useDeleteAll = () => {
-    const { filteredTodos } = useSelector((state: RootState) => state.todos);
+    const filteredTodos = useSelector((state: RootState) => state.todos.filteredTodos);
     const { user } = useSelector((state: RootState) => state.auth);
 
     const [getTodos] = useGetTodos();

@@ -8,14 +8,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 interface Props {
-  date: string;
   todo: TodoInterface;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 export const Buttons: React.FC<Props> = ({ todo, setIsOpen }) => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const user = useSelector((state: RootState) => state.auth.user);
 
   async function deleteTodo(todoId: number | string) {
     try {

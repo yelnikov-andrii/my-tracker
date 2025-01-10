@@ -4,7 +4,7 @@ import { formatDate } from '../../../helpers/formateDate';
 import { Box, Typography } from '@mui/material';
 
 export const DateBlock = () => {
-  const { currentDate } = useSelector((state: RootState) => state.time);
+  const currentDate = useSelector((state: RootState) => state.time.currentDate);
 
   return (
     <>
