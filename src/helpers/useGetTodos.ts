@@ -7,13 +7,12 @@ import { arraysAreEquals } from "./arrayAreEquals";
 
 export const useGetTodos = () => {
     const dispatch = useDispatch();
-    const user = useSelector((state: RootState) => state.auth.user);
     const todos = useSelector((state: RootState) => state.todos.todos);
 
-    const getTodos = useCallback(async () => {
+    const getTodos = useCallback(async (userId: string) => {
         try {
-            if (user) {
-                const response = await fetch(`${baseUrl}/todos/${user?.id}`);
+            if (userId) {
+                const response = await fetch(`${baseUrl}/todos/${userId}`);
                 const todosFromServer = await response.json();
 
                 const todosAreEqual = arraysAreEquals(todos, todosFromServer);
@@ -21,6 +20,8 @@ export const useGetTodos = () => {
 
                 if (!todosAreEqual) {
                     dispatch(getTodosFromServer(todosFromServer));
+                } else {
+                    return;
                 }
             }
         }
@@ -28,7 +29,7 @@ export const useGetTodos = () => {
         catch (e) {
             console.log(e);
         }
-    }, [user, todos])
+    }, [todos])
 
     return [getTodos];
 }

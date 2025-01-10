@@ -4,7 +4,7 @@ import { baseUrl } from "./baseUrl";
 import { useCallback } from "react";
 import { useGetTodos } from "./useGetTodos";
 
-async function deleteTodos(completedTodosIds: string[], user: UserI, getTodos: () => void) {
+async function deleteTodos(completedTodosIds: string[], user: UserI, getTodos: (userId: string) => void) {
     try {
         const response = await fetch(`${baseUrl}/todos`, {
             headers: {
@@ -17,7 +17,7 @@ async function deleteTodos(completedTodosIds: string[], user: UserI, getTodos: (
         if (!response.ok) {
             throw new Error(`Failed to create todo: ${response.statusText}`);
         } else {
-            getTodos();
+            getTodos(user.id);
         }
 
     } catch (e) {
@@ -27,7 +27,7 @@ async function deleteTodos(completedTodosIds: string[], user: UserI, getTodos: (
 
 export const useDeleteAll = () => {
     const filteredTodos = useSelector((state: RootState) => state.todos.filteredTodos);
-    const { user } = useSelector((state: RootState) => state.auth);
+    const user = useSelector((state: RootState) => state.auth.user);
 
     const [getTodos] = useGetTodos();
 

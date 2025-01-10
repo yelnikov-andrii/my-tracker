@@ -7,6 +7,7 @@ import { Box, Button, MenuItem, Toolbar } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import MenuComp from './MenuComp';
 import { changeAuth, changeUser } from '../../store/authSlice';
+import { getTodosFromServer, setFilteredTodos } from '../../store/todosSlice';
 
 interface Props {
   links: LinkI[];
@@ -59,10 +60,11 @@ export const Header = () => {
   const dispatch = useDispatch();
 
   function unauthorize() {
-    localStorage.setItem('accessToken', '');
-    localStorage.setItem('user_todo', '');
+    localStorage.clear();
     dispatch(changeAuth(false));
     dispatch(changeUser(null));
+    dispatch(setFilteredTodos([]));
+    dispatch(getTodosFromServer([]));
   }
 
   return (

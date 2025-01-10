@@ -14,7 +14,7 @@ dayjs.extend(isBetween);
 
 type AddTodoHandler = () => void;
 
-async function createTodo(todo: TodoInterfaceToAdd, userId: string, getTodos: () => void) {
+async function createTodo(todo: TodoInterfaceToAdd, userId: string, getTodos: (id: string) => void) {
   try {
     const response = await fetchWithAuth(`${baseUrl}/todos`, {
       method: 'POST',
@@ -29,7 +29,7 @@ async function createTodo(todo: TodoInterfaceToAdd, userId: string, getTodos: ()
     }
 
     if (response.ok) {
-      getTodos();
+      getTodos(userId);
     }
   } catch (error) {
     console.error("Error creating todo:", error);

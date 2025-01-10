@@ -26,6 +26,8 @@ function App() {
   const { isAuth } = useSelector((state: RootState) => state.auth);
   const [initialized, setInitialized] = useState(false);
 
+  const user = userStr ? JSON.parse(userStr) : '';
+
   useEffect(() => {
     if (todosFromStorage.length) {
       dispatch(getTodosFromServer(todosFromStorage));
@@ -38,8 +40,7 @@ function App() {
   }, [todosFromStorage, date]);
 
   useEffect(() => {
-    if (userStr) {
-      const user = JSON.parse(userStr);
+    if (user) {
       dispatch(changeUser(user));
       setInitialized(true);
     } else {
@@ -52,9 +53,11 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log('get todos')
-    getTodos();
-  }, [])
+    if (user.id) {
+      console.log('user id is exist')
+      getTodos(user.id);
+    }
+  }, [user.id]);
 
   if (!initialized) {
     return (

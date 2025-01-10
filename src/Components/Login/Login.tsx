@@ -21,7 +21,7 @@ const Login = () => {
     const [errors, setErrors] = useState<ErrorI>({});
     const [alertError, setAlertError] = useState('');
     const navigate = useNavigate();
-    const delay = 2000;
+    const delay = 500;
     const dispatch = useDispatch();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
