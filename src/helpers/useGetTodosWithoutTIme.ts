@@ -1,4 +1,3 @@
-import React from "react";
 import { baseUrl } from "./baseUrl";
 import { useDispatch, useSelector } from "react-redux";
 import { getTodosWithoutTimeFromServer } from "../store/todosSlice";
