@@ -42,14 +42,13 @@ function App() {
   useEffect(() => {
     if (user) {
       dispatch(changeUser(user));
-      setInitialized(true);
-    } else {
-      setInitialized(true);
     }
 
     if (token) {
       dispatch(changeAuth(true));
     }
+
+    setInitialized(true);
   }, []);
 
   useEffect(() => {
