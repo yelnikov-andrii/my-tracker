@@ -11,8 +11,8 @@ interface Props {
   date: string;
 }
 
-export const ReadyToDelete: React.FC <Props> = ({ readyToDelete, setReadyToDelete }) => {
-  const deleteAllCompletedTodos = useDeleteAll();
+export const ReadyToDelete: React.FC<Props> = ({ readyToDelete, setReadyToDelete }) => {
+  const [deleteAllCompletedTodos] = useDeleteAll();
   const filteredTodos = useSelector((state: RootState) => state.todos.filteredTodos);
   const dispatch = useDispatch();
 
