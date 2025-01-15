@@ -9,9 +9,9 @@ import Registration from './Components/Registration/Registration';
 import Login from './Components/Login/Login';
 import { changeAuth, changeUser } from './store/authSlice';
 import { getTodosFromServer } from './store/todosSlice';
-import { getTodosFromLocalStorage } from './helpers/todosInLocaleStorage';
+import { getTodosFromLocalStorage } from './helpers/localeStorage/todosInLocaleStorage';
 import { setDate } from './store/timeSlice';
-import { useGetTodos } from './helpers/useGetTodos';
+import { useGetTodos } from './helpers/getTodosHelper/useGetTodos';
 
 function App() {
   const dispatch = useDispatch();
@@ -42,14 +42,13 @@ function App() {
   useEffect(() => {
     if (user) {
       dispatch(changeUser(user));
-      setInitialized(true);
-    } else {
-      setInitialized(true);
     }
 
     if (token) {
       dispatch(changeAuth(true));
     }
+
+    setInitialized(true);
   }, []);
 
   useEffect(() => {
@@ -68,7 +67,7 @@ function App() {
     return (
       <div style={{ padding: '48px' }}>
         <h4>
-          Loading...
+          Завантаження<span className='dots'></span>
         </h4>
       </div>
     )

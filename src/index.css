@@ -27,3 +27,48 @@ code {
     padding: 0;
   }
 }
+
+.dots {
+  margin-left: 4px;
+  width: 12px;
+  text-align: left;
+  display: inline-block;
+  font-weight: 700;
+}
+
+.dots::after {
+  content: '';
+  display: inline-block;
+
+  animation: dots 1s infinite ease forwards;
+}
+
+@keyframes dots {
+  0% {
+    content: '';
+  }
+
+  15% {
+    content: '.';
+  }
+
+  33% {
+    content: '..';
+  }
+
+  66% {
+    content: '...';
+  }
+
+  100% {
+    content: '...';
+  }
+}
+
+.global_alert {
+  position: absolute;
+  bottom: 48px;
+  left: 10%;
+  right: 10%;
+  z-index: 9;
+}

@@ -1,11 +1,13 @@
 import { Button } from '@mui/material'
 import React, { Dispatch, SetStateAction } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteTodoAction, selectTodoToChange } from '../../../store/todosSlice';
+import { addTodoAction, deleteTodoAction, selectTodoToChange } from '../../../store/todosSlice';
 import { baseUrl } from '../../../helpers/baseUrl';
 import { changeTime } from '../../../store/timeSlice';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { fetchWithAuth } from '../../../helpers/fetchWithAuth';
+import { showGlobalAlert } from '../../../helpers/alertGlobal/showGlobalAlert';
 
 interface Props {
   todo: TodoInterface;
@@ -18,7 +20,7 @@ export const Buttons: React.FC<Props> = ({ todo, setIsOpen }) => {
 
   async function deleteTodo(todoId: number | string) {
     try {
-      const response = await fetch(`${baseUrl}/todos/${todoId}`, {
+      const response = await fetchWithAuth(`${baseUrl}/todos/${todoId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -27,13 +29,14 @@ export const Buttons: React.FC<Props> = ({ todo, setIsOpen }) => {
       });
 
       if (!response.ok) {
-        console.log(response, 'response delete')
-        console.log('Error: Cannot delete todo');
+        showGlobalAlert("Не вдалося видалити справу");
+        discardDelete(todo);
         return;
       }
 
-      console.log('Todo deleted successfully');
     } catch (error) {
+      discardDelete(todo);
+      showGlobalAlert("Не вдалося видалити справу");
       console.error('Error deleting todo:', error);
     }
   }
@@ -42,6 +45,10 @@ export const Buttons: React.FC<Props> = ({ todo, setIsOpen }) => {
     setIsOpen(true);
     dispatch(selectTodoToChange(todo));
     dispatch(changeTime({ start: todo.start, finish: todo.finish }));
+  }
+
+  function discardDelete(todo: TodoInterface) {
+    dispatch(addTodoAction(todo));
   }
 
   return (

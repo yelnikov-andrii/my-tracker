@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch, useSelector } from "react-redux";
-import { getTodosFromServer } from "../store/todosSlice";
-import { baseUrl } from "./baseUrl";
+import { getTodosFromServer } from "../../store/todosSlice";
+import { baseUrl } from "../baseUrl";
 import { useCallback } from "react";
 import { arraysAreEquals } from "./arrayAreEquals";
 
@@ -26,7 +26,7 @@ export const useGetTodos = () => {
         }
 
         catch (e) {
-            console.log(e);
+            console.error(e);
         }
     }, [todos])
 

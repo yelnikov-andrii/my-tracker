@@ -2,8 +2,8 @@
 import dayjs from "dayjs";
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setFilteredTodos } from "../store/todosSlice";
-import { formatDate } from "./formateDate";
+import { setFilteredTodos } from "../../store/todosSlice";
+import { formatDate } from "../dateAndTimeHelpers/formateDate";
 
 export const useGetFilteredTodos = () => {
   const dispatch = useDispatch();

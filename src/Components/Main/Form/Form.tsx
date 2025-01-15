@@ -6,8 +6,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { ClockBlock } from './ClockBlock';
 import { setFinishTime, setStartTime } from '../../../store/timeSlice';
-import { useAddTodo } from '../../../helpers/useAddTodo';
-import { useChangeTodo } from '../../../helpers/useChangeTodo';
+import { useAddTodo } from '../../../helpers/addTodoHelpers/useAddTodo';
+import { useChangeTodo } from '../../../helpers/changeTodoHelpers/useChangeTodo';
 
 interface Props {
   date: string;
@@ -28,8 +28,8 @@ export const Form: React.FC<Props> = React.memo(() => {
 
   const dispatch = useDispatch();
 
-  const [addTodoHandler, alert] = useAddTodo();
-  const [changeTheTodoHandler, changeAlert] = useChangeTodo(foundTodo);
+  const [addTodoHandler, alert, loading] = useAddTodo();
+  const [changeTheTodoHandler, changeAlert, changeLoading] = useChangeTodo(foundTodo);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -92,37 +92,63 @@ export const Form: React.FC<Props> = React.memo(() => {
         </Box>
         <Box display="flex" justifyContent="center" gap={1}>
           {!todoToChange ? (
-            <Button
-              onClick={() => {
-                addTodoHandler();
-              }}
-              variant="contained"
-            >
-              Додати справу
-            </Button>
+            <>
+              {loading ? (
+                <Button
+                  variant="contained"
+                >
+                  Додавання справи<span className='dots'></span>
+                </Button>
+              ) : (
+                <Button
+                  onClick={
+                    () => {
+                      addTodoHandler();
+                    }
+                  }
+                  variant="contained"
+                >
+                  Додати справу
+                </Button>
+              )}
+            </>
           ) : (
-            <Button
-              onClick={() =>
-                changeTheTodoHandler(todoToChange)
-              }
-              variant="contained"
-            >
-              Редагувати справу
-            </Button>
+            <>
+              {changeLoading ? (
+                <Button
+                  variant="contained"
+                >
+                  Редагування справи<span className='dots'></span>
+                </Button>
+              ) : (
+                <Button
+                  onClick={() =>
+                    changeTheTodoHandler(todoToChange)
+                  }
+                  variant="contained"
+                >
+                  Редагувати справу
+                </Button>
+              )}
+            </>
           )}
         </Box>
-        {alert && (
-          <Alert severity="error">
-            {alert}
-          </Alert>
-        )}
-        {changeAlert && (
-          <Alert severity="error">
-            {changeAlert}
-          </Alert>
-        )}
-      </Box>
-    </LocalizationProvider>
+        {
+          alert && (
+            <Alert severity="error" variant='filled'>
+              {alert}
+            </Alert>
+          )
+        }
+        {
+          changeAlert && (
+            <Alert severity="error" variant='filled'>
+              {changeAlert}
+            </Alert>
+          )
+        }
+      </Box >
+    </LocalizationProvider >
   )
 });
 

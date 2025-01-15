@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { baseUrl } from "./baseUrl";
+import { baseUrl } from "../baseUrl";
 import { useCallback } from "react";
 
 export const useToggleAll = () => {

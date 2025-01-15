@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { saveTodosToLocalStorage } from '../helpers/todosInLocaleStorage';
+import { saveTodosToLocalStorage } from '../helpers/localeStorage/todosInLocaleStorage';
 
 const initialState: StateInterface = {
   todoToChange: null,
@@ -16,7 +16,7 @@ export const todoslice = createSlice({
   reducers: {
     getTodosFromServer: (state: StateInterface, action: PayloadAction<any>) => {
       state.todos = action.payload;
-      localStorage.setItem('todos_tracker', JSON.stringify(action.payload));
+      saveTodosToLocalStorage(action.payload);
     },
     getTodosWithoutTimeFromServer: (state: StateInterface, action: PayloadAction<any>) => {
       state.todosWithoutTime = action.payload;
@@ -37,7 +37,7 @@ export const todoslice = createSlice({
     },
     setFilteredTodos: (state: StateInterface, action: PayloadAction<any>) => {
       state.filteredTodos = action.payload;
-      localStorage.setItem('todos_tracker', JSON.stringify(state.todos));
+      saveTodosToLocalStorage(state.todos);
     },
     changeTodoAction: (state: StateInterface, action: PayloadAction<any>) => {
       const updatedTodos = state.todos.map(todo => {
@@ -53,15 +53,16 @@ export const todoslice = createSlice({
       saveTodosToLocalStorage(updatedTodos);
     },
     deleteTodoAction: (state: StateInterface, action: PayloadAction<any>) => {
-      state.todos = state.todos.filter(todo => todo.id !== action.payload);
-      localStorage.setItem('todos_tracker', JSON.stringify(state.todos));
+      const newTodos = state.todos.filter(todo => todo.id !== action.payload);
+      state.todos = newTodos;
+      saveTodosToLocalStorage(newTodos);
     },
     changeTodoName: (state: StateInterface, action: PayloadAction<string>) => {
       state.todoName = action.payload;
     },
     addTodoAction: (state: StateInterface, action: PayloadAction<any>) => {
       state.todos.push(action.payload);
-      localStorage.setItem('todos_tracker', JSON.stringify(state.todos));
+      saveTodosToLocalStorage(state.todos);
     },
     addTodoWithoutTime: (state: StateInterface, action: PayloadAction<TodoWithoutTmeI>) => {
       state.todosWithoutTime.push(action.payload);

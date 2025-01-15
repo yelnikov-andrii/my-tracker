@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { formatDate } from '../../../helpers/formateDate';
+import { formatDate } from '../../../helpers/dateAndTimeHelpers/formateDate';
 import { Box, Button, Typography } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -28,18 +28,18 @@ export const DateBlock = () => {
   return (
     <>
       <Box display="flex" alignItems="center" gap={2} marginTop={2} marginBottom={1}>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '16px' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '16px', '@media (max-width: 768px)': { gap: '8px', flexWrap: 'wrap' } }}>
           <Typography variant='h4' style={{ display: 'inline-block' }}>
             Дата:
           </Typography>
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Button size='small' onClick={() => changeDate('prev')}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', '@media (max-width: 768px)': { gap: '4px' } }}>
+            <Button size='small' onClick={() => changeDate('prev')} style={{ minWidth: '36px' }}>
               <ArrowBackIosIcon />
             </Button>
             <Typography variant='h4' style={{ display: 'inline-block' }}>
               {`${formatDate(currentDate)}`}
             </Typography>
-            <Button size='small' onClick={() => changeDate('next')}>
+            <Button size='small' onClick={() => changeDate('next')} style={{ minWidth: '36px' }}>
               <ArrowForwardIosIcon />
             </Button>
           </Box>

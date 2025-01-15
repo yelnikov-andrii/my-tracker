@@ -5,8 +5,8 @@ import { useSelector } from 'react-redux';
 import { List, ListItem } from '@mui/material';
 import { ListItemComponent } from './ListItemComponent';
 import { ToggleBlock } from './ToggleBlock';
-import { useGetFilteredTodos } from '../../../helpers/useGetFilteredTodos';
-import { useGetSortedTodos } from '../../../helpers/useGetSortedTodos';
+import { useGetFilteredTodos } from '../../../helpers/getTodosHelper/useGetFilteredTodos';
+import { useGetSortedTodos } from '../../../helpers/getTodosHelper/useGetSortedTodos';
 
 interface Props {
   setIsOpen: Dispatch<SetStateAction<boolean>>;

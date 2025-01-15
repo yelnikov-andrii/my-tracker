@@ -1,8 +1,8 @@
 import { Box, Checkbox } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useToggleAll } from '../../../helpers/useToggleAll';
-import { useGetTodos } from '../../../helpers/useGetTodos';
+import { useToggleAll } from '../../../helpers/pluralActions/useToggleAll';
+import { useGetTodos } from '../../../helpers/getTodosHelper/useGetTodos';
 import { setFilteredTodos, toggleAllAction } from '../../../store/todosSlice';
 
 export const ToggleBlock = () => {
