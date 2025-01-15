@@ -2,6 +2,7 @@
 import { useSelector } from "react-redux";
 import { baseUrl } from "../baseUrl";
 import { useCallback } from "react";
+import { showGlobalAlert } from "../alertGlobal/showGlobalAlert";
 
 async function deleteTodos(completedTodosIds: string[], user: UserI) {
     try {
@@ -14,11 +15,12 @@ async function deleteTodos(completedTodosIds: string[], user: UserI) {
         });
 
         if (!response.ok) {
-            throw new Error(`Failed to create todo: ${response.statusText}`);
+            showGlobalAlert('Помилка при видаленні справ');
         }
 
     } catch (e) {
-        console.log(e);
+        showGlobalAlert('Помилка при видаленні справ');
+        console.error(e);
     }
 }
 
