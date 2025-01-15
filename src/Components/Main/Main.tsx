@@ -6,14 +6,15 @@ import { TodoList } from './TodoList/TodoList';
 import { useDispatch, useSelector } from 'react-redux';
 import { MyCalendar } from '../UI/MyCalendar';
 import { setDate } from '../../store/timeSlice';
-import { formatDate } from '../../helpers/formateDate';
+import { formatDate } from '../../helpers/dateAndTimeHelpers/formateDate';
 import { DateBlock } from './DateBlock/DateBlock';
 import { DeleteCompleted } from './DeleteCompleted/DeleteCompleted';
 import { ReadyToDelete } from './ReadyToDelete/ReadyToDelete';
-import { Box } from '@mui/material';
+import { Alert, Box, Button } from '@mui/material';
 import { AddTodoBlock } from './AddTodoBlock/AddTodoBlock';
 import { MyModal } from '../UI/MyModal';
 import MyDropdown from '../UI/MyDropdown';
+import { clearGlobalAlert } from '../../store/globalAlert';
 
 export const Main: React.FC = () => {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ export const Main: React.FC = () => {
   const currentDate = useSelector((state: RootState) => state.time.currentDate);
   const [readyToDelete, setReadyToDelete] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(false);
+  const alert = useSelector((state: RootState) => state.alert.alert);
 
   function changeCurrentDate(newDate: Date) {
     const formatedDate = newDate.toISOString();
@@ -64,6 +66,25 @@ export const Main: React.FC = () => {
             setReadyToDelete={setReadyToDelete}
             date={formatDate(currentDate)}
           />
+        )}
+        {alert && (
+          <Box sx={{ padding: '16px 0 32px' }}>
+            <Alert
+              severity='error'
+              className='global_alert'
+              variant="filled"
+              action={
+                <Button color="inherit" size="small" onClick={() => {
+                  dispatch(clearGlobalAlert());
+                }}>
+                  ок
+                </Button>
+              }
+            >
+              {alert}
+              Can not update
+            </Alert>
+          </Box>
         )}
       </MyContainer>
     </Box>

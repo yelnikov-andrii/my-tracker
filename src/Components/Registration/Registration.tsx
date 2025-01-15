@@ -20,11 +20,12 @@ const Registration = () => {
     const [errors, setErrors] = useState<ErrorI>({});
     const [alertMessage, setAlertMessage] = useState({ success: '', error: '' });
     const navigate = useNavigate();
-    const delay = 3000;
+    const delay = 1000;
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setAlertMessage(prev => ({...prev, success: '', error: ''}));
+        setAlertMessage(prev => ({ ...prev, success: '', error: '' }));
         setErrors({});
         setFormData({
             ...formData,
@@ -52,6 +53,7 @@ const Registration = () => {
 
     const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setLoading(true);
         if (validate()) {
             fetch(`${baseUrl}/registration`, {
                 method: 'POST',
@@ -62,7 +64,7 @@ const Registration = () => {
             })
                 .then(response => {
                     if (!response.ok) {
-                        setAlertMessage(prev => ({...prev, error: response.statusText}));
+                        setAlertMessage(prev => ({ ...prev, error: response.statusText }));
                         throw new Error('Помилка ' + response.status + ' ' + response.statusText);
                     }
 
@@ -78,11 +80,14 @@ const Registration = () => {
                 .catch((e) => {
                     console.log(e);
                 })
+                .finally(() => {
+                    setLoading(false);
+                })
         }
     };
 
     return (
-        <Container maxWidth="sm" sx={{ paddingTop: '48px'}}>
+        <Container maxWidth="sm" sx={{ paddingTop: '48px' }}>
             <Typography variant="h5" gutterBottom>
                 Реєстрація
             </Typography>
@@ -124,19 +129,25 @@ const Registration = () => {
                         />
                     </Grid>
                     <Grid size={12}>
-                        <Button variant="contained" color="primary" type="submit">
-                            Зареєструватися
-                        </Button>
+                        {loading ? (
+                            <Button variant="contained" size='large' color="primary" type="submit">
+                                Завантаження <span className='dots'></span>
+                            </Button>
+                        ) : (
+                            <Button variant="contained" size='large' color="primary" type="submit">
+                                Логін
+                            </Button>
+                        )}
                     </Grid>
                     {alertMessage && (
                         <Grid size={12}>
                             {alertMessage.error && (
-                                <Alert severity='error'>
+                                <Alert severity='error' variant='filled'>
                                     {alertMessage.error}
                                 </Alert>
                             )}
                             {alertMessage.success && (
-                                <Alert severity='success'>
+                                <Alert severity='success' variant='filled'>
                                     {alertMessage.success}
                                 </Alert>
                             )}
@@ -144,7 +155,7 @@ const Registration = () => {
                     )}
                     {(errors.email || errors.password) && (
                         <Grid size={12}>
-                            <Alert severity='error'>
+                            <Alert severity='error' variant='filled'>
                                 {errors.email}
                                 {errors.password}
                             </Alert>

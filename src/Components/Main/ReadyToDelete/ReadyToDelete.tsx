@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { MyModal } from '../../UI/MyModal';
 import { Box, Button, Typography } from '@mui/material';
-import { useDeleteAll } from '../../../helpers/useDeleteAll';
+import { useDeleteAll } from '../../../helpers/pluralActions/useDeleteAll';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilteredTodos } from '../../../store/todosSlice';
 

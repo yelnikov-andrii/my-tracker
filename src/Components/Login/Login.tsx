@@ -23,6 +23,7 @@ const Login = () => {
     const navigate = useNavigate();
     const delay = 500;
     const dispatch = useDispatch();
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -51,6 +52,7 @@ const Login = () => {
     const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (validate()) {
+            setLoading(true);
             fetch(`${baseUrl}/login`, {
                 method: 'POST',
                 headers: {
@@ -83,11 +85,14 @@ const Login = () => {
                     console.log(e, 'error login');
                     setAlertError(e.message);
                 })
+                .finally(() => {
+                    setLoading(false);
+                })
         }
     };
 
     return (
-        <Container maxWidth="sm" sx={{ paddingTop: '48px'}}>
+        <Container maxWidth="sm" sx={{ paddingTop: '48px' }}>
             <Typography variant="h5" gutterBottom>
                 Логін
             </Typography>
@@ -117,13 +122,19 @@ const Login = () => {
                         />
                     </Grid>
                     <Grid size={12}>
-                        <Button variant="contained" color="primary" type="submit">
-                            Логін
-                        </Button>
+                        {loading ? (
+                            <Button variant="contained" size='large' color="primary" type="submit">
+                                Завантаження <span className='dots'></span>
+                            </Button>
+                        ) : (
+                            <Button variant="contained" size='large' color="primary" type="submit">
+                                Логін
+                            </Button>
+                        )}
                     </Grid>
                     {(errors.email || errors.password) && (
                         <Grid size={12}>
-                            <Alert severity='error'>
+                            <Alert severity='error' variant='filled'>
                                 {errors.email}
                                 {errors.password}
                             </Alert>
@@ -131,7 +142,7 @@ const Login = () => {
                     )}
                     {(alertError) && (
                         <Grid size={12}>
-                            <Alert severity='error'>
+                            <Alert severity='error' variant='filled'>
                                 {alertError}
                             </Alert>
                         </Grid>

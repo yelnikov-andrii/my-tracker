@@ -1,6 +1,6 @@
 import { Box, Button } from '@mui/material';
 import React, { Dispatch, SetStateAction } from 'react';
-import { useCheckIfCompletedExist } from '../../../helpers/useCheckIfCompletedIxist';
+import { useCheckIfCompletedExist } from '../../../helpers/pluralActions/useCheckIfCompletedIxist';
 
 interface Props {
   setReadyToDelete: Dispatch<SetStateAction<boolean>>;

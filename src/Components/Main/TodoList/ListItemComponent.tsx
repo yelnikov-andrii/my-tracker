@@ -6,6 +6,8 @@ import dayjs from 'dayjs';
 import { baseUrl } from '../../../helpers/baseUrl';
 import { changeTodoAction } from '../../../store/todosSlice';
 import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
+import { fetchWithAuth } from '../../../helpers/fetchWithAuth';
+import { showGlobalAlert } from '../../../helpers/alertGlobal/showGlobalAlert';
 
 interface Props {
   todo: TodoInterface;
@@ -20,7 +22,7 @@ export const ListItemComponent: React.FC<Props> = ({ todo, setIsOpen }) => {
     const newTodo = { ...todo };
     newTodo.completed = !todo.completed;
     try {
-      const response = await fetch(`${baseUrl}/todos/${todo.id}`, {
+      const response = await fetchWithAuth(`${baseUrl}/todos/${todo.id}`, {
         method: 'PATCH',
         headers: {
           "Content-Type": "application/json"
@@ -29,12 +31,20 @@ export const ListItemComponent: React.FC<Props> = ({ todo, setIsOpen }) => {
       });
 
       if (!response.ok) {
+        showGlobalAlert('Помилка при оновленні справи');
         console.error('Error: Cannot update todo');
+        discardCahnges(todo);
         return;
       }
     } catch (e) {
+      showGlobalAlert('Помилка при оновленні справи');
+      discardCahnges(todo);
       console.log(e);
     }
+  }
+
+  function discardCahnges(todo: TodoInterface) {
+    dispatch(changeTodoAction({ todo: { ...todo, completed: !todo.completed }, todoId: todo.id }));
   }
 
   function toggleTodo(todo: TodoInterface) {
@@ -76,15 +86,20 @@ export const ListItemComponent: React.FC<Props> = ({ todo, setIsOpen }) => {
         sx={{
           textDecoration: todo.completed ? 'line-through' : 'none',
           color: todo.completed ? '#9e9e9e' : 'inherit',
-          opacity: todo.completed ? '0.7' : '1'
+          opacity: todo.completed ? '0.7' : '1',
+          gap: '16px',
+          '@media (max-width: 768px)': {
+            flexWrap: 'wrap',
+            gap: '8px'
+          }
         }}
       >
-        <Box sx={{display: 'flex', gap: '8px', alignItems: 'center'}}>
-          <span style={{ fontWeight: '500', fontSize: '20px' }}>
+        <Box sx={{ display: 'flex', gap: '16px', alignItems: 'center', '@media (max-width: 768px)': { gap: '8px' } }}>
+          <span style={{ fontWeight: '500', fontSize: '18px' }}>
             {`${dayjs(todo.start).format('HH:mm')}`}
           </span>
           <HorizontalRuleIcon />
-          <span style={{ fontWeight: '500', fontSize: '20px' }}>
+          <span style={{ fontWeight: '500', fontSize: '18px' }}>
             {`${dayjs(todo.finish).format('HH:mm')}`}
           </span>
         </Box>
@@ -92,15 +107,20 @@ export const ListItemComponent: React.FC<Props> = ({ todo, setIsOpen }) => {
           sx={{
             textDecoration: todo.completed ? 'line-through' : 'none',
             fontWeight: '600',
-            fontSize: '20px'
+            fontSize: '18px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '16px'
           }}
         >
-          {todo.name}
+          <span>
+            {todo.name}
+          </span>
+          <Checkbox
+            onChange={() => toggleTodo(todo)}
+            checked={todo.completed}
+          />
         </Box>
-        <Checkbox
-          onChange={() => toggleTodo(todo)}
-          checked={todo.completed}
-        />
       </Box >
       <Buttons
         todo={todo}

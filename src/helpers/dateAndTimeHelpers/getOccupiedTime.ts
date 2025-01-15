@@ -2,13 +2,13 @@
 import dayjs from "dayjs";
 import { useMemo } from "react";
 
-export const useGetOccupiedTimes = (todos: any, todoId?: any) => {
-    function getOccupiedTimes(todos: any, todoId?: any) {
+export const useGetOccupiedTimes = (todos: TodoInterface[], todoId?: number | string) => {
+    function getOccupiedTimes(todos: TodoInterface[], todoId?: number | string) {
         if (!todos || todos?.length === 0) {
             return [];
         }
 
-        const filteredTodos = todos?.filter((todo: any) => {
+        const filteredTodos = todos?.filter((todo: TodoInterface) => {
             if (todoId) {
                 if (todo.id !== todoId) {
                     return todo;
