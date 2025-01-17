@@ -39,7 +39,7 @@ export const TodoList = () => {
         getTodosWithoutTime();
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   }
 
@@ -69,11 +69,11 @@ export const TodoList = () => {
       });
 
       if (!response.ok) {
-        console.log('Error: Cannot delete todo');
+        console.error('Error: Cannot delete todo');
         return;
       }
 
-      console.log('Todo deleted successfully');
+      console.error('Todo deleted successfully');
     } catch (error) {
       console.error('Error deleting todo:', error);
     }

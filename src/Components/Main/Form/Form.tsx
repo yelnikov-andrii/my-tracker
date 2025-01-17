@@ -1,24 +1,28 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+/* eslint-disable react/prop-types */
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, OutlinedInput, Alert } from '@mui/material';
 import { changeTodoName } from '../../../store/todosSlice';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { ClockBlock } from './ClockBlock';
-import { setFinishTime, setStartTime } from '../../../store/timeSlice';
 import { useAddTodo } from '../../../helpers/addTodoHelpers/useAddTodo';
 import { useChangeTodo } from '../../../helpers/changeTodoHelpers/useChangeTodo';
+import { changeTime, setFinishTime, setStartTime } from '../../../store/timeSlice';
+import dayjs from 'dayjs';
 
 interface Props {
-  date: string;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setNotClose: Dispatch<SetStateAction<boolean>>;
 }
 
-export const Form: React.FC<Props> = React.memo(() => {
+export const Form: React.FC<Props> = React.memo(({ setNotClose }) => {
   const todoName = useSelector((state: RootState) => state.todos.todoName);
   const todoToChange = useSelector((state: RootState) => state.todos.todoToChange);
   const filteredTodos = useSelector((state: RootState) => state.todos.filteredTodos);
-  const { startTime, finishTime } = useSelector((state: RootState) => state.time);
+  const startTime = useSelector((state: RootState) => state.time.startTime);
+  const finishTime = useSelector((state: RootState) => state.time.finishTime);
+  const currentDate = useSelector((state: RootState) => state.time.currentDate);
 
   const foundTodo = filteredTodos?.find(todo => todo.id === todoToChange?.id);
   const [view, setView] = useState<ViewT>({
@@ -28,8 +32,28 @@ export const Form: React.FC<Props> = React.memo(() => {
 
   const dispatch = useDispatch();
 
-  const [addTodoHandler, alert, loading] = useAddTodo();
+  const [addTodoHandler, alert, loading] = useAddTodo(setNotClose);
   const [changeTheTodoHandler, changeAlert, changeLoading] = useChangeTodo(foundTodo);
+
+  useEffect(() => {
+    const lastTodoInArr: TodoInterface = filteredTodos.at(filteredTodos.length - 1);
+    if (!lastTodoInArr) {
+      const timeObject = {
+        start: dayjs(currentDate)
+          .hour(0)
+          .minute(0).toISOString(),
+        finish: dayjs(currentDate)
+          .hour(0)
+          .minute(1).toISOString()
+      };
+      dispatch(changeTime({ start: timeObject.start, finish: timeObject.finish }));
+      return;
+    } else {
+      dispatch(changeTime({ start: lastTodoInArr.finish, finish: dayjs(lastTodoInArr.finish).add(1, 'minute').toISOString() }));
+      return;
+    }
+  }, [currentDate, dispatch, filteredTodos]);
+
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -96,6 +120,7 @@ export const Form: React.FC<Props> = React.memo(() => {
               {loading ? (
                 <Button
                   variant="contained"
+                  disabled
                 >
                   Додавання справи<span className='dots'></span>
                 </Button>
@@ -135,14 +160,14 @@ export const Form: React.FC<Props> = React.memo(() => {
         </Box>
         {
           alert && (
-            <Alert severity="error" variant='filled'>
+            <Alert severity="error" variant='filled' sx={{ margin: '16px 0 0 0' }}>
               {alert}
             </Alert>
           )
         }
         {
           changeAlert && (
-            <Alert severity="error" variant='filled'>
+            <Alert severity="error" variant='filled' sx={{ margin: '16px 0 0 0' }}>
               {changeAlert}
             </Alert>
           )

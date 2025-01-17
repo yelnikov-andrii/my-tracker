@@ -92,7 +92,6 @@ export const useChangeTodo = (todo: TodoInterface | undefined): [(todoId: TodoIn
         if (user) {
             changeTodo(todo.id, newTodo, dispatch, user, setLoading)
                 .then((res: any) => {
-                    console.log(res, 'res');
                     if (!res) {
                         showAlert('Помилка при редагуванні задачі');
                         showGlobalAlert('Помилка при додаванні задачі');

@@ -5,9 +5,11 @@ interface Props {
   children: React.ReactNode;
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  notClose?: boolean;
 }
 
-export const MyModal: React.FC <Props> = ({ children, isOpen, setIsOpen }) => {
+export const MyModal: React.FC <Props> = ({ children, isOpen, setIsOpen, notClose }) => {
+  console.log(notClose, 'not close')
 
   return (
     <Box
@@ -24,6 +26,10 @@ export const MyModal: React.FC <Props> = ({ children, isOpen, setIsOpen }) => {
       }}
       zIndex={1}
       onClick={() => {
+        if (notClose) {
+          return;
+        }
+
         setIsOpen(false);
       }}
     >

@@ -39,7 +39,7 @@ export const ListItemComponent: React.FC<Props> = ({ todo, setIsOpen }) => {
     } catch (e) {
       showGlobalAlert('Помилка при оновленні справи');
       discardCahnges(todo);
-      console.log(e);
+      console.error(e);
     }
   }
 

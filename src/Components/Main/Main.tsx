@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react'
+import React, { useState } from 'react'
 import { MyContainer } from '../UI/Container';
 import { Form } from './Form/Form';
 import { TodoList } from './TodoList/TodoList';
@@ -24,6 +24,8 @@ export const Main: React.FC = () => {
   const [isOpen, setIsOpen] = React.useState(false);
   const alert = useSelector((state: RootState) => state.alert.alert);
 
+  const [notClose, setNotClose] = useState(false);
+
   function changeCurrentDate(newDate: Date) {
     const formatedDate = newDate.toISOString();
     dispatch(setDate(formatedDate));
@@ -43,11 +45,11 @@ export const Main: React.FC = () => {
         <MyModal
           isOpen={isOpen}
           setIsOpen={setIsOpen}
+          notClose={notClose}
         >
           {isOpen && (
             <Form
-              date={formatDate(currentDate)}
-              setIsOpen={setIsOpen}
+              setNotClose={setNotClose}
             />
           )}
         </MyModal>
@@ -82,7 +84,6 @@ export const Main: React.FC = () => {
               }
             >
               {alert}
-              Can not update
             </Alert>
           </Box>
         )}

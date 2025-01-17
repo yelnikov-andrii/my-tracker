@@ -10,6 +10,29 @@ import Grid from '@mui/material/Grid2';
 import { useNavigate } from 'react-router-dom';
 import { baseUrl } from '../../helpers/baseUrl';
 
+interface AlertProps {
+    message: string;
+    action: any;
+}
+
+const RegistrationAlert: React.FC<AlertProps> = ({ message, action }) => {
+    return (
+        <Alert severity='error' variant='filled' sx={{ display: 'flex', alignItems: 'center' }}>
+            <span>
+                {message}
+            </span>
+            <Button onClick={() => {
+                action();
+            }}
+                sx={{ margin: '8px 0 0 0', padding: '0' }}
+                variant='text'
+            >
+                ок
+            </Button>
+        </Alert>
+    )
+}
+
 const Registration = () => {
     const [formData, setFormData] = useState({
         email: '',
@@ -78,7 +101,7 @@ const Registration = () => {
                     }, delay);
                 })
                 .catch((e) => {
-                    console.log(e);
+                    console.error(e);
                 })
                 .finally(() => {
                     setLoading(false);
@@ -135,21 +158,27 @@ const Registration = () => {
                             </Button>
                         ) : (
                             <Button variant="contained" size='large' color="primary" type="submit">
-                                Логін
+                                Реєстрація
                             </Button>
                         )}
                     </Grid>
                     {alertMessage && (
                         <Grid size={12}>
                             {alertMessage.error && (
-                                <Alert severity='error' variant='filled'>
-                                    {alertMessage.error}
-                                </Alert>
+                                <RegistrationAlert
+                                    message={alertMessage.error}
+                                    action={() => {
+                                        setAlertMessage(prev => ({ ...prev, error: '' }))
+                                    }}
+                                />
                             )}
                             {alertMessage.success && (
-                                <Alert severity='success' variant='filled'>
-                                    {alertMessage.success}
-                                </Alert>
+                                <RegistrationAlert
+                                    message={alertMessage.success}
+                                    action={() => {
+                                        setAlertMessage(prev => ({ ...prev, success: '' }))
+                                    }}
+                                />
                             )}
                         </Grid>
                     )}

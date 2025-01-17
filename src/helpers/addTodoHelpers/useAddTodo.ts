@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { addTodoAction, changeTodoAction, changeTodoName, deleteTodoAction } from "../../store/todosSlice";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useGetOccupiedTimes } from "../dateAndTimeHelpers/getOccupiedTime";
 import isBetween from "dayjs/plugin/isBetween";
@@ -13,7 +13,7 @@ dayjs.extend(isBetween);
 
 type AddTodoHandler = () => void;
 
-async function createTodo(todo: TodoInterfaceToAdd, userId: string, setLoading: Dispatch<SetStateAction<boolean>>) {
+async function createTodo(todo: TodoInterfaceToAdd, userId: string, setLoading: Dispatch<SetStateAction<boolean>>, isMounted: boolean) {
   setLoading(true);
   try {
     const response = await fetchWithAuth(`${baseUrl}/todos`, {
@@ -25,21 +25,30 @@ async function createTodo(todo: TodoInterfaceToAdd, userId: string, setLoading: 
     });
 
     if (!response.ok) {
+      if (isMounted) {
+        setLoading(false);
+      }
+      console.log('response not ok')
       throw new Error(`Failed to create todo: ${response.statusText}`);
     }
 
     if (response.ok) {
-      setLoading(false);
+      if (isMounted) {
+        setLoading(false);
+      }
+      console.log(response, 'response ok')
       return response.json();
     }
 
   } catch (error) {
-    setLoading(false);
+    if (isMounted) {
+      setLoading(false);
+    }
     console.error("Error creating todo:", error);
   }
 }
 
-export const useAddTodo = (): [AddTodoHandler, string, boolean] => {
+export const useAddTodo = (setNotClose: Dispatch<SetStateAction<boolean>>): [AddTodoHandler, string, boolean] => {
   const startTime = useSelector((state: RootState) => state.time.startTime);
   const finishTime = useSelector((state: RootState) => state.time.finishTime);
 
@@ -50,6 +59,10 @@ export const useAddTodo = (): [AddTodoHandler, string, boolean] => {
 
   const [alert, setAlert] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const delayNotClose = 1000;
+
+  const [isMounted, setIsMounted] = useState(true);
 
   const occupiedTimesNew = useGetOccupiedTimes(todos || []);
 
@@ -66,6 +79,22 @@ export const useAddTodo = (): [AddTodoHandler, string, boolean] => {
       dayjs(finishTime).isBetween(occupied.start, occupied.finish)
     );
   };
+
+  useEffect(() => {
+    return () => {
+      setIsMounted(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (loading) {
+      setNotClose(true);
+    } else {
+      setTimeout(() => {
+        setNotClose(false);
+      }, delayNotClose);
+    }
+  }, [loading, setNotClose]);
 
   function addTodoHandler() {
     if (!todoName) {
@@ -100,16 +129,17 @@ export const useAddTodo = (): [AddTodoHandler, string, boolean] => {
       dispatch(deleteTodoAction(localTodoId));
     }
 
-    createTodo(todoNew, userId, setLoading)
+    createTodo(todoNew, userId, setLoading, isMounted)
       .then((res: any) => {
         if (!res) {
+          console.log(res, 'res')
           showAlert('Помилка при додаванні задачі');
           showGlobalAlert('Помилка при додаванні задачі');
           discardChanges();
           return;
         } else {
           dispatch(changeTodoName(''));
-          dispatch(changeTime({ start: todoNew.finish, finish: dayjs(todoNew.finish).add(5, 'minute').toISOString() }));
+          dispatch(changeTime({ start: todoNew.finish, finish: dayjs(todoNew.finish).add(1, 'minute').toISOString() }));
           dispatch(changeTodoAction({ todo: res, todoId: localTodoId }));
         }
 
@@ -119,6 +149,11 @@ export const useAddTodo = (): [AddTodoHandler, string, boolean] => {
         showAlert('Помилка при додаванні задачі');
         showGlobalAlert('Помилка при додаванні задачі');
         discardChanges();
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setNotClose(false);
+        }, delayNotClose)
       })
   }
 

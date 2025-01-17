@@ -82,7 +82,7 @@ const Login = () => {
                     }, delay);
                 })
                 .catch((e) => {
-                    console.log(e, 'error login');
+                    console.error(e, 'error login');
                     setAlertError(e.message);
                 })
                 .finally(() => {
@@ -143,7 +143,10 @@ const Login = () => {
                     {(alertError) && (
                         <Grid size={12}>
                             <Alert severity='error' variant='filled'>
-                                {alertError}
+                                <span>{alertError}</span>
+                                <Button>
+                                    Ок
+                                </Button>
                             </Alert>
                         </Grid>
                     )}

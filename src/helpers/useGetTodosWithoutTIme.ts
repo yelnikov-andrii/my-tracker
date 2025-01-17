@@ -12,7 +12,7 @@ export const useGetTodosWIthoutTime = () => {
             const todos = await response.json();
             dispatch(getTodosWithoutTimeFromServer(todos));
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     }
 
