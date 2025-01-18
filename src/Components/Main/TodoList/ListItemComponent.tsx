@@ -1,5 +1,5 @@
 import { Box, Checkbox, ListItem } from '@mui/material'
-import React, { Dispatch, SetStateAction } from 'react'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 import { Buttons } from './Buttons';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
@@ -18,7 +18,10 @@ export const ListItemComponent: React.FC<Props> = ({ todo, setIsOpen }) => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.auth.user);
 
+  const [loading, setLoading] = useState(false);
+
   async function updateTodo(todo: TodoInterface) {
+    setLoading(true);
     const newTodo = { ...todo };
     newTodo.completed = !todo.completed;
     try {
@@ -33,23 +36,23 @@ export const ListItemComponent: React.FC<Props> = ({ todo, setIsOpen }) => {
       if (!response.ok) {
         dispatch(showGlobalAlert('Помилка при оновленні справи'));
         console.error('Error: Cannot update todo');
-        discardCahnges(newTodo);
         return;
       }
     } catch (e) {
       dispatch(showGlobalAlert('Помилка при оновленні справи'));
-      discardCahnges(newTodo);
       console.error(e);
+    }
+    finally {
+      setLoading(false);
     }
   }
 
-  function discardCahnges(todo: TodoInterface) {
-    dispatch(changeTodoAction({ todo: { ...todo, completed: !todo.completed }, todoId: todo.id }));
-  }
-
   function toggleTodo(todo: TodoInterface) {
-    updateTodo(todo);
-    dispatch(changeTodoAction({ todo: { ...todo, completed: !todo.completed }, todoId: todo.id }));
+    updateTodo(todo)
+      .then(() => {
+        dispatch(changeTodoAction({ todo: { ...todo, completed: !todo.completed }, todoId: todo.id }));
+      });
+
   }
 
   return (
@@ -82,7 +85,7 @@ export const ListItemComponent: React.FC<Props> = ({ todo, setIsOpen }) => {
         display="flex"
         justifyContent="space-between"
         width="100%"
-        alignItems="center"
+        alignItems="top"
         sx={{
           textDecoration: todo.completed ? 'line-through' : 'none',
           color: todo.completed ? '#9e9e9e' : 'inherit',
@@ -94,7 +97,7 @@ export const ListItemComponent: React.FC<Props> = ({ todo, setIsOpen }) => {
           }
         }}
       >
-        <Box sx={{ display: 'flex', gap: '16px', alignItems: 'center', '@media (max-width: 768px)': { gap: '8px' } }}>
+        <Box sx={{ display: 'flex', gap: '16px', alignItems: 'top', '@media (max-width: 768px)': { gap: '8px' } }}>
           <span style={{ fontWeight: '500', fontSize: '18px' }}>
             {`${dayjs(todo.start).format('HH:mm')}`}
           </span>
@@ -113,19 +116,32 @@ export const ListItemComponent: React.FC<Props> = ({ todo, setIsOpen }) => {
             gap: '16px'
           }}
         >
-          <span>
-            {todo.name}
-          </span>
-          <Checkbox
-            onChange={() => toggleTodo(todo)}
-            checked={todo.completed}
-          />
+          <Box sx={{ display: 'flex', flexDirection:'column', gap: '4px', justifyContent: 'flex-end'}}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+              <span>
+                {todo.name}
+              </span>
+              <Checkbox
+                onChange={() => toggleTodo(todo)}
+                checked={todo.completed}
+                disabled={loading}
+              />
+            </Box>
+            <Box sx={{ fontSize: '14px', fontWeight: 400 }}>
+              {loading && (
+                <>
+                  Оновлення
+                  <span className='dots'></span>
+                </>
+              )}
+            </Box>
+          </Box>
         </Box>
       </Box >
       <Buttons
         todo={todo}
         setIsOpen={setIsOpen}
       />
-    </ListItem>
+    </ListItem >
   )
 }
