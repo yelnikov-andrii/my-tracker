@@ -31,14 +31,14 @@ export const ListItemComponent: React.FC<Props> = ({ todo, setIsOpen }) => {
       });
 
       if (!response.ok) {
-        showGlobalAlert('Помилка при оновленні справи');
+        dispatch(showGlobalAlert('Помилка при оновленні справи'));
         console.error('Error: Cannot update todo');
-        discardCahnges(todo);
+        discardCahnges(newTodo);
         return;
       }
     } catch (e) {
-      showGlobalAlert('Помилка при оновленні справи');
-      discardCahnges(todo);
+      dispatch(showGlobalAlert('Помилка при оновленні справи'));
+      discardCahnges(newTodo);
       console.error(e);
     }
   }

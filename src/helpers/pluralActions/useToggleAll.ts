@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { baseUrl } from "../baseUrl";
 import { useCallback } from "react";
 import { showGlobalAlert } from "../alertGlobal/showGlobalAlert";
@@ -9,6 +9,7 @@ export const useToggleAll = () => {
     const allChecked = useSelector((state: RootState) => state.todos.allChecked);
 
     const updatedTodos = filteredTodos.map(todo => ({ ...todo, completed: !allChecked }));
+    const dispatch = useDispatch();
 
     const toggleAll = useCallback(async () => {
         try {
@@ -21,13 +22,13 @@ export const useToggleAll = () => {
             });
 
             if (!response.ok) {
-                showGlobalAlert('Помилка при виборі усіх завдань');
+                dispatch(showGlobalAlert('Помилка при виборі усіх завдань'));
             }
         } catch (e) {
-            showGlobalAlert('Помилка при виборі усіх завдань');
+            dispatch(showGlobalAlert('Помилка при виборі усіх завдань'));
             console.error("Error toggling todos:", e);
         }
-    }, [updatedTodos]);
+    }, [updatedTodos, dispatch]);
 
     return toggleAll;
 };

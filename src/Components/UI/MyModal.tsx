@@ -9,7 +9,6 @@ interface Props {
 }
 
 export const MyModal: React.FC <Props> = ({ children, isOpen, setIsOpen, notClose }) => {
-  console.log(notClose, 'not close')
 
   return (
     <Box

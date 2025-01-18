@@ -32,6 +32,8 @@ export const Main: React.FC = () => {
     localStorage.setItem('date_tracker', formatedDate);
   }
 
+  console.log(alert, 'global alert')
+
   return (
     <Box paddingTop={3}>
       <MyContainer>

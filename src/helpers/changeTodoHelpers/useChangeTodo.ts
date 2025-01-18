@@ -94,7 +94,7 @@ export const useChangeTodo = (todo: TodoInterface | undefined): [(todoId: TodoIn
                 .then((res: any) => {
                     if (!res) {
                         showAlert('Помилка при редагуванні задачі');
-                        showGlobalAlert('Помилка при додаванні задачі');
+                        dispatch(showGlobalAlert('Помилка при редагуванні задачі'));
                         return;
                     } else {
                         const updatedTodos = filteredTodos.map(filteredTodo => {
@@ -109,7 +109,7 @@ export const useChangeTodo = (todo: TodoInterface | undefined): [(todoId: TodoIn
                 })
                 .catch(() => {
                     showAlert('Помилка при оновленні справи');
-                    showGlobalAlert('Помилка при додаванні задачі');
+                    dispatch(showGlobalAlert('Помилка при оновленні задачі'));
                 })
         } else {
             showAlert('Виникла помилка');

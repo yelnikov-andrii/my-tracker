@@ -30,14 +30,14 @@ export const Buttons: React.FC<Props> = ({ todo, setIsOpen }) => {
 
       if (!response.ok) {
         console.log('not ok response')
-        showGlobalAlert("Не вдалося видалити справу");
+        dispatch(showGlobalAlert("Не вдалося видалити справу"));
         discardDelete(todo);
         return;
       }
 
     } catch (error) {
       discardDelete(todo);
-      showGlobalAlert("Не вдалося видалити справу");
+      dispatch(showGlobalAlert("Не вдалося видалити справу"));
       console.error('Error deleting todo:', error);
     }
   }

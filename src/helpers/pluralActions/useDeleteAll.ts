@@ -7,7 +7,7 @@ import { saveTodosToLocalStorage } from "../localeStorage/todosInLocaleStorage";
 import { fetchWithAuth } from "../fetchWithAuth";
 import { getTodosFromServer } from "../../store/todosSlice";
 
-async function deleteTodos(completedTodosIds: string[], user: UserI) {
+async function deleteTodos(completedTodosIds: string[], user: UserI, dispatch: any) {
     try {
         const response = await fetchWithAuth(`${baseUrl}/todos`, {
             headers: {
@@ -18,11 +18,11 @@ async function deleteTodos(completedTodosIds: string[], user: UserI) {
         });
 
         if (!response.ok) {
-            showGlobalAlert('Помилка при видаленні справ');
+            dispatch(showGlobalAlert('Помилка при видаленні справ'));
         }
 
     } catch (e) {
-        showGlobalAlert('Помилка при видаленні справ');
+        dispatch(showGlobalAlert('Помилка при видаленні справ'));
         console.error(e);
     }
 }
@@ -48,13 +48,13 @@ export const useDeleteAll = ():[() => void] => {
 
     const deleteAllCompletedTodos = useCallback(() => {
         if (completedTodosIds.length > 0) {
-            deleteTodos(completedTodosIds, user)
+            deleteTodos(completedTodosIds, user, dispatch)
             .then(() => {
                 saveTodosToLocalStorage(todos);
                 dispatch(getTodosFromServer(updatedTodos));
             })
             .catch(() => {
-                showGlobalAlert('Не вдалося видалити ')
+                dispatch(showGlobalAlert('Не вдалося видалити'));
             })
             
         }

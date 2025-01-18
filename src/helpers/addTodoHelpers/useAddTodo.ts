@@ -134,7 +134,7 @@ export const useAddTodo = (setNotClose: Dispatch<SetStateAction<boolean>>): [Add
         if (!res) {
           console.log(res, 'res')
           showAlert('Помилка при додаванні задачі');
-          showGlobalAlert('Помилка при додаванні задачі');
+          dispatch(showGlobalAlert('Помилка при додаванні задачі'));
           discardChanges();
           return;
         } else {
@@ -147,7 +147,7 @@ export const useAddTodo = (setNotClose: Dispatch<SetStateAction<boolean>>): [Add
       .catch((e) => {
         console.error(e)
         showAlert('Помилка при додаванні задачі');
-        showGlobalAlert('Помилка при додаванні задачі');
+        dispatch(showGlobalAlert('Помилка при додаванні задачі'));
         discardChanges();
       })
       .finally(() => {
