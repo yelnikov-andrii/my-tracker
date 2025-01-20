@@ -8,11 +8,11 @@ const MenuComp = () => {
     const { isAuth } = useSelector((state: RootState) => state.auth);
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-      setAnchorElNav(event.currentTarget);
+        setAnchorElNav(event.currentTarget);
     };
-  
+
     const handleCloseNavMenu = () => {
-      setAnchorElNav(null);
+        setAnchorElNav(null);
     };
 
     return (

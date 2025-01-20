@@ -38,7 +38,7 @@ export const privateLinks = [
     id: 4,
     name: 'Справи без часових меж',
     href: '/todos-without-timeline'
-  }
+  },
 ];
 
 export const LinksBlock: React.FC<Props> = ({ links, handleCloseNavMenu, mobile }) => {
@@ -56,7 +56,7 @@ export const LinksBlock: React.FC<Props> = ({ links, handleCloseNavMenu, mobile 
 }
 
 export const Header = () => {
-  const { isAuth } = useSelector((state: RootState) => state.auth);
+  const { isAuth, user } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch();
 
   function unauthorize() {
@@ -74,12 +74,22 @@ export const Header = () => {
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <MenuComp />
+            {isAuth && (
+              <Box sx={{ display: { xs: 'flex', md: 'none' }, justifyContent: 'center', alignItems: 'center', margin: '0 16px 0 0' }}>
+                {user?.email}
+              </Box>
+            )}
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               <Box sx={{ display: 'flex', gap: '32px' }}>
                 {isAuth ? (
-                  <LinksBlock
-                    links={privateLinks}
-                  />
+                  <>
+                    <LinksBlock
+                      links={privateLinks}
+                    />
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      {user?.email}
+                    </Box>
+                  </>
                 ) : (
                   <LinksBlock
                     links={publicLinks}

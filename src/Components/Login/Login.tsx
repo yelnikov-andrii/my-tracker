@@ -4,11 +4,12 @@ import {
     Button,
     Container,
     Typography,
-    Alert
+    Alert,
+    Box
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { changeAuth, changeUser } from '../../store/authSlice';
 import { baseUrl } from '../../helpers/baseUrl';
 
@@ -24,6 +25,7 @@ const Login = () => {
     const delay = 500;
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
+    const isAuth = useSelector((state: RootState) => state.auth.isAuth);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -152,6 +154,16 @@ const Login = () => {
                     )}
                 </Grid>
             </form>
+            {!isAuth && (
+                <Box sx={{margin: '48px 0 0 0'}}>
+                    <p>
+                        email: andriiyelnikov@gmail.com
+                    </p>
+                    <p>
+                        пароль: 12345
+                    </p>
+                </Box>
+            )}
         </Container>
     );
 };
