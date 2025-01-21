@@ -1,18 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getTodosFromServer } from "../../store/todosSlice";
 import { baseUrl } from "../baseUrl";
-import { useCallback } from "react";
 import { arraysAreEquals } from "./arrayAreEquals";
+import { fetchWithAuth } from "../fetchWithAuth";
+import { getTodosFromLocalStorage } from "../localeStorage/todosInLocaleStorage";
 
 export const useGetTodos = () => {
     const dispatch = useDispatch();
-    const todos = useSelector((state: RootState) => state.todos.todos);
+    const todos = getTodosFromLocalStorage();
 
-    const getTodos = useCallback(async (userId: string) => {
+    const getTodos = async (userId: string) => {
         try {
             if (userId) {
-                const response = await fetch(`${baseUrl}/todos/${userId}`);
+                const response = await fetchWithAuth(`${baseUrl}/todos/${userId}`);
                 const todosFromServer = await response.json();
 
                 const todosAreEqual = arraysAreEquals(todos, todosFromServer);
@@ -28,7 +29,7 @@ export const useGetTodos = () => {
         catch (e) {
             console.error(e);
         }
-    }, [todos])
+    }
 
     return [getTodos];
 }

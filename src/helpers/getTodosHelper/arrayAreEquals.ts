@@ -3,5 +3,7 @@ export const arraysAreEquals = (arr1: any[], arr2: any[]):boolean => {
         return false;
     }
 
-    return arr1.every((item, index) => item === arr2[index]);
+    return arr1.every((item, index) => {
+        return JSON.stringify(item) === JSON.stringify(arr2[index]);
+    });
 }

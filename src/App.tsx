@@ -12,6 +12,7 @@ import { getTodosFromServer } from './store/todosSlice';
 import { getTodosFromLocalStorage } from './helpers/localeStorage/todosInLocaleStorage';
 import { setDate } from './store/timeSlice';
 import { useGetTodos } from './helpers/getTodosHelper/useGetTodos';
+import { Box } from '@mui/material';
 
 function App() {
   const dispatch = useDispatch();
@@ -20,11 +21,12 @@ function App() {
   const userStr = localStorage.getItem('user_todo');
   const date = localStorage.getItem('date_tracker');
 
-  const todosFromStorage = React.useMemo(() => getTodosFromLocalStorage(), []);
   const [getTodos] = useGetTodos();
 
-  const { isAuth } = useSelector((state: RootState) => state.auth);
+  const isAuth = useSelector((state: RootState) => state.auth.isAuth);
   const [initialized, setInitialized] = useState(false);
+
+  const todosFromStorage = getTodosFromLocalStorage();
 
   const user = userStr ? JSON.parse(userStr) : '';
 
@@ -37,11 +39,12 @@ function App() {
       const formatedDate = date.toString();
       dispatch(setDate(formatedDate));
     }
-  }, [todosFromStorage, date]);
+  }, []);
 
   useEffect(() => {
     if (user) {
       dispatch(changeUser(user));
+      getTodos(user.id);
     }
 
     if (token) {
@@ -49,57 +52,35 @@ function App() {
     }
 
     setInitialized(true);
-  }, []);
+  }, [user?.id, dispatch]);
 
-  useEffect(() => {
-    if (user.id) {
-      getTodos(user.id);
-    }
-  }, [user.id]);
-
-  useEffect(() => {
-    if (user.id) {
-      getTodos(user.id);
-    }
-  }, []);
 
   if (!initialized) {
     return (
-      <div style={{ padding: '48px' }}>
+      <Box sx={{ padding: '48px' }}>
         <h4>
           Завантаження<span className='dots'></span>
         </h4>
-      </div>
+      </Box>
     )
   }
+
+  console.log('app renders')
 
   return (
     <div>
       <Header />
       <div className='container'>
-        {isAuth ? (
-          <Routes>
-            <Route path='/' element={<Main />}>
-            </Route>
-            <Route path='/login' element={<Login />}>
-            </Route>
-            <Route path='/registration' element={<Registration />}>
-            </Route>
-            <Route path='/todos-without-timeline' element={<TodosWithoutTime />}>
-            </Route>
-          </Routes>
-        ) : (
-          <Routes>
-            <Route path='/' element={<Navigate to="/login" />}>
-            </Route>
-            <Route path='/login' element={<Login />}>
-            </Route>
-            <Route path='/registration' element={<Registration />}>
-            </Route>
-            <Route path='/todos-without-timeline' element={<Navigate to="/login" />}>
-            </Route>
-          </Routes>
-        )}
+        <Routes>
+          <Route path='/' element={isAuth ? <Main /> : <Navigate to="/login" />}>
+          </Route>
+          <Route path='/login' element={<Login />}>
+          </Route>
+          <Route path='/registration' element={<Registration />}>
+          </Route>
+          <Route path='/todos-without-timeline' element={isAuth ? <TodosWithoutTime /> : <Navigate to="/login" />}>
+          </Route>
+        </Routes>
       </div>
     </div>
   );

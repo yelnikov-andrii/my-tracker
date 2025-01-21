@@ -24,12 +24,16 @@ async function changeTodo(todoId: string | number, newTodo: TodoInterfaceToAdd, 
         }
 
         const updatedTodo = await response.json();
-        dispatch(changeTodoAction({ todo: updatedTodo, todoId: updatedTodo.id }))
+        dispatch(changeTodoAction({ todo: updatedTodo, todoId: updatedTodo.id }));
+        return updatedTodo;
     }
 
     catch (error) {
         setLoading(false);
         console.error('Error updating todo:', error);
+    }
+    finally {
+        setLoading(false);
     }
 }
 
