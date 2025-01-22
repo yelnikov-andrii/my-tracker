@@ -10,14 +10,20 @@ import Grid from '@mui/material/Grid2';
 import { useNavigate } from 'react-router-dom';
 import { baseUrl } from '../../helpers/baseUrl';
 
+enum TypeSeverity {
+    error = 'error',
+    success = 'success'
+}
+
 interface AlertProps {
     message: string;
     action: any;
+    type: TypeSeverity;
 }
 
-const RegistrationAlert: React.FC<AlertProps> = ({ message, action }) => {
+const RegistrationAlert: React.FC<AlertProps> = ({ message, action, type }) => {
     return (
-        <Alert severity='error' variant='filled' sx={{ display: 'flex', alignItems: 'center' }}>
+        <Alert severity={type} variant='filled' sx={{ display: 'flex', alignItems: 'center' }}>
             <span>
                 {message}
             </span>
@@ -85,10 +91,14 @@ const Registration = () => {
                 },
                 body: JSON.stringify({ email: formData.email, password: formData.password })
             })
-                .then(response => {
+                .then(async response => {
                     if (!response.ok) {
-                        setAlertMessage(prev => ({ ...prev, error: response.statusText }));
-                        throw new Error('Помилка ' + response.status + ' ' + response.statusText);
+
+                        const errorResponse = await response.json();
+                        console.error('Помилка сервера:', errorResponse);
+
+                        setAlertMessage(prev => ({ ...prev, error: errorResponse.message + errorResponse?.errors?.email + ' ' + errorResponse?.errors?.password }));
+                        throw new Error('Помилка ' + errorResponse.message + ' ' + errorResponse?.errors?.email + ' ' + errorResponse?.errors?.password);
                     }
 
                     return response.json();
@@ -157,7 +167,7 @@ const Registration = () => {
                     <Grid size={12}>
                         {loading ? (
                             <Button variant="contained" size='large' color="primary" type="submit">
-                                Завантаження <span className='dots'></span>
+                                Запит відправлено <span className='dots'></span>
                             </Button>
                         ) : (
                             <Button variant="contained" size='large' color="primary" type="submit">
@@ -173,6 +183,7 @@ const Registration = () => {
                                     action={() => {
                                         setAlertMessage(prev => ({ ...prev, error: '' }))
                                     }}
+                                    type={TypeSeverity.error}
                                 />
                             )}
                             {alertMessage.success && (
@@ -181,6 +192,7 @@ const Registration = () => {
                                     action={() => {
                                         setAlertMessage(prev => ({ ...prev, success: '' }))
                                     }}
+                                    type={TypeSeverity.success}
                                 />
                             )}
                         </Grid>

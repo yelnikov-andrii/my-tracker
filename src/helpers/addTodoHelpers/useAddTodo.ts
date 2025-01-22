@@ -28,7 +28,7 @@ async function createTodo(todo: TodoInterfaceToAdd, userId: string, setLoading: 
       if (isMounted) {
         setLoading(false);
       }
-      console.log('response not ok')
+
       throw new Error(`Failed to create todo: ${response.statusText}`);
     }
 
@@ -36,7 +36,7 @@ async function createTodo(todo: TodoInterfaceToAdd, userId: string, setLoading: 
       if (isMounted) {
         setLoading(false);
       }
-      console.log(response, 'response ok')
+      
       return response.json();
     }
 
@@ -60,7 +60,7 @@ export const useAddTodo = (setNotClose: Dispatch<SetStateAction<boolean>>): [Add
   const [alert, setAlert] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const delayNotClose = 1000;
+  const delayNotClose = 500;
 
   const [isMounted, setIsMounted] = useState(true);
 
@@ -132,7 +132,6 @@ export const useAddTodo = (setNotClose: Dispatch<SetStateAction<boolean>>): [Add
     createTodo(todoNew, userId, setLoading, isMounted)
       .then((res: any) => {
         if (!res) {
-          console.log(res, 'res')
           showAlert('Помилка при додаванні задачі');
           dispatch(showGlobalAlert('Помилка при додаванні задачі'));
           discardChanges();

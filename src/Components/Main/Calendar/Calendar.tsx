@@ -2,18 +2,10 @@ import React, { FunctionComponent } from "react";
 import MyDropdown from "../../UI/MyDropdown";
 import { MyCalendar } from "../../UI/MyCalendar";
 
-interface CalendarProps {
-    value: string;
-    onChange: (newDate: Date) => void;
-}
-
-const Calendar: FunctionComponent<CalendarProps> = ({ value, onChange}) => {
+const Calendar: FunctionComponent = () => {
     return (
         <MyDropdown butttonContent="Календар">
-            <MyCalendar
-                value={value}
-                onChange={onChange}
-            />
+            <MyCalendar />
         </MyDropdown>
     );
 }

@@ -3,7 +3,7 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, OutlinedInput, Alert } from '@mui/material';
-import { changeTodoName } from '../../../store/todosSlice';
+import { changeTodoName, selectTodoToChange } from '../../../store/todosSlice';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { ClockBlock } from './ClockBlock';
@@ -37,6 +37,11 @@ export const Form: React.FC<Props> = React.memo(({ setNotClose }) => {
 
   useEffect(() => {
     const lastTodoInArr: TodoInterface = filteredTodos.at(filteredTodos.length - 1);
+
+    if (todoToChange) {
+      return;
+    }
+
     if (!lastTodoInArr) {
       const timeObject = {
         start: dayjs(currentDate)
@@ -52,8 +57,13 @@ export const Form: React.FC<Props> = React.memo(({ setNotClose }) => {
       dispatch(changeTime({ start: lastTodoInArr.finish, finish: dayjs(lastTodoInArr.finish).add(1, 'minute').toISOString() }));
       return;
     }
-  }, [currentDate, dispatch, filteredTodos]);
+  }, [currentDate, dispatch, filteredTodos, todoToChange]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(selectTodoToChange(null));
+    }
+  }, []);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

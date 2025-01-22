@@ -1,7 +1,9 @@
 import dayjs from "dayjs";
 import { useMemo } from "react";
+import { useGetFilteredTodos } from "./useGetFilteredTodos";
 
 export const useGetSortedTodos = (todos: TodoInterface[]) => {
+    useGetFilteredTodos();
     const getSortedTodos = (todos: TodoInterface[]) => {
         return todos.slice().sort((a, b) => dayjs(a.start).diff(dayjs(b.start)));
     };

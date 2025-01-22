@@ -8,7 +8,6 @@ import { setFilteredTodos } from '../../../store/todosSlice';
 interface Props {
   readyToDelete: boolean;
   setReadyToDelete: Dispatch<SetStateAction<boolean>>;
-  date: string;
 }
 
 export const ReadyToDelete: React.FC<Props> = ({ readyToDelete, setReadyToDelete }) => {

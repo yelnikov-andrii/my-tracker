@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     TextField,
     Button,
@@ -22,7 +22,6 @@ const Login = () => {
     const [errors, setErrors] = useState<ErrorI>({});
     const [alertError, setAlertError] = useState('');
     const navigate = useNavigate();
-    const delay = 500;
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const isAuth = useSelector((state: RootState) => state.auth.isAuth);
@@ -79,9 +78,7 @@ const Login = () => {
                     localStorage.setItem('user_todo', JSON.stringify(data.user));
                     dispatch(changeAuth(true));
                     dispatch(changeUser(data.user));
-                    setTimeout(() => {
-                        navigate('/');
-                    }, delay);
+                    setLoading(false);
                 })
                 .catch((e) => {
                     console.error(e, 'error login');
@@ -92,6 +89,26 @@ const Login = () => {
                 })
         }
     };
+
+    function clearErrors(value: string) {
+        if (value === 'errors') {
+            setErrors({});
+            return;
+        }
+
+        if (value === 'alert') {
+            setAlertError('');
+            return;
+        }
+
+        return;
+    }
+
+    useEffect(() => {
+        if (isAuth) {
+            navigate('/');
+        }
+    }, [isAuth, navigate]);
 
     return (
         <Container maxWidth="sm" sx={{ paddingTop: '48px' }}>
@@ -109,6 +126,7 @@ const Login = () => {
                             onChange={handleChange}
                             error={!!errors.email}
                             helperText={errors.email}
+                            autoComplete="email"
                         />
                     </Grid>
                     <Grid size={12}>
@@ -121,6 +139,7 @@ const Login = () => {
                             onChange={handleChange}
                             error={!!errors.password}
                             helperText={errors.password}
+                            autoComplete="current-password"
                         />
                     </Grid>
                     <Grid size={12}>
@@ -139,6 +158,11 @@ const Login = () => {
                             <Alert severity='error' variant='filled'>
                                 {errors.email}
                                 {errors.password}
+                                <Button onClick={() => {
+                                    clearErrors('errors');
+                                }}>
+                                    Ок
+                                </Button>
                             </Alert>
                         </Grid>
                     )}
@@ -146,7 +170,9 @@ const Login = () => {
                         <Grid size={12}>
                             <Alert severity='error' variant='filled'>
                                 <span>{alertError}</span>
-                                <Button>
+                                <Button onClick={() => {
+                                    clearErrors('alert');
+                                }}>
                                     Ок
                                 </Button>
                             </Alert>
@@ -155,7 +181,7 @@ const Login = () => {
                 </Grid>
             </form>
             {!isAuth && (
-                <Box sx={{margin: '48px 0 0 0'}}>
+                <Box sx={{ margin: '48px 0 0 0' }}>
                     <p>
                         email: andriiyelnikov@gmail.com
                     </p>
