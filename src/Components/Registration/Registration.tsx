@@ -102,6 +102,7 @@ const Registration = () => {
                 })
                 .catch((e) => {
                     console.error(e);
+                    setAlertMessage(prev => ({ ...prev, error: e.message }));
                 })
                 .finally(() => {
                     setLoading(false);

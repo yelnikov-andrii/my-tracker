@@ -4,17 +4,16 @@ import { MyContainer } from '../UI/Container';
 import { Form } from './Form/Form';
 import { TodoList } from './TodoList/TodoList';
 import { useDispatch, useSelector } from 'react-redux';
-import { MyCalendar } from '../UI/MyCalendar';
 import { setDate } from '../../store/timeSlice';
 import { formatDate } from '../../helpers/dateAndTimeHelpers/formateDate';
 import { DateBlock } from './DateBlock/DateBlock';
 import { DeleteCompleted } from './DeleteCompleted/DeleteCompleted';
 import { ReadyToDelete } from './ReadyToDelete/ReadyToDelete';
-import { Alert, Box, Button } from '@mui/material';
+import { Box } from '@mui/material';
 import { AddTodoBlock } from './AddTodoBlock/AddTodoBlock';
 import { MyModal } from '../UI/MyModal';
-import MyDropdown from '../UI/MyDropdown';
-import { clearGlobalAlert } from '../../store/globalAlert';
+import Calendar from './Calendar/Calendar';
+import GlobalAlert from './GlobalAlert/GlobalAlert';
 
 export const Main: React.FC = () => {
   const dispatch = useDispatch();
@@ -35,12 +34,10 @@ export const Main: React.FC = () => {
   return (
     <Box paddingTop={3}>
       <MyContainer>
-        <MyDropdown butttonContent="Календар">
-          <MyCalendar
-            value={currentDate}
-            onChange={changeCurrentDate}
-          />
-        </MyDropdown>
+        <Calendar
+          value={currentDate}
+          onChange={changeCurrentDate}
+        />
         <DateBlock />
         <MyModal
           isOpen={isOpen}
@@ -70,22 +67,9 @@ export const Main: React.FC = () => {
           />
         )}
         {alert && (
-          <Box sx={{ padding: '16px 0 32px' }}>
-            <Alert
-              severity='error'
-              className='global_alert'
-              variant="filled"
-              action={
-                <Button color="inherit" size="small" onClick={() => {
-                  dispatch(clearGlobalAlert());
-                }}>
-                  ок
-                </Button>
-              }
-            >
-              {alert}
-            </Alert>
-          </Box>
+          <GlobalAlert
+            alert={alert}
+          />
         )}
       </MyContainer>
     </Box>

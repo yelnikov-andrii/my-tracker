@@ -65,8 +65,6 @@ function App() {
     )
   }
 
-  console.log('app renders')
-
   return (
     <div>
       <Header />
