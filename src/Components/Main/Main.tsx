@@ -11,6 +11,7 @@ import { AddTodoBlock } from './AddTodoBlock/AddTodoBlock';
 import { MyModal } from '../UI/MyModal';
 import Calendar from './Calendar/Calendar';
 import GlobalAlert from './GlobalAlert/GlobalAlert';
+import LoadingFromServerBlock from './LoadingFromServerBlock/LoadingFromServerBlock';
 
 export const Main: React.FC = () => {
   const [readyToDelete, setReadyToDelete] = React.useState(false);
@@ -24,6 +25,7 @@ export const Main: React.FC = () => {
       <Container>
         <Calendar />
         <DateBlock />
+        <LoadingFromServerBlock />
         <MyModal
           isOpen={isOpen}
           setIsOpen={setIsOpen}

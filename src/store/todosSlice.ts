@@ -5,6 +5,7 @@ const initialState: StateInterface = {
   todoToChange: null,
   todoName: '',
   todos: [],
+  todosLoading: false,
   filteredTodos: [],
   allChecked: false,
   todosWithoutTime: [],
@@ -14,6 +15,9 @@ export const todoslice = createSlice({
   name: 'todos',
   initialState,
   reducers: {
+    setTodosLoading: (state: StateInterface, action: PayloadAction<boolean>) => {
+      state.todosLoading = action.payload;
+    },
     getTodosFromServer: (state: StateInterface, action: PayloadAction<any>) => {
       state.todos = action.payload;
       saveTodosToLocalStorage(action.payload);
@@ -73,6 +77,6 @@ export const todoslice = createSlice({
   },
 });
 
-export const { changeTodoName, changeTodoAction, setFilteredTodos, deleteTodoAction, getTodosFromServer, selectTodoToChange, toggleAllAction, addTodoAction, addTodoWithoutTime, getTodosWithoutTimeFromServer, deleteTodoWithoutAction } = todoslice.actions;
+export const { changeTodoName, changeTodoAction, setFilteredTodos, deleteTodoAction, getTodosFromServer, selectTodoToChange, toggleAllAction, addTodoAction, addTodoWithoutTime, getTodosWithoutTimeFromServer, deleteTodoWithoutAction, setTodosLoading } = todoslice.actions;
 
 export default todoslice.reducer;

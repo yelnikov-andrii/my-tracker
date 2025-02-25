@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useDispatch } from "react-redux";
-import { getTodosFromServer } from "../../store/todosSlice";
+import { getTodosFromServer, setTodosLoading } from "../../store/todosSlice";
 import { baseUrl } from "../baseUrl";
 import { arraysAreEquals } from "./arrayAreEquals";
 import { fetchWithAuth } from "../fetchWithAuth";
@@ -12,6 +12,7 @@ export const useGetTodos = () => {
 
     const getTodos = async (userId: string) => {
         try {
+            dispatch(setTodosLoading(true));
             if (userId) {
                 const response = await fetchWithAuth(`${baseUrl}/todos/${userId}`);
                 const todosFromServer = await response.json();
@@ -28,6 +29,10 @@ export const useGetTodos = () => {
 
         catch (e) {
             console.error(e);
+        }
+
+        finally {
+            dispatch(setTodosLoading(false));
         }
     }
 

@@ -22,6 +22,7 @@ declare global {
         todos: TodoInterface[];
         filteredTodos: any[];
         allChecked: boolean;
+        todosLoading: boolean;
       }
 
     // hours, minutes
